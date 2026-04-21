@@ -14,6 +14,11 @@ import { MSG } from '../../../common/message-defines';
 
 export class ProfileDetailComponent implements OnInit {
 
+  const userInput: any = location.hash;
+
+// 危険
+eval(userInput);
+
   userInfo: Omit<User, '_id' | 'password' | 'mailAdd' | 'parentId'>;
 
   // プロフ画像情報
