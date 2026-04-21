@@ -1,0 +1,115 @@
+<p>主催選択</p>
+  <mat-horizontal-stepper labelPosition="bottom" #stepper appDisableStepperFocus>
+    <!-- ステッパー No.1 -->
+    <mat-step [stepControl]="formGroup">
+      <ng-template matStepLabel>検索・選択</ng-template>
+      <!-- 検索欄 -->
+      <mat-dialog-content>
+        <p class="search-bar"><span class="bar-title">検索</span></p>
+        <div [ngClass]="{'round-box': !searchFlg, 'square-box': searchFlg}">
+          <form [formGroup]="formGroup">
+            <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+              <mat-label>{{ organLabel }}名<span class="required">(必須)</span></mat-label>
+              <input matInput [formControlName]="formNameLabel" placeholder="チーム神奈川" maxLength="50" required>
+              <mat-error *ngIf="formGroup.get(formNameLabel).hasError('required')">{{msg.noenteredErr.replace('※1', organLabel + '名')}}</mat-error>
+              <mat-hint>{{msg.wordMaxChkErr.replace('※1','50')}}</mat-hint>
+            </mat-form-field>
+            <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+              <mat-label>都道府県<span class="required">(必須)</span></mat-label>
+              <mat-select placeholder="都道府県を選択" formControlName="prefecture" required>
+                <mat-option *ngFor="let prefecture of prefectures" value="{{prefecture}}">
+                  {{prefecture}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="formGroup.get('prefecture').hasError('required')">{{msg.unselectErr.replace('※1','都道府県')}}</mat-error>
+            </mat-form-field>
+          </form>
+          <div class="search-button">
+            <button mat-raised-button type="button" [disabled]="formGroup.invalid" [class.active-button]="!formGroup.invalid"
+              (click)="onClickSearch()">
+              <mat-icon>search</mat-icon>検索
+            </button>
+          </div>
+        </div>
+        <!-- 結果欄 -->
+        <ng-container *ngIf="searchFlg">
+          <div class="result-bar">
+            <span class="bar-title">結果</span>
+            <span class="result-text" *ngIf="organsCnt > 0 && organsCnt <= 100">：{{organsCnt}}件</span>
+            <span class="result-text" *ngIf="organsCnt > 100">：{{organsCnt}}件 ※100件まで表示</span>
+          </div>
+          <div class="result-box">
+            <p *ngIf="organsCnt <= 0" class="no-result">検索結果がありませんでした。</p>
+            <ng-container *ngFor="let org of compOrganList; index as i">
+              <app-image-list-panel [imageInfo]="org.organLogo">
+                <div class="flex">
+                  <div>
+                    <ng-container [ngSwitch]="device">
+                      <ng-container *ngSwitchCase="'sp'">
+                        <span class="team-name">{{org.organName | omitLongSentence: 10:'...'}}</span><br>
+                        <span class="team-address">{{org.organAddInf | omitLongSentence: 8:'...'}}</span>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="'pc'">
+                        <span class="team-name">{{org.organName | omitLongSentence: 12:'...'}}</span><br>
+                        <span class="team-address">{{org.organAddInf | omitLongSentence: 12:'...'}}</span>
+                      </ng-container>
+                    </ng-container>
+                  </div>
+                  <mat-checkbox (change)="onClickBoxOrgan(org)" color="primary"></mat-checkbox>
+                </div>
+              </app-image-list-panel>
+            </ng-container>
+          </div>
+        </ng-container>
+      </mat-dialog-content>
+      <!-- ボタン -->
+      <mat-dialog-actions class="flex-button">
+        <div class="cancel-button">
+          <button mat-stroked-button type="button" color="basic" [mat-dialog-close]="false">キャンセル</button>
+        </div>
+        <div class="next-button">
+          <button mat-raised-button type="button" [disabled]="!haveCheckedBox" [class.active-button]="haveCheckedBox"
+            (click)="onClickChkTeam(stepper)">選択完了</button>
+        </div>
+      </mat-dialog-actions>
+    </mat-step>
+    <!-- ステッパー No.2 -->
+    <mat-step>
+      <ng-template matStepLabel>確認</ng-template>
+      <mat-dialog-content>
+        <div class="second-box">
+          <!-- 重複団体表示 -->
+          <ng-container *ngFor="let organErr of regDoneOrg; first as first">
+            <p *ngIf="first" class="team-alert"> ※追加済みの{{ organLabel }}を選択しています。{{ organLabel }}を選択し直してください。</p>
+            <p class="team-alert">●{{organErr.organName}}</p>
+          </ng-container>
+          <!-- 登録可能団体表示 -->
+          <ng-container *ngFor="let organ of selectedOrg">
+            <p>●{{organ.organName}}</p>
+          </ng-container>
+          <p class="sum-number">計 {{regDoneOrg.length + selectedOrg.length}} {{ organLabel }}</p>
+        </div>
+      </mat-dialog-content>
+      <!-- ボタン -->
+      <mat-dialog-actions class="flex-button">
+        <div class="cancel-button">
+          <button mat-stroked-button type="button" color="basic" (click)="stepper.previous()">戻る</button>
+        </div>
+        <div class="reg-button">
+          <button mat-raised-button type="button" [disabled]="this.regDoneOrg.length > 0" [class.active-button]="this.regDoneOrg.length == 0"
+            (click)="onClickAdd(stepper)">追加</button>
+        </div>
+      </mat-dialog-actions>
+    </mat-step>
+    <!-- ステッパー No.3 -->
+    <mat-step>
+      <ng-template matStepLabel>結果</ng-template>
+      <mat-dialog-content>
+        <div class="last-box">追加が完了しました。</div>
+      </mat-dialog-content>
+      <!-- ボタン -->
+      <mat-dialog-actions class="fin-button">
+        <button mat-stroked-button type="button" color="basic" (click)="onClickFin()">OK</button>
+      </mat-dialog-actions>
+    </mat-step>
+  </mat-horizontal-stepper>

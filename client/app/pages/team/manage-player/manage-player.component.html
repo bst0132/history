@@ -1,0 +1,57 @@
+<div class="content">
+  <mat-card>
+    <mat-card-content>
+      <div>
+        <div>{{getSportValue(teamInfo?.sports)}}</div>
+      </div>
+      <div>
+        <div>
+          <img *ngIf="teamInfo?.teamLogo" [src]="teamInfo.teamLogo">
+        </div>
+        <div>{{teamInfo?.teamName}}</div>
+      </div>
+      <div>
+        <button mat-raised-button color="primary" type="button" (click)="invitePlayer()">選手をチームに招待する</button>
+      </div>
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>所属選手</mat-card-title>
+        </mat-card-header>
+      </mat-card>
+      <mat-card-content [formGroup]="tableForm">
+        <ng-container formArrayName="playerList">
+          <ng-container *ngFor="let player of getPlayerList; let i = index">
+            <mat-card [formGroupName]="i">
+              <span>
+                {{player.get('playerName').value}}
+              </span>
+              <mat-form-field >
+                <mat-label>背番号</mat-label>
+                <input matInput placeholder="1" formControlName="uniNum" required>
+                <mat-error *ngIf="player.get('uniNum').hasError('required')">{{msg.noenteredErr.replace('※1','背番号')}}</mat-error>
+              </mat-form-field>
+              <mat-form-field >
+                <mat-label>ポジション</mat-label>
+                <input matInput placeholder="GK" formControlName="gamePosition" required>
+                <mat-error *ngIf="player.get('gamePosition').hasError('required')">{{msg.noenteredErr.replace('※1','ポジション')}}</mat-error>
+              </mat-form-field>
+              <span>
+                {{player.get('teamStartDate').value | date: 'yyyy/MM/dd'}}
+              </span>
+              <mat-form-field >
+                <mat-label>所属終了年月</mat-label>
+                <input matInput [matDatepicker]="picker1" placeholder="2020/01/01" formControlName="teamEndDate">
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+              </mat-form-field>
+              <button mat-raised-button  color="primary" type="button" (click)="onEditPlayer(player)" [disabled]="!player.dirty">変更</button>
+            </mat-card>
+          </ng-container>
+        </ng-container>
+      </mat-card-content>
+      <div class="footerButtonArea">
+        <button mat-raised-button color="primary" type="button" (click)="returnToDetail()">戻る</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

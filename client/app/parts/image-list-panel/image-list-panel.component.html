@@ -1,0 +1,15 @@
+<mat-card>
+  <div class="list-card-contents">
+    <div class="avatar-area">
+      <div class="no-image" *ngIf="!imageInfo?.dataUrl">
+        <img [src]="'assets/images/no_image.png'">
+      </div>
+      <div class="image" *ngIf="imageInfo?.dataUrl">
+        <img [src]="imageInfo?.dataUrl">
+      </div>
+    </div>
+    <div class="text-container">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</mat-card>

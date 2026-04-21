@@ -1,0 +1,61 @@
+.footer-button-area {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  button {
+    margin-left: 25px;
+  }
+}
+
+.league-info {
+  margin-top: 20px;
+}
+
+.league-table {
+  border-collapse: collapse;
+}
+
+.no-column {
+  width: 20px
+}
+
+.team-select {
+  min-width: 150px;
+}
+
+.header-row {
+  background-color: rgba($color: lightsteelblue, $alpha: 0.45);
+}
+
+.odd-row {
+  background-color: rgba($color: lightsteelblue, $alpha: 0.15);
+}
+
+.data-cell {
+  width: 7.5%;
+  min-width: 75px;
+  word-break: break-all;
+  white-space: pre-wrap;
+  text-align: center;
+}
+
+.slash {
+  background-image: linear-gradient(15deg, transparent 49%, grey 49%, grey 51%, transparent 51%, transparent);
+}
+
+.hyphen-cell {
+  text-align: center;
+}
+
+.point {
+  width: 20%;
+}
+
+.scroll-table {
+  display: block;
+  overflow-x: scroll;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  max-height: 750px;
+  width: 100%;
+}

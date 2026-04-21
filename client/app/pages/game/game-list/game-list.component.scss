@@ -1,0 +1,27 @@
+@import '../../../../mylib/var';
+
+  .date {
+    width: 30%;
+  }
+
+  .swangDash {
+    margin: 5px, auto;
+  }
+
+  .word-break {
+    white-space: pre-wrap;
+    text-align:center;
+  }
+
+  .mat-table {
+    mat-row {
+      &:hover {
+        background-color: rgba($bst-blue, 0.10);
+        cursor: pointer;
+      }
+    }
+  }
+
+  .mat-column-navigateIcon {
+    flex: 0 0 10px;
+  }

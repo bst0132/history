@@ -1,0 +1,83 @@
+@import '../../../../mylib/mixin';
+
+mat-card {
+  &.game-card {
+    margin: 0;
+    padding: 3px 16px;
+    background-color: rgba($color: lightslategray, $alpha: 0.2);
+    @include size($width: 225px, $height: 20px);
+  }
+}
+
+.tournament-info {
+  @include flex-style($justify: space-between);
+  margin: 15px;
+  mat-form-field {
+    width: 35%;
+  }
+}
+
+.line {
+  width: 25px;
+}
+
+.tournament {
+  display: flex;
+  overflow: scroll;
+}
+
+.round {
+  @include flex-style($direction: column);
+  &.not-first {
+    justify-content: space-around;
+  }
+}
+
+.flex-container {
+  display: flex;
+  flex: 0 0 auto;
+  &.not-first {
+    flex-grow: 1;
+  }
+}
+
+.block {
+  @include flex-style($direction: column);
+  padding: 7px 0;
+  margin: auto 0;
+  position: relative;
+}
+
+.node {
+  display: flex;
+}
+
+.line-container {
+  @include flex-style($direction: column);
+}
+
+.flex-line {
+  display: flex;
+  flex-grow: 1;
+}
+
+.final-round {
+  @include flex-style($direction: column, $justify: space-around);
+}
+
+.third-place-match {
+  @include position($position: relative, $top:100px, $right: 257px);
+}
+
+.footer-button-area {
+  margin-top: 20px;
+  @include flex-style($justify: space-between);
+  button {
+    &:nth-child(1) {
+      margin-left: 25px;
+    }
+    &:nth-child(2) {
+      margin-right: 25px;
+    }
+  }
+}

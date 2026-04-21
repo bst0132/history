@@ -1,0 +1,39 @@
+<p mat-dialog-title>チーム名を入力して追加</p>
+<!-- 入力フォーム -->
+<mat-dialog-content>
+  <form [formGroup]="formGroup">
+    <div formArrayName="teamInfo">
+      <ng-container *ngFor="let team of getTeamInfo?.controls; let i = index" [formGroupName]="i">
+        <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+          <mat-label>チーム名</mat-label>
+          <input matInput formControlName="teamName" placeholder="チーム神奈川" maxLength='50' required>
+          <mat-icon matSuffix class="delete-btn" (click)="onDelTeamInfo(i)" (keyup)="onKeyCheck($event)" tabindex="0">delete_outline</mat-icon>
+          <mat-error *ngIf="team.get('teamName').hasError('required')">{{msg.noenteredErr.replace('※1', 'チーム名')}}</mat-error>
+          <mat-hint>{{msg.wordMaxChkErr.replace('※1','50')}}</mat-hint>
+        </mat-form-field>
+      </ng-container>
+      <!-- チーム名入力フォーム(上限10) -->
+      <div class="button-area" *ngIf="getTeamInfo?.length < 10">
+        <span (click)="onAddTeamInfo()">
+          <a class="add-context" *ngIf="!getTeamInfo?.length">チーム名を入力する</a>
+          <button mat-icon-button type="button" class="add-button"><mat-icon>add</mat-icon></button>
+        </span>
+      </div>
+    </div>
+  </form>
+  <!-- 注意メッセージ -->
+  <ng-container *ngIf="alertMsg">
+    <p class="alert-msg">{{alertMsg}}</p>
+  </ng-container>
+</mat-dialog-content>
+<!-- ボタン -->
+<mat-dialog-actions  class="flex-button">
+  <div class="back-button">
+    <button mat-stroked-button type="button" color="basic" [mat-dialog-close]="false">キャンセル</button>
+  </div>
+  <div class="update-button">
+    <button mat-raised-button type="button" [disabled]="formGroup.invalid || canDeactive() || !getTeamInfo.value.length"
+      [class.active-button]="!formGroup.invalid && !canDeactive() && getTeamInfo.value.length"
+      (click)="onClickReg()">登録</button>
+  </div>
+</mat-dialog-actions>

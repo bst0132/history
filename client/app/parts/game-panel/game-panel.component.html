@@ -1,0 +1,53 @@
+<mat-card>
+  <div class="card-contents">
+    <!-- 場所・時間 -->
+    <div class="base-info">
+      <p class="place">
+        場所：
+        <span *ngIf="gamesInf?.gamePlace">{{gamesInf?.gamePlace}}</span>
+        <span class="non-reg" *ngIf="!gamesInf?.gamePlace">(未定)</span>
+      </p>
+      <p>
+        時間：
+        <span *ngIf="gamesInf?.gameStartTime || gamesInf?.gameStartTime === 0">{{gamesInf?.gameStartTime | timeNumberToString}} ~</span>
+        <span class="non-reg" *ngIf="!gamesInf?.gameStartTime && gamesInf?.gameStartTime !== 0">(未定)</span>
+      </p>
+    </div>
+    <div class="flex-container">
+      <!-- チーム情報１段目 -->
+      <div class="avatar-area" *ngIf="!gamesInf?.criteriaLogo?.dataUrl">
+        <img [src]="'assets/images/no_image.png'">
+      </div>
+      <div class="avatar-area" *ngIf="gamesInf?.criteriaLogo?.dataUrl">
+        <img [src]="gamesInf?.criteriaLogo?.dataUrl">
+      </div>
+      <div>
+        <span *ngIf="gamesInf?.criteriaName">{{gamesInf?.criteriaName}}</span>
+        <span class="non-reg" *ngIf="!gamesInf?.criteriaName">(未定)</span>
+      </div>
+      <div class="score-area">
+        <span *ngIf="gamesInf?.criteriaScore >= 0">{{gamesInf?.criteriaScore}}</span>
+        <span class="non-reg" *ngIf="!gamesInf?.criteriaScore && gamesInf?.criteriaScore != 0">(得点)</span>
+      </div>
+      <!-- 縦線 -->
+      <div class="line">
+        <mat-divider vertical></mat-divider>
+      </div>
+      <!-- チーム情報２段目 -->
+      <div class="avatar-area" *ngIf="!gamesInf?.opponentLogo?.dataUrl">
+        <img [src]="'assets/images/no_image.png'">
+      </div>
+      <div class="avatar-area" *ngIf="gamesInf?.opponentLogo?.dataUrl">
+        <img [src]="gamesInf?.opponentLogo?.dataUrl">
+      </div>
+      <div>
+        <span *ngIf="gamesInf?.opponentName">{{gamesInf?.opponentName}}</span>
+        <span class="non-reg" *ngIf="!gamesInf?.opponentName">(未定)</span>
+      </div>
+      <div class="score-area">
+        <span *ngIf="gamesInf?.opponentScore >= 0">{{gamesInf?.opponentScore}}</span>
+        <span class="non-reg" *ngIf="!gamesInf?.opponentScore && gamesInf?.opponentScore != 0">(得点)</span>
+      </div>
+    </div>
+  </div>
+</mat-card>

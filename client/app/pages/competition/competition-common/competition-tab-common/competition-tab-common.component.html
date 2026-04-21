@@ -1,0 +1,210 @@
+<mat-card class="contents-card" >
+  <!-- 大会要綱編集ボタン -->
+  <ng-container *ngIf="canEdit">
+    <div class="edit-button">
+      <span (click)="changeToEdit()">
+        <a >編集する</a>
+        <button mat-icon-button type="button"><mat-icon>create</mat-icon></button>
+      </span>
+    </div>
+    <div class="edit-button">
+      <span (click)="onClickQrcodeDialogOpen()">
+        <a >QRコードを発行する</a>
+        <button mat-icon-button type="button"><mat-icon>dashboard</mat-icon></button>
+      </span>
+    </div>
+  </ng-container>
+  <div class="comp-symbol">
+    <!-- 大会ロゴ表示 -->
+    <div class="image-area" [ngStyle]="{'margin-top.px': canEdit ? 0 : 30}">
+      <app-image-select [mode]="'show'" [imageInfo]="compInfo?.compLogo"></app-image-select>
+    </div>
+    <!-- 大会名 -->
+    <span class="comp-name">{{compInfo?.compName}}</span>
+  </div>
+  <!-- 大会詳細 -->
+  <div class="comp-detail">
+    <div class="items">
+      <p class="item-title">●大会開催期間</p>
+      <p class="item-contents">
+        <span [class.content-title]="compInfo?.openingTime">期間</span>
+        ： {{compInfo?.openingDate | date: 'yyyy/MM/dd'}} ~ {{compInfo?.closingDate | date: 'yyyy/MM/dd'}}
+      </p>
+      <ng-container *ngIf="compInfo?.openingTime">
+        <p class="item-contents">
+          <span class="content-title">開会時間</span>
+          ： {{compInfo?.openingTime}}
+        </p>
+      </ng-container>
+    </div>
+    <div class="items">
+      <p class="item-title">●会場</p>
+      <p class="item-contents">
+        <ng-container *ngFor="let places of compInfo?.compPlace; last as last">
+          {{places}}<span *ngIf="!last">、</span>
+        </ng-container>
+        <ng-container *ngIf="!compInfo?.compPlace || !compInfo?.compPlace?.length">
+          <span class="no-content">(未登録)</span>
+        </ng-container>
+      </p>
+    </div>
+    <div class="items">
+      <p class="item-title">●主催・主管</p>
+      <p class="item-contents organizer">
+        主催：
+        <ng-container *ngFor="let orgNames of compInfo?.compOrgName; last as last">
+          {{orgNames}}<span *ngIf="!last">、</span>
+        </ng-container>
+        <ng-container *ngIf="!compInfo?.compOrgName || !compInfo?.compOrgName?.length">
+          <span class="no-content">(未登録)</span>
+        </ng-container>
+      </p>
+      <p class="item-contents organizer">
+        主管：
+        <ng-container *ngFor="let supervisors of compInfo?.supervisor; last as last">
+          {{supervisors}}<span *ngIf="!last">、</span>
+        </ng-container>
+        <ng-container *ngIf="!compInfo?.supervisor || !compInfo?.supervisor?.length">
+          <span class="no-content">(未登録)</span>
+        </ng-container>
+      </p>
+    </div>
+    <ng-container *ngIf="compInfo?.cosponsor && compInfo?.cosponsor?.length">
+      <div class="items">
+        <p class="item-title">●協賛</p>
+        <ng-container *ngFor="let cosponsors of compInfo?.cosponsor; last as last">
+          <p class="item-contents">
+            {{cosponsors}}<span *ngIf="!last">、</span>
+          </p>
+        </ng-container>
+      </div>
+    </ng-container>
+    <div class="items">
+      <p class="item-title">●趣旨</p>
+      <p class="item-contents">
+        <ng-container *ngIf="compInfo?.purpose">{{compInfo?.purpose}}</ng-container>
+        <ng-container *ngIf="!compInfo?.purpose">
+          <span class="no-content">(未登録)</span>
+        </ng-container>
+      </p>
+    </div>
+    <div class="items">
+      <p class="item-title">●参加資格</p>
+      <p class="item-contents">
+        <ng-container *ngIf="compInfo?.entryQual">{{compInfo?.entryQual}}</ng-container>
+        <ng-container *ngIf="!compInfo?.entryQual">
+          <span class="no-content">(未登録)</span>
+        </ng-container>
+      </p>
+    </div>
+    <div class="items">
+      <ng-container *ngIf="compInfo?.gameRules && compInfo?.gameRules?.length">
+        <cdk-accordion>
+          <cdk-accordion-item #accordionItem="cdkAccordionItem" [attr.aria-expanded]="accordionItem.expanded">
+            <p class="item-title" (keyup)="onKeyCheck($event)" role="button" tabindex="0">
+              <span class="click-item" (click)="accordionItem.toggle()">●競技規則</span>
+              <span class="accordion-item-btn" (click)="accordionItem.toggle()">
+                {{ accordionItem.expanded ? 'を閉じる' : 'を開く' }}
+              </span>
+            </p>
+            <div class="item-contents" role="listitem" [style.display]="accordionItem.expanded ? '' : 'none'">
+              <ng-container *ngFor="let rules of compInfo?.gameRules;">
+                <p>{{rules}}</p>
+              </ng-container>
+            </div>
+          </cdk-accordion-item>
+        </cdk-accordion>
+      </ng-container>
+      <ng-container *ngIf="!compInfo?.gameRules || !compInfo?.gameRules?.length">
+        <p class="item-title">●競技規則</p>
+        <p class="item-contents">
+          <span class="no-content">(未登録)</span>
+        </p>
+      </ng-container>
+    </div>
+    <div class="items">
+      <p class="item-title">●大会方式</p>
+      <p class="item-contents">
+        <ng-container *ngIf="compInfo?.compSystemInf?.compSystem">{{compInfo?.compSystemInf?.compSystem | getCompSystemValue}}方式</ng-container>
+        <ng-container *ngIf="!compInfo?.compSystemInf?.compSystem">
+          <span class="no-content">(未登録)</span>
+        </ng-container>
+      </p>
+    </div>
+    <ng-container *ngIf="compInfo?.compSystemInf?.compSystem === cns.league || compInfo?.compSystemInf?.compSystem === cns.leagueTournament">
+      <div class="items">
+        <p class="item-title">●勝ち点</p>
+        <div class="item-contents">
+          <ul class="winning-point">
+            <li class="case">勝ち</li>
+            <li class="case">負け</li>
+            <li class="case">引き分け</li>
+          </ul>
+          <ul class="winning-point">
+            <li>：</li>
+            <li>：</li>
+            <li>：</li>
+          </ul>
+          <ul class="winning-point">
+            <li class="point">{{compInfo?.compSystemInf?.winningPointInf?.winPoint}}点</li>
+            <li class="point">{{compInfo?.compSystemInf?.winningPointInf?.losePoint}}点</li>
+            <li class="point">{{compInfo?.compSystemInf?.winningPointInf?.drawPoint}}点</li>
+          </ul>
+        </div>
+      </div>
+    </ng-container>
+    <div class="items">
+      <p class="item-title">●表彰</p>
+      <p class="item-contents">
+        <ng-container *ngIf="compInfo?.awards">{{compInfo?.awards}}</ng-container>
+        <ng-container *ngIf="!compInfo?.awards">
+          <span class="no-content">(未登録)</span>
+        </ng-container>
+      </p>
+    </div>
+    <ng-container *ngIf="compInfo?.notes && compInfo?.notes?.length">
+      <div class="items">
+        <cdk-accordion>
+          <cdk-accordion-item #accordionItem="cdkAccordionItem" [attr.aria-expanded]="accordionItem.expanded">
+            <p class="item-title" (keyup)="onKeyCheck($event)" role="button" tabindex="0">
+              <span class="click-item" (click)="accordionItem.toggle()">●注意事項</span>
+              <span class="accordion-item-btn" (click)="accordionItem.toggle()">
+                {{ accordionItem.expanded ? 'を閉じる' : 'を開く' }}
+              </span>
+            </p>
+            <div class="item-contents" role="listitem" [style.display]="accordionItem.expanded ? '' : 'none'">
+              <ng-container *ngFor="let notes of compInfo?.notes;">
+                <p>{{notes}}</p>
+              </ng-container>
+            </div>
+          </cdk-accordion-item>
+        </cdk-accordion>
+      </div>
+    </ng-container>
+    <div class="items">
+      <p class="item-title">●参加費</p>
+      <p class="item-contents">
+        <ng-container *ngIf="compInfo?.entryFee">{{compInfo?.entryFee}}</ng-container>
+        <ng-container *ngIf="!compInfo?.entryFee">
+          <span class="no-content">(未登録)</span>
+        </ng-container>
+      </p>
+    </div>
+    <ng-container *ngIf="compInfo?.remarks">
+      <div class="items">
+        <p class="item-title">●その他</p>
+        <p class="item-contents">{{compInfo?.remarks}}</p>
+      </div>
+    </ng-container>
+    <div class="items">
+      <p class="item-title">●連絡先</p>
+      <p class="item-contents">
+        <ng-container *ngIf="compInfo?.contact?.name">{{compInfo?.contact?.name}} : </ng-container>
+        <ng-container *ngIf="compInfo?.contact?.phoneNumber">{{compInfo?.contact?.phoneNumber}}</ng-container>
+        <ng-container *ngIf="!compInfo?.contact?.phoneNumber">
+          <span class="no-content">(未登録)</span>
+        </ng-container>
+      </p>
+    </div>
+  </div>
+</mat-card>

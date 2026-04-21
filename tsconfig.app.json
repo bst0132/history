@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist/client",
+    "module": "es2020",
+    "types": []
+  },
+  "files": [
+    "client/main.ts",
+    "client/polyfills.ts"
+  ],
+  "include": [
+    "defs/*.d.ts"
+  ]
+}

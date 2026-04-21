@@ -1,0 +1,9 @@
+<div class="title">画像の使用する範囲を選択してください。</div>
+<mat-dialog-content class="content">
+  <div class="img-container">
+    <image-cropper class="cropper" [imageBase64]= data.dataUrl [maintainAspectRatio]="true" [roundCropper]="true" [aspectRatio]="1" [resizeToWidth]="200" (imageCropped)="imageCropped($event)"></image-cropper>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions class="btn-area">
+  <button mat-button type="button" [mat-dialog-close]="croppedImage">OK</button>
+</mat-dialog-actions>

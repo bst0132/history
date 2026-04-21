@@ -1,0 +1,112 @@
+@import '../../../../../mylib/var';
+@import '../../../../../mylib/mixin';
+
+// タブ毎のカードスタイル
+.contents-card {
+  @include contents-card;
+  // 大会要綱タブ内 画像・大会名
+  .comp-symbol {
+    margin-bottom: 2em;
+    // 画像エリア
+    .image-area {
+      margin-bottom: 1.5em;
+    }
+    // 大会名
+    .comp-name {
+      display: block;
+      text-align: center;
+      font-weight: bold;
+      font-size: large;
+    }
+  }
+  // 大会要綱タブ内 各項目関連
+  .comp-detail {
+    padding: 0 0.5em;
+    // 各項目
+    .items {
+      margin-bottom: 2em;
+      // 項目タイトル
+      .item-title {
+        color: #0d4976;
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        pointer-events: none;
+        @media (max-width: $media-tb) {
+          font-size: 15px;
+        }
+        @include focus-visible-outline;
+        // 大会要綱タブ内折り畳み項目
+        .accordion-item-btn {
+          font-size: 13px;
+          cursor: pointer;
+          pointer-events: auto;
+          @media (max-width: $media-tb) {
+            font-size: 11px;
+          }
+        }
+        .click-item {
+          cursor: pointer;
+          pointer-events: auto;
+        }
+      }
+      // 項目内容
+      .item-contents {
+        white-space: pre-wrap;
+        font-size: 15px;
+        margin-left: 1em;
+        margin-bottom: 0;
+        @media (max-width: $media-tb) {
+          font-size: 13px;
+        }
+        // 主催・主管
+        &.organizer {
+          text-indent: -3.3em;
+          padding-left: 3.2em;
+        }
+        // 項目内容のタイトル（期間、開会時間）
+        .content-title {
+          display: inline-block;
+          width: 4.5em;
+        }
+        // 勝ち点
+        .winning-point {
+          display: inline-block;
+          list-style-type: none;
+          margin: 0;
+          padding: 0;
+          .case {
+            width: 5em;
+          }
+          .point {
+            width: 3em;
+            text-align: right;
+          }
+        }
+        // 未登録の場合の文字色
+        .no-content {
+          color: rgb(175, 175, 175);
+        }
+      }
+    }
+  }
+  // 編集ボタンスタイル
+  .edit-button {
+    text-align: right;
+    margin-bottom: 20px;
+    a {
+      color: $parts-yellow;
+      cursor: pointer;
+      font-size: 16px;
+      margin-right: 5px;
+      transition: 0.1s;
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+    button {
+      @include edit-button;
+      color: white;
+    }
+  }
+}

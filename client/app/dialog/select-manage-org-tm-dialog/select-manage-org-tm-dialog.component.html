@@ -1,0 +1,99 @@
+<p tabindex="0">主催選択</p>
+<mat-dialog-content class="{{device}}" tabindex="-1">
+  <!-- 管理団体 -->
+  <mat-card class="base-card {{device}}">
+    <mat-card-header>
+      <mat-card-title>管理団体</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ng-container *ngIf="(!organList || !organList.length); else registeredOrgan">
+        <div class="message">管理する団体が登録されていません</div>
+      </ng-container>
+      <ng-template #registeredOrgan>
+        <ng-container *ngIf="!addOrganList || !addOrganList.length">
+          <div class="message">追加できる管理団体はありません</div>
+        </ng-container>
+        <div class="org-list">
+          <ng-container *ngIf="addOrganList && addOrganList.length">
+            <mat-card class="item-card {{device}} add-card" [class.card-width]="device == 'sp' && addedOrganList.length >= 2">
+              <mat-card-content>
+                <ng-container *ngFor="let addOrgan of addOrganList">
+                  <app-image-panel class="add-panel {{device}}" [imageInfo]="addOrgan.organLogo" tabindex="0" (click)="onClickOrg(addOrgan)" (keyup)="onKeyCheck($event)">
+                    <div class="manage-info">{{addOrgan.organName}}</div>
+                    <hr>
+                    <div class="manage-info">{{addOrgan.organAddInf.organPrefecture}} {{addOrgan.organAddInf.organCity}}</div>
+                  </app-image-panel>
+                </ng-container>
+              </mat-card-content>
+            </mat-card>
+          </ng-container>
+          <ng-container *ngIf="addedOrganList && addedOrganList.length">
+            <mat-card class="item-card {{device}} added-card" [class.card-width]="device == 'sp' && addOrganList.length >= 2">
+              <mat-card-content>
+                <div class="added-title"><mat-icon class="added-icon">check_circle</mat-icon>追加済み</div>
+                <ng-container *ngFor="let addedOrgan of addedOrganList">
+                  <app-image-panel class="added-panel {{device}}" [imageInfo]="addedOrgan.organLogo">
+                    <div class="manage-info">{{addedOrgan.organName}}</div>
+                    <hr>
+                    <div class="manage-info">{{addedOrgan.organAddInf.organPrefecture}} {{addedOrgan.organAddInf.organCity}}</div>
+                  </app-image-panel>
+                </ng-container>
+              </mat-card-content>
+            </mat-card>
+          </ng-container>
+        </div>
+      </ng-template>
+    </mat-card-content>
+  </mat-card>
+  <!-- 管理チーム -->
+  <mat-card class="base-card {{device}}">
+    <mat-card-header>
+      <mat-card-title>管理チーム</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ng-container *ngIf="(!teamList || !teamList.length); else registeredTeam">
+        <div class="message">管理するチームが登録されていません</div>
+      </ng-container>
+      <ng-template #registeredTeam>
+        <ng-container *ngIf="!addTeamList || !addTeamList.length">
+          <div class="message">追加できる管理チームはありません</div>
+        </ng-container>
+        <div class="org-list">
+          <ng-container *ngIf="addTeamList && addTeamList.length">
+            <mat-card class="item-card {{device}} add-card" [class.card-width]="device == 'sp' && addedTeamList.length >= 2">
+              <mat-card-content>
+                <ng-container *ngFor="let addTeam of addTeamList">
+                  <app-image-panel class="add-panel {{device}}" [imageInfo]="addTeam.teamLogo" tabindex="0" (click)="onClickTeam(addTeam)" (keyup)="onKeyCheck($event)">
+                    <div class="manage-info">{{addTeam.teamName}}</div>
+                    <hr>
+                    <div>{{addTeam.teamAddInf.teamPrefecture}}</div>
+                  </app-image-panel>
+                </ng-container>
+              </mat-card-content>
+            </mat-card>
+          </ng-container>
+          <ng-container *ngIf="addedTeamList && addedTeamList.length">
+            <mat-card class="item-card {{device}} added-card" [class.card-width]="device == 'sp' && addTeamList.length >= 2">
+              <mat-card-content>
+                <div class="added-title"><mat-icon class="added-icon">check_circle</mat-icon>追加済み</div>
+                <ng-container *ngFor="let addedTeam of addedTeamList">
+                  <app-image-panel class="added-panel {{device}}" [imageInfo]="addedTeam.teamLogo">
+                    <div class="manage-info">{{addedTeam.teamName}}</div>
+                    <hr>
+                    <div>{{addedTeam.teamAddInf.teamPrefecture}}</div>
+                  </app-image-panel>
+                </ng-container>
+              </mat-card-content>
+            </mat-card>
+          </ng-container>
+        </div>
+      </ng-template>
+    </mat-card-content>
+  </mat-card>
+</mat-dialog-content>
+<!-- ボタン -->
+<mat-dialog-actions>
+  <div class="cancel-button">
+    <button mat-stroked-button type="button" color="basic" [mat-dialog-close]="false">キャンセル</button>
+  </div>
+</mat-dialog-actions>

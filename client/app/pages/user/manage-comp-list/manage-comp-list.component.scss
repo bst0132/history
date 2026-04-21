@@ -1,0 +1,18 @@
+@import '../../../../mylib/var';
+
+.comp-list {
+  text-align: center;
+}
+
+:host ::ng-deep app-image-panel {
+  &:hover {
+    opacity: 0.7;
+  }
+  &:focus-visible {
+    outline: none;
+    mat-card {
+      outline: double thick $focus-color;
+      outline-offset: 1px;
+    }
+  }
+}

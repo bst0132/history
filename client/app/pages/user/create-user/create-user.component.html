@@ -1,0 +1,113 @@
+<div class="content">
+  <!-- モーダルウインドウ -->
+  <div class="mask" [hidden]="!showPolicy" cdkTrapFocus [cdkTrapFocusAutoCapture]="true">
+    <section id="modal-policy" tabindex="0">
+      <p>
+        本サービスをご利用するには以下の利用規約に同意していただく必要があります。<br>
+        最後までご確認の上、登録画面にお進みください。
+      </p>
+      <div class="terms-use-title">利用規約</div>
+      <div class="policy-explanation">{{userPolicy.header}}</div>
+      <ng-container *ngFor="let body of userPolicy.body">
+        <div class="policy-title">{{body.title}}</div>
+        <ng-container *ngFor="let firstContents of body.firstContents">
+          <div [ngClass]="{'policy-first-contents': !firstContents.class, 'policy-not-clause': firstContents.class=='notClause'}">{{firstContents.text}}</div>
+          <ng-container *ngFor="let secondContents of firstContents.secondContents">
+            <div class="policy-second-contents">{{secondContents.text}}</div>
+            <ng-container *ngFor="let thirdContents of secondContents.thirdContents">
+              <div class="policy-third-contents">{{thirdContents.text}}</div>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+      <div class="policy-end">{{userPolicy.footer}}</div>
+      <div class="button-area">
+        <button class="button agree" mat-raised-button color="primary" type="button" (click)="checkPolicy()">同意する</button>
+        <button class="button" mat-raised-button  type="button" (click)="cancel()">同意しない</button>
+      </div>
+    </section>
+  </div>
+  <!-- 登録フォーム -->
+  <mat-toolbar class="title-toolbar">
+    <span *ngIf="!regFlg">アカウント作成</span>
+    <span *ngIf="regFlg">登録完了</span>
+  </mat-toolbar>
+  <mat-card class="base-card">
+    <mat-card-content>
+      <div class="card">
+        <mat-card class="contents-card">
+          <ng-container *ngIf="!regFlg">
+            <mat-horizontal-stepper labelPosition="bottom" selectedIndex="2" appDisableStepperFocus>
+              <mat-step>
+                <ng-template matStepLabel>アカウント作成<br>メール送信</ng-template>
+              </mat-step>
+              <mat-step>
+                <ng-template matStepLabel>メール送信<br>完了</ng-template>
+              </mat-step>
+              <mat-step>
+                <ng-template matStepLabel>アカウント情報<br>入力</ng-template>
+                <form [formGroup]="formGroup">
+                  <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                    <mat-label>ニックネーム<span class="required">(必須)</span></mat-label>
+                    <input matInput formControlName="nickname" placeholder="サービス内で使用されるアカウント名です" maxLength='30' required>
+                    <mat-error *ngIf="formGroup.get('nickname').hasError('required')">{{msg.noenteredErr.replace('※1','ニックネーム')}}</mat-error>
+                    <mat-hint>{{msg.wordMaxChkErr.replace('※1','30')}}（ニックネームは登録後変更できます。）</mat-hint>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                    <mat-label>ID<span class="required">(必須)</span></mat-label>
+                    <input matInput placeholder="ID000001" formControlName="userUniqueID" placeholder="アカウント検索で使われるIDです" maxLength='20' required>
+                    <mat-hint>半角英数字混在8文字以上20文字以内で入力してください</mat-hint>
+                    <mat-error *ngIf="formGroup.get('userUniqueID').hasError('required')">{{msg.noenteredErr.replace('※1','ID')}}</mat-error>
+                    <mat-error *ngIf="formGroup.get('userUniqueID').hasError('pattern')">{{msg.idFormChkErr}}</mat-error>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                    <mat-label>パスワード<span class="required">(必須)</span></mat-label>
+                    <input matInput [type]="passHide ? 'password' : 'text'" formControlName="password" placeholder="パスワードを入力してください" maxLength='20' required>
+                    <mat-error *ngIf="formGroup.get('password').hasError('required')">{{msg.noenteredErr.replace('※1','パスワード')}}</mat-error>
+                    <mat-error *ngIf="formGroup.get('password').hasError('vulnerable')">{{msg.passFormChkErr}}</mat-error>
+                    <mat-hint>{{msg.passFormChkErr}}</mat-hint>
+                    <button mat-icon-button matSuffix class="hide-button" type="button" (click)="passHide = !passHide">
+                      <mat-icon>{{passHide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                  </mat-form-field>
+                  <div class="pass-strength">
+                    <mat-hint>パスワードの強度</mat-hint>
+                    <mat-password-strength [password]="formGroup.get('password').value"
+                    (onStrengthChanged)="onStrengthChanged($event)"
+                    [accentThreshold]="41" ></mat-password-strength>
+                  </div>
+                  <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                    <mat-label>パスワード（再入力）<span class="required">(必須)</span></mat-label>
+                    <input matInput [type]="confirmPassHide ? 'password' : 'text'" formControlName="confirmPassword" placeholder="確認のためもう一度入力してください" maxLength='20' required>
+                    <mat-error *ngIf="formGroup.get('confirmPassword').hasError('required')">{{msg.noenteredErr.replace('※1','パスワード')}}</mat-error>
+                    <mat-error *ngIf="formGroup.get('confirmPassword').hasError('vulnerable')">{{msg.passFormChkErr}}</mat-error>
+                    <button mat-icon-button matSuffix class="hide-button" type="button" (click)="confirmPassHide = !confirmPassHide">
+                      <mat-icon>{{confirmPassHide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                  </mat-form-field>
+                  <mat-error class="password-unmatch" *ngIf="formGroup.hasError('password-unmatch')">{{msg.mismatchErr.replace('※1','パスワード')}}</mat-error>
+                  <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                    <mat-label>デモ用共通コード<span class="required">(必須)</span></mat-label>
+                    <input matInput type="password" formControlName="createUserCode" placeholder="デモ共通コードを入力してください" required>
+                    <mat-error *ngIf="formGroup.get('createUserCode').hasError('required')">{{msg.noenteredErr.replace('※1','デモ用共通コード')}}</mat-error>
+                  </mat-form-field>
+                  <div class="update-button">
+                    <button mat-raised-button type="button" (click)="onSubmit()" [disabled]="formGroup.invalid" [class.active-button]="!formGroup.invalid">
+                      <mat-icon>done</mat-icon>登録
+                    </button>
+                  </div>
+                </form>
+              </mat-step>
+              <mat-step>
+                <ng-template matStepLabel>完了</ng-template>
+              </mat-step>
+            </mat-horizontal-stepper>
+          </ng-container>
+          <ng-container *ngIf="regFlg">
+            <app-complete-screen [mode]="'done'" [url]="'createUser'"></app-complete-screen>
+          </ng-container>
+        </mat-card>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

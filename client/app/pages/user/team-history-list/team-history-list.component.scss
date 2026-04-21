@@ -1,0 +1,142 @@
+@import '../../../../mylib/var';
+@import '../../../../mylib/mixin';
+
+.mat-table {
+  mat-row {
+    &:hover {
+      background-color: rgba($bst-blue, 0.10);
+      cursor: pointer;
+    }
+  }
+}
+
+.info-icon {
+  @include text($fontSize: 1.5em, $textColor:$bst-blue);
+  @include focus-visible-outline;
+  &:hover {
+    cursor: help;
+  }
+}
+
+.required-comment {
+  text-align: center;
+}
+
+.error-comment {
+  font-size: 10.5px;
+  line-height: 0;
+}
+
+.mat-column-navigateIcon {
+  flex: 0 0 10px;
+}
+
+// モーダルウインドウのスタイリング
+// 背景のグレーの部分
+.mask {
+  @include position($position: fixed, $left: 0, $top: 0, $bottom: 0, $right: 0);
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+// モーダルウインドウの位置・大きさなど
+#modal_edit {
+  @include size($width: 70%, $height: 50%);
+  @include position($position: fixed, $left: 0, $top: 20%, $right: 0);
+  background: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  margin: 0 auto;
+  z-index: 2;
+}
+
+@media (min-width: $media-tb) {
+  #modal_edit {
+    top: 25%;
+    height: 45%;
+  }
+}
+
+@media (min-width: $media-pc) {
+  #modal_edit {
+    top: 20%;
+    height: 50%;
+  }
+}
+
+// 閉じるボタン
+.close-button {
+  @include focus-visible-outline-clear($outline-offset: -16px);
+  @include position($position: absolute, $top: 0, $right: 0);
+  @include text($fontSize: 1.4em, $textColor: black);
+  padding: 20px 20px;
+  cursor: pointer;
+}
+
+// 入力フォームモーダルのスタイリング
+.form {
+  text-align: center;
+  position: relative;
+}
+
+.edit-form {
+  @include position($position: absolute, $left: 0, $top: 15%, $right: 0);
+}
+
+.form-field {
+  line-height: 2.0;
+  width: 80%;
+}
+
+@media (min-width: $media-tb) {
+  .form-field {
+    width: 60%;
+  }
+}
+
+input[readonly] {
+  cursor: pointer;
+}
+
+// 修正ボタン
+.edit-button {
+  width: 100%;
+  margin-top: 4vh;
+  button {
+    @include focus-visible-button;
+    @include position($left: 0, $right: 0);
+    text-align: center;
+    width: 80%;
+  }
+}
+
+@media (min-width: $media-tb) {
+  .edit-button button {
+    width: 60%;
+  }
+}
+
+// 詳細表示モーダルのスタイリング
+// タイトル部分
+.detail-title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 25px;
+  padding: 10px;
+  margin-top: 5%;
+}
+
+@media (min-width: $media-pc) {
+  .detail-title {
+    margin-top: 2%;
+  }
+}
+
+.navigate-form {
+  @include focus-visible-outline;
+}
+
+// タブフォーカス時の枠線のスタイリング
+::ng-deep .mat-datepicker-toggle button:focus-visible {
+  @include focus-visible-outline;
+}

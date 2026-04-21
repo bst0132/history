@@ -1,0 +1,155 @@
+<div class="content">
+  <ng-container *ngIf="device == 'sp'">
+    <mat-toolbar class="title-toolbar">
+      <span>プロフィール</span>
+      <!-- クリック要素(押下したら画面遷移のイベントを追加する) -->
+      <div (click)="editProfile()">
+        <a >編集する</a>
+        <button mat-icon-button type="button"><mat-icon>create</mat-icon></button>
+      </div>
+    </mat-toolbar>
+    <!-- SP版通知表示エリア -->
+    <app-invite-list></app-invite-list>
+  </ng-container>
+  <!-- プロフィール画像表示エリア -->
+  <div [ngClass]="{'card': device == 'sp'}">
+    <mat-card class="contents-card profile" [style.background-image]="image">
+      <ng-container *ngIf="device == 'pc'">
+        <div class="edit" (click)="editProfile()">
+          <a >編集する</a>
+          <button mat-icon-button type="button"><mat-icon>create</mat-icon></button>
+        </div>
+      </ng-container>
+      <div class="avatar-back">
+        <div class="avatar-area">
+          <div class="no-image" *ngIf="!userImage.dataUrl">
+            <img [src]="'assets/images/no_image.png'">
+          </div>
+          <div class="image" *ngIf="userImage.dataUrl">
+            <img [src]="userImage.dataUrl" [style.transform]="userImage.transform">
+          </div>
+        </div>
+      </div>
+      <div class="profile-area">
+        <div>
+          <ul class="item">
+            <li class="item-name">ニックネーム</li>
+            <li class="item-contents">{{userInfo?.nickname}}</li>
+          </ul>
+          <ul class="item">
+            <li class="item-name">ID</li>
+            <li class="item-contents">{{userInfo?.userUniqueID}}</li>
+          </ul>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+  <div class="botttom-container {{device}}">
+    <!-- PC版通知表示エリア -->
+    <ng-container *ngIf="device == 'pc'">
+      <app-invite-list class="bottom-contents {{device}}"></app-invite-list>
+    </ng-container>
+    <!-- 選手情報表示エリア -->
+    <div class="card bottom-contents {{device}}">
+      <mat-toolbar class="contents-toolbar">
+        <span>選手情報</span>
+      </mat-toolbar>
+      <mat-card class="contents-card {{device}}">
+        <ng-container *ngIf="!userInfo?.playerInf">
+          <p>選手情報はありません</p>
+        </ng-container>
+        <ng-container *ngIf="userInfo?.playerInf">
+          <mat-list>
+            <mat-list-item>
+              <div class="item">
+                <p class="item-title">氏名</p>
+                <p class="item-name">{{userInfo?.playerInf?.lastName}}{{userInfo?.playerInf?.firstName}}</p>
+              </div>
+              <mat-divider></mat-divider>
+            </mat-list-item>
+            <mat-list-item>
+              <div class="item">
+                <span class="item-title">フリガナ</span>
+                <span class="item-name">{{userInfo?.playerInf?.lastNameKana}}{{userInfo?.playerInf?.firstNameKana}}</span>
+              </div>
+              <mat-divider></mat-divider>
+            </mat-list-item>
+            <mat-list-item>
+              <div class="item">
+                <span class="item-title">生年月日</span>
+                <span class="item-name">{{userInfo?.playerInf?.birthDate | date: 'yyyy/MM/dd'}}</span>
+              </div>
+              <mat-divider></mat-divider>
+            </mat-list-item>
+            <mat-list-item>
+              <div class="item">
+                <span class="item-title">出身地</span>
+                <span class="item-name">{{userInfo?.playerInf?.birthPlace}}</span>
+              </div>
+              <mat-divider></mat-divider>
+            </mat-list-item>
+            <mat-list-item>
+              <div class="item">
+                <span class="item-title">身長</span>
+                <span class="item-name">{{userInfo?.playerInf?.heightNum}}{{userInfo?.playerInf?.heightUnit}}</span>
+              </div>
+              <mat-divider></mat-divider>
+            </mat-list-item>
+            <mat-list-item>
+              <div class="item">
+                <span class="item-title">体重</span>
+                <span class="item-name">{{userInfo?.playerInf?.weightNum}}{{userInfo?.playerInf?.weightUnit}}</span>
+              </div>
+              <mat-divider></mat-divider>
+            </mat-list-item>
+            <mat-list-item>
+              <div class="item">
+                <span class="item-title">血液型</span>
+                <span class="item-name">{{userInfo?.playerInf?.bloodType}}</span>
+              </div>
+              <mat-divider></mat-divider>
+            </mat-list-item>
+            <mat-list-item>
+              <div class="item">
+                <span class="item-title">国籍</span>
+                <span class="item-name">{{userInfo?.playerInf?.nationallity}}</span>
+              </div>
+            </mat-list-item>
+          </mat-list>
+        </ng-container>
+      </mat-card>
+    </div>
+    <!-- スポーツ情報表示エリア -->
+    <div class="card bottom-contents {{device}}">
+      <mat-toolbar class="contents-toolbar">
+        <span>スポーツ情報</span>
+      </mat-toolbar>
+      <mat-card class="contents-card {{device}}">
+        <ng-container *ngIf="!userInfo?.sportsInf || userInfo?.sportsInf?.length==0">
+          <p>スポーツ情報はありません</p>
+        </ng-container>
+        <ng-container *ngIf="userInfo?.sportsInf?.length > 0">
+          <mat-list>
+            <mat-list-item>
+              <span class="sport">●{{userInfo?.sportsInf[0]?.sport | getSportValue}}</span>
+              <mat-divider></mat-divider>
+            </mat-list-item>
+            <mat-list-item>
+              <div class="item">
+                <span class="item-title">ポジション</span>
+                <span class="item-name">{{userInfo?.sportsInf[0]?.position}}</span>
+              </div>
+              <mat-divider></mat-divider>
+            </mat-list-item>
+            <mat-list-item>
+              <div class="item">
+                <span class="item-title">利き足</span>
+                <span class="item-name">{{userInfo?.sportsInf[0]?.dominantFoot}}</span>
+              </div>
+            </mat-list-item>
+          </mat-list>
+        </ng-container>
+      </mat-card>
+    </div>
+  </div>
+</div>

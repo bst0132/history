@@ -1,0 +1,60 @@
+<div class="content">
+  <!-- 画面名表示 -->
+  <mat-toolbar class="title-toolbar">
+    <span>大会一覧</span>
+    <!-- 新規大会登録 -->
+    <div (click)="onClickCreateComp()">
+      <a >新規登録する</a>
+      <button mat-icon-button type="button"><mat-icon>create</mat-icon></button>
+    </div>
+  </mat-toolbar>
+  <mat-toolbar class="contents-toolbar">
+    <span>絞り込み条件</span>
+    <mat-icon class="refine-serch" *ngIf="!condition" (click)="conditionFlag()" (keyup)="onKeyCheck($event)" tabindex="0">add</mat-icon>
+    <mat-icon class="refine-serch" *ngIf="condition" (click)="conditionFlag()" (keyup)="onKeyCheck($event)" tabindex="0">remove</mat-icon>
+  </mat-toolbar>
+  <!-- 絞り込み条件部分 -->
+  <form [formGroup]="formGroup">
+    <mat-card *ngIf="condition" class="data-card">
+      <p>●大会開催日</p>
+      <div class="date {{device}}">
+        <mat-form-field appearance="outline" floatLabel="always">
+          <mat-label>開始日</mat-label>
+          <input matInput readonly placeholder="YYYY/MM/DD" [matDatepicker]="picker1" formControlName="openingDate" tabindex="-1" (click)="picker1.open()">
+          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+        </mat-form-field>
+        <p class="mid-mark">~</p>
+        <mat-form-field appearance="outline" floatLabel="always">
+          <mat-label>終了日</mat-label>
+          <input matInput readonly placeholder="YYYY/MM/DD" [matDatepicker]="picker2" formControlName="closingDate" tabindex="-1" (click)="picker2.open()">
+          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+          <mat-datepicker #picker2></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="update-button">
+        <button mat-raised-button color="primary" type="button" (click)="onSearch()" [disabled]="!searchCondition" [class.active-button]="searchCondition">
+          <mat-icon>search</mat-icon>検索
+        </button>
+      </div>
+    </mat-card>
+  </form>
+  <!-- 検索結果表示部分 -->
+  <mat-toolbar class="contents-toolbar">
+    <p>検索結果<span *ngIf="collectionList.length > 0"> : {{collectionList.length}}件</span></p>
+    <div class="competition-status">
+      <mat-icon class="organized">circle</mat-icon><p>主催</p>
+      <mat-icon class="entry">circle</mat-icon><p>その他</p>
+    </div>
+  </mat-toolbar>
+  <div *ngIf="searchCondition" class="collection-list">
+    <span class="no-search" *ngIf="collectionList.length <= 0">検索結果がありませんでした。</span>
+    <ng-container *ngFor="let collection of collectionList; let i = index">
+      <mat-card [ngClass]="{'collection-organized' : collection.compDecisionFlg, 'collection-entry' : !collection.compDecisionFlg}" (click)="onClickCompGuide(collection.compId)" (keyup)="onKeyCheck($event)" tabindex="0">
+        <div>{{collection.openingDate | date: 'yyyy/MM/dd'}}</div>
+        <p>{{collection.compName}}</p>
+        <p *ngIf="collection.compPlace?.length > 0" class="collection-place">{{collection.compPlace[0]}}<span *ngIf="collection.compPlace?.length > 1"> etc.</span></p>
+      </mat-card>
+    </ng-container>
+  </div>
+</div>

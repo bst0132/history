@@ -1,0 +1,13 @@
+<!-- 画面タイトル部分 -->
+<mat-toolbar class="title-toolbar">
+  <span>リーグ詳細</span>
+</mat-toolbar>
+<!-- 画面内容 -->
+<mat-card class="base-card">
+  <app-competition-common-league *ngIf="leagueData" [leagueData]="leagueData">
+  </app-competition-common-league>
+  <!-- 戻るボタン -->
+  <ng-container>
+    <button class="back-button" mat-raised-button color="basic" type="button" (click)="onClickBack()">戻る</button>
+  </ng-container>
+</mat-card>

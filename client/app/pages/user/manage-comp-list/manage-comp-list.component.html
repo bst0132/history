@@ -1,0 +1,22 @@
+<div class="content">
+  <!-- 管理大会 -->
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>管理大会</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="comp-list">
+        <ng-container *ngFor="let comp of compList">
+          <app-image-panel [imageInfo]="comp.compLogo" tabindex="0" (click)="navigateManageComp(comp)" (keyup)="onKeyCheck($event)">
+            <!-- 大会名 -->
+            <div>{{comp.compName}}</div>
+            <!-- 主催団体名 -->
+            <div>{{getOrganizerName(comp.organizerInf[0].organizerID)}}</div>
+            <!-- 大会開催日 -->
+            <div>{{comp.heldDate | date:'yyyy/MM/dd'}}</div>
+          </app-image-panel>
+        </ng-container>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,38 @@
+@import '../../../../mylib/var';
+
+.org-list {
+  text-align: center;
+  // 情報表示部分
+  .manage-info {
+    margin: 3px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  // 名前と所在地を区別するボーダー
+  hr {
+    width: 95%;
+    margin: 0.3em auto;
+    border: none;
+    border-top: dashed thin lightslategray;
+  }
+}
+
+:host ::ng-deep app-image-panel {
+  pointer-events: none;
+  &:hover {
+    opacity: 0.7;
+  }
+  &:focus-visible {
+    outline: none;
+    mat-card {
+      outline: double thick $focus-color;
+      outline-offset: 1px;
+    }
+  }
+  mat-card {
+    pointer-events: auto;
+  }
+}

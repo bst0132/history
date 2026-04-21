@@ -1,0 +1,104 @@
+<div class="content">
+  <!-- 画面タイトル部分 -->
+  <mat-toolbar class="title-toolbar">
+    <span class="toolbar-text">団体検索</span>
+  </mat-toolbar>
+
+  <!-- 画面内容 -->
+  <mat-card class="base-card">
+    <mat-card-content>
+      <div class="card">
+        <mat-card class="contents-card radius">
+          <!-- 検索フォーム -->
+          <form [formGroup]="formGroup">
+            <!-- 競技 -->
+            <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+              <mat-label>競技<span class="required">(必須)</span></mat-label>
+              <mat-select formControlName="sports" required>
+                <mat-option *ngFor="let s of sportsList" [value]="s.key">
+                  {{s.value}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <!-- 都道府県 -->
+            <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+              <mat-label>都道府県<span class="required">(必須)</span></mat-label>
+              <mat-select placeholder="都道府県を選択してください" formControlName="organPrefecture" required>
+                <mat-option *ngFor="let prefecture of prefectures" [value]="prefecture">
+                  {{prefecture}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="formGroup.get('organPrefecture').hasError('required')">{{msg.unselectErr.replace('※1','都道府県')}}</mat-error>
+            </mat-form-field>
+            <!-- 団体名 -->
+            <mat-form-field appearance="outline" floatLabel="always">
+              <mat-label>団体名(任意)</mat-label>
+              <input placeholder="団体名を入力できます" type="text" matInput  formControlName="organName" maxlength="50">
+              <mat-hint>{{msg.wordMaxChkErr.replace('※1','50')}}</mat-hint>
+            </mat-form-field>
+          </form>
+          <div class="search-button">
+            <button mat-raised-button type="button" (click)="onClickSearch()" [disabled]="formGroup.invalid" [class.active-button]="!formGroup.invalid">
+              <mat-icon>search</mat-icon>検索
+            </button>
+          </div>
+          <!-- 検索結果 -->
+          <ng-container *ngIf="searchFlg">
+            <mat-toolbar class="contents-toolbar">
+              <span *ngIf="organCnt <= 0">検索結果</span>
+              <span *ngIf="organCnt > 0 && organCnt <= 100">検索結果：{{organCnt}}件</span>
+              <span *ngIf="organCnt > 100">検索結果：{{organCnt}}件 ※100件以上は表示されません</span>
+            </mat-toolbar>
+            <mat-card class="contents-card result">
+              <span *ngIf="organCnt <= 0">検索結果がありませんでした。</span>
+              <!-- PC版表示 -->
+              <div class="list-card-container pc">
+                <ng-container *ngFor="let organ of organList">
+                  <mat-card (click)="onClickDetail(organ.organID)" (keyup)="onKeyCheck($event)" class="list-card" tabindex="0">
+                    <div class="list-card-contents">
+                      <div class="avatar-area">
+                        <div class="no-image" *ngIf="!organ.organLogo.dataUrl">
+                          <img src="assets/images/no_image.png">
+                        </div>
+                        <div class="image" *ngIf="organ.organLogo.dataUrl">
+                          <img [src]="organ.organLogo.dataUrl" [style.transform]="organ.organLogo.transform">
+                        </div>
+                      </div>
+                      <div class="text-container">
+                        <div>{{organ.organName | omitLongSentence: 20:'...'}}</div>
+                        <div>{{organ.organAddInf?.organPrefecture}}{{organ.organAddInf?.organCity | omitLongSentence: 20:'...'}}</div>
+                      </div>
+                    </div>
+                  </mat-card>
+                </ng-container>
+              </div>
+              <!-- SP版表示 -->
+              <div class="list-container sp">
+                <mat-card *ngIf="organCnt > 0">
+                  <mat-action-list>
+                    <mat-list-item *ngFor="let organ of organList" (click)="onClickDetail(organ.organID)" (keyup)="onKeyCheck($event)" tabindex="0">
+                      <div matListAvatar class="avatar-area">
+                        <div class="no-image" *ngIf="!organ.organLogo.dataUrl">
+                          <img src="assets/images/no_image.png">
+                        </div>
+                        <div matListAvatar class="image" *ngIf="organ.organLogo.dataUrl">
+                          <img [src]="organ.organLogo.dataUrl" [style.transform]="organ.organLogo.transform">
+                        </div>
+                      </div>
+                      <div mat-line>
+                        <div class="media-small">{{organ.organName | omitLongSentence: 10:'...'}}</div>
+                        <div class="place media-small">{{organ.organAddInf?.organPrefecture}}{{organ.organAddInf?.organCity | omitLongSentence: 10:'...'}}</div>
+                      </div>
+                      <mat-icon>navigate_next</mat-icon>
+                      <mat-divider></mat-divider>
+                    </mat-list-item>
+                  </mat-action-list>
+                </mat-card>
+              </div>
+            </mat-card>
+          </ng-container>
+        </mat-card>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

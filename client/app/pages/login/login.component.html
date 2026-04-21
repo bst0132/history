@@ -1,0 +1,168 @@
+<div class="content">
+  <div class="top-screen">
+    <!-- モーダルウインドウの部分 -->
+    <!-- 背景のグレーの部分 -->
+    <div class="mask" [hidden]="!showForm && !showPlayer && !showFun && !showAdmin" (click)="closeModal()"></div>
+
+    <!-- ログインモーダルウインドウ -->
+    <section id="modal_login" [hidden]="!showForm" class="form" cdkTrapFocus [cdkTrapFocusAutoCapture]="true">
+      <!-- 入力フォーム: 使用する入力フォーム設定を適用 -->
+      <form [formGroup]="formGroup" class="login-form">
+
+        <!-- メールアドレス -->
+        <mat-form-field class="form-field">
+          <mat-label>メールアドレス</mat-label>
+          <input id="mailadd" matInput placeholder="xxxxx@xxx.com" formControlName="mailAdd" class="zoom-block" maxLength='100' required>
+          <mat-error *ngIf="formGroup.get('mailAdd').hasError('required')">{{msg.noenteredErr.replace('※1','メールアドレス')}}</mat-error>
+          <mat-error *ngIf="formGroup.get('mailAdd').hasError('pattern')">{{msg.formatChkErr.replace('※1','メールアドレス形式')}}</mat-error>
+          <mat-hint>{{msg.wordMaxChkErr.replace('※1','100')}}</mat-hint>
+        </mat-form-field>
+
+        <!-- パスワード -->
+        <mat-form-field class="form-field ">
+          <mat-label>パスワード</mat-label>
+          <input id="password" matInput [type]="passHide ? 'password' : 'text'" formControlName="password" class="zoom-block" maxLength='20' required>
+          <mat-error *ngIf="formGroup.get('password').hasError('required')">{{msg.noenteredErr.replace('※1','パスワード')}}</mat-error>
+          <mat-error *ngIf="formGroup.get('password').hasError('vulnerable')">{{msg.passFormChkErr}}</mat-error>
+          <mat-hint>{{msg.passFormChkErr}}</mat-hint>
+          <button mat-icon-button matSuffix type="button" (click)="passHide = !passHide">
+            <mat-icon class="pass-icon">{{passHide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <!-- ログインボタン -->
+        <div class="login-button">
+          <button id="login-button" mat-raised-button color="primary" type="submit" (click)="onSubmit()" [disabled]="formGroup.invalid||loginOverCount">ログイン</button>
+        </div>
+
+        <!-- エラーメッセージ -->
+        <mat-error *ngIf="passwordUnmatch" class="err-messeage">{{msg.mismatchErr.replace('※1','メールアドレスまたはパスワード')}}</mat-error>
+
+        <!-- エラーメッセージ -->
+        <mat-error *ngIf="loginOverCount" class="err-messeage">
+          <div *ngFor="let loginOverErr of loginOverErr">{{loginOverErr}}</div>
+        </mat-error>
+
+        <!-- パスワードリセット画面遷移 -->
+        <p class="forget-pass">※パスワードを忘れた方は<a routerLink="/resetPassword" routerLinkActive="active-link">こちら</a></p>
+      </form>
+
+      <!-- 閉じるボタン -->
+      <p (click)="closeModal()" (keyup)="onKeyCheck($event)" class="close-button" tabindex="0">✖</p>
+    </section>
+
+    <!-- 選手向け詳細モーダルウインドウ -->
+    <section id="modal_player" [hidden]="!showPlayer" cdkTrapFocus [cdkTrapFocusAutoCapture]="true">
+      <p class="detail-title">大会の成績管理に</p>
+      <p class="detail-text">
+        今まで大会の成績管理をノートに残していたりしませんか？<br>
+        大会の成績を当サービスで管理することにより、記録管理のペーパレス化が実現します。<br>
+        さらに、過去の大会成績を見ることができ、いつでも手軽に自分の成績を確認することができます。<br>
+      </p>
+      <div>
+        <img src="assets/images/use_Smartphone.png" alt="スマートフォンを操作する人">
+      </div>
+      <!-- 閉じるボタン -->
+      <p (click)="closeModal()" (keyup)="onKeyCheck($event)" class="close-button" tabindex="0">✖</p>
+    </section>
+
+    <!-- ファン向け詳細モーダルウインドウ -->
+    <section id="modal_fun" [hidden]="!showFun" cdkTrapFocus [cdkTrapFocusAutoCapture]="true">
+      <p class="detail-title">記録の閲覧に</p>
+      <p class="detail-text">
+        選手個人の記録、チームの記録、大会の記録を見たいときはありませんか？<br>
+        当サービスでは選手同士、選手のご家族、ファンの方が記録を見ることができます。<br>
+        当サービスを使って手軽に情報共有を行いましょう！<br>
+      </p>
+      <div>
+        <img src="assets/images/team.png" alt="チーム">
+      </div>
+      <!-- 閉じるボタン -->
+      <p (click)="closeModal()" (keyup)="onKeyCheck($event)" class="close-button" tabindex="0">✖</p>
+    </section>
+
+    <!-- 管理者向け詳細モーダルウインドウ -->
+    <section id="modal_admin" [hidden]="!showAdmin" cdkTrapFocus [cdkTrapFocusAutoCapture]="true">
+      <p class="detail-title">チームの管理に</p>
+      <p class="detail-text">
+        チーム・団体の所属メンバー管理に苦労する機会はありませんか？<br>
+        当サービスではチームや団体の管理者の方向けに、チーム・団体登録機能を用意しました。<br>
+        この機能を利用していただくことにより、所属メンバーの管理が容易になります。<br>
+        また、大会の運営者向けに大会の登録機能も備わっており、簡単に大会の管理を行うことができます。<br>
+      </p>
+      <div>
+        <img src="assets/images/organization_chart.png" alt="組織図">
+      </div>
+      <!-- 閉じるボタン -->
+      <p (click)="closeModal()" (keyup)="onKeyCheck($event)" class="close-button" tabindex="0">✖</p>
+    </section>
+
+    <!-- メインの部分 -->
+    <picture>
+      <source media="(min-width: 1025px)" srcset="assets/images/soccerBall_PC.jpg" alt="サッカーボールの写真">
+      <img src="assets/images/soccerBall_SP.jpg" alt="サッカーボールの写真">
+    </picture>
+
+    <!-- サービス名・キャッチコピー -->
+    <div class="top-title">
+      <h1 class="title-sp">
+        Personal<br>
+        Sports<br>
+        History<br>
+      </h1>
+      <h1 class="title-pc">Personal Sports History</h1>
+      <p>カンタン！ラクラク！サッカー情報管理ツール</p>
+    </div>
+
+    <!-- ログイン状態ごとにボタン表示切り替え -->
+    <!-- ログアウト状態 -->
+    <div class="top-button" *ngIf="!commonService.isLogined">
+      <button type="button" id="login" class="button" (click)="openForm()">ログイン</button>
+      <button type="button" (click)="onClickNavigate('sendMail')" class="button">新規登録</button>
+    </div>
+
+    <!-- ログイン状態 -->
+    <div class="top-button" *ngIf="commonService.isLogined">
+      <button type="button" (click)="onClickNavigate('profileDetail')" class="button">マイページ</button>
+      <button type="button" (click)="onClickLogout()" class="button">ログアウト</button>
+    </div>
+  </div>
+
+  <!-- 説明のコンテンツ部分 -->
+  <div class="detail-list">
+    <a (click)="openPlayer()" (keyup)="onKeyCheck($event)" tabindex="0">
+      <img src="assets/images/player.jpg" alt="選手の写真">
+      <div class="detail-contents">
+        <p>大会の成績管理に</p>
+        <p class="detail-button">もっと詳しく</p>
+      </div>
+    </a>
+
+    <a (click)="openFun()" (keyup)="onKeyCheck($event)" tabindex="0">
+      <img src="assets/images/stadium.jpg" alt="ファンの写真">
+      <div class="detail-contents">
+        <p>記録の閲覧に</p>
+        <p class="detail-button">もっと詳しく</p>
+      </div>
+    </a>
+
+    <a (click)="openAdmin()" (keyup)="onKeyCheck($event)" tabindex="0">
+      <img src="assets/images/teamAdmin.jpg" alt="チーム・団体管理者の写真">
+      <div class="detail-contents">
+        <p>チームの管理に</p>
+        <p class="detail-button">もっと詳しく</p>
+      </div>
+    </a>
+  </div>
+
+  <!-- フッター -->
+  <div class="footer-link-area">
+    <li (click)="onClickNavigate('companyProfile')" (keyup)="onKeyCheck($event)" tabindex="0">運営会社情報</li>
+    <li (click)="onClickNavigate('privacyPolicy')" (keyup)="onKeyCheck($event)" tabindex="0">個人情報保護方針</li>
+    <li *ngIf="commonService.isLogined" (click)="onClickNavigate('siteMap')" (keyup)="onKeyCheck($event)" tabindex="0">サイトマップ</li>
+    <li (click)="onClickNavigate('termsUse')" (keyup)="onKeyCheck($event)" tabindex="0">利用規約</li>
+  </div>
+  <div class="footer">
+    <p>©Sports History Team</p>
+  </div>
+</div>

@@ -1,0 +1,60 @@
+<div class="content">
+  <mat-card>
+    <mat-card-content>
+
+      <!-- ニックネーム -->
+      <mat-card>
+        <mat-form-field>
+          <mat-label>ニックネーム</mat-label>
+          <input type="text" matInput [value]="user.nickname" readonly tabindex="-1">
+        </mat-form-field>
+
+        <!-- 氏名 -->
+        <mat-form-field>
+          <mat-label>氏名</mat-label>
+          <input type="text" matInput [value]="getFullName()" readonly tabindex="-1">
+        </mat-form-field>
+      </mat-card>
+
+      <!-- タイトル -->
+      <div class="title">
+        <mat-card-title>個人成績</mat-card-title>
+      </div>
+
+      <!-- 個人成績 -->
+      <!-- 成績情報がある場合 -->
+      <mat-card *ngIf="playerResults.length !== 0">
+        <!-- 競技 -->
+        <mat-card class="sports">
+          <mat-card-subtitle>{{compInfo[0].sports | getSportValue}}</mat-card-subtitle>
+        </mat-card>
+
+        <!-- 一覧ヘッダー -->
+        <div class="flex-container header">
+          <mat-label class="date">開催日</mat-label>
+          <mat-label>大会名</mat-label>
+          <mat-label>試合名</mat-label>
+          <mat-label>成績種類</mat-label>
+        </div>
+
+        <!-- 一覧データ -->
+        <ng-container *ngFor="let playerResult of playerResults">
+          <ng-container *ngFor="let record of playerResult.records">
+            <div class="flex-container">
+              <div class="flex-item date">{{getEventDate(playerResult.gameID) | date: 'yyyy/MM/dd'}}</div>
+              <div class="flex-item">{{getCompName(playerResult.competitionID)}}</div>
+              <div class="flex-item">{{getGameName(playerResult.gameID)}}</div>
+              <div class="flex-item">{{record.recordType}}</div>
+            </div>
+          </ng-container>
+        </ng-container>
+      </mat-card>
+
+      <!-- 成績情報が無い場合 -->
+      <mat-card *ngIf="playerResults.length == 0">
+        成績情報がありません。
+      </mat-card>
+
+    </mat-card-content>
+  </mat-card>
+</div>

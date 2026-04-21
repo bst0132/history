@@ -1,0 +1,93 @@
+<div class="content">
+  <mat-card>
+    <ng-container *ngIf="gameLists.length >= 1">
+      <mat-card>
+        <mat-form-field>
+          <mat-label>グループ名称</mat-label>
+          <input matInput [value]="gameLists[0][0].gameInfCom.gameSystemInf.gameSystemName" readonly>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>参加チーム数</mat-label>
+          <input matInput [value]="gameLists[0][0].gameInfCom.gameSystemInf.gameTeamCnt" readonly>
+        </mat-form-field>
+      </mat-card>
+      <mat-card>
+        <!-- 大会全体のブロック -->
+        <div class="tournament">
+          <ng-container *ngFor="let gameList of gameLists; index as idx; first as first; last as last">
+            <!-- 同じ階層のブロック-->
+            <div class="round" [ngClass]="{'final-round': last}">
+              <!-- このブロックで１試合分 -->
+              <ng-container *ngFor="let game of gameList; index as i; odd as isOdd; even as isEven">
+                <div class="flex-container" [ngClass]="{'af-first-round': !first && !last}">
+                  <div class="block">
+                    <ng-container *ngFor="let team of game.teamInfo; index as index">
+                      <!-- １チーム分のブロック-->
+                      <div class="node">
+                        <mat-card class="game-card" [ngClass]="{'winner': isWinner(game, team.teamID)}">
+                          <mat-card-content class="game-info">
+                            <span class="team">{{getTeamName(team.teamID) | omitLongSentence: 11: '...'}}</span>
+                            <div class="score-container">
+                              <span class="score">{{tournamentInfoList[idx][i][index].score}}</span>
+                              <span *ngIf="!(tournamentInfoList[idx][i][index].scorePK == 0)">
+                                &nbsp;(PK{{tournamentInfoList[idx][i][index].scorePK}})
+                              </span>
+                            </div>
+                          </mat-card-content>
+                        </mat-card>
+                      </div>
+                    </ng-container>
+                  </div>
+
+                  <ng-container *ngIf="!last">
+                    <!-- 線を引くために用意した幅25pxのボックス ４×４-->
+                    <div class="line-container" [ngClass]="{'even': isEven, 'odd': isOdd}">
+                      <div class="flex-line">
+                        <div class="line"></div>
+                        <div class="line"></div>
+                      </div>
+                      <div class="flex-line">
+                        <div class="line"></div>
+                        <div class="line"></div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+                <!-- ここまでで１試合-->
+              </ng-container>
+            </div>
+            <!-- ここまでで１階層 -->
+          </ng-container>
+
+          <!-- 3位決定戦 -->
+          <div *ngIf="thirdPlaceGame.length != 0">
+            <div class="flex-container third-place-match">
+              <div class="block">
+                <ng-container *ngFor="let game of thirdPlaceGame">
+                  <div class="node">
+                    <mat-card class="game-card" [ngClass]="{'winner': isWinner(gameList[0], game.team)}">
+                      <mat-card-content class="game-info">
+                        <span class="team">{{getTeamName(game.team) | omitLongSentence: 11: '...'}}</span>
+                        <div class="score-container">
+                          <span class="score">{{game.score}}</span>
+                          <span *ngIf="!(game.scorePK == 0)">&nbsp;(PK{{game.scorePK}})</span>
+                        </div>
+                      </mat-card-content>
+                    </mat-card>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- ここまでで１トーナメント-->
+      </mat-card>
+    </ng-container>
+    <div class="footer-button-area">
+      <button mat-raised-button color="primary" type="button" (click)="pageBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+    </div>
+  </mat-card>
+</div>

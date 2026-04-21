@@ -1,0 +1,45 @@
+<div class="contents {{device}}">
+  <ng-container *ngIf="device == 'pc'">
+    <mat-toolbar class="contents-toolbar">
+      <mat-icon class="icon" [ngClass]="{'notice-yellow-pc': inviteList?.length > 0}">notifications</mat-icon><span>通知</span>
+    </mat-toolbar>
+  </ng-container>
+  <ng-container *ngIf="device == 'sp' && inviteList?.length > 0">
+    <mat-toolbar class="contents-toolbar notice-yellow-sp">
+      <mat-icon class="icon">notifications</mat-icon><span>通知</span>
+    </mat-toolbar>
+  </ng-container>
+  <ng-container *ngIf="device == 'pc' && inviteList?.length <= 0">
+    <mat-card class="contents-card {{device}}">
+        通知はありません
+    </mat-card>
+  </ng-container>
+  <ng-container *ngIf="inviteList?.length > 0">
+    <mat-card class="contents-card {{device}}">
+      <mat-table [dataSource]="inviteList">
+        <ng-container matColumnDef="message">
+          <mat-header-cell *matHeaderCellDef>メッセージ</mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            <ng-container *ngIf="row.inviteType == 'teamStaff' || row.inviteType == 'organStaff' || row.inviteType == 'memberCompetition'">
+              {{row.inviteOriName}}よりスタッフとして招待されています。
+            </ng-container>
+            <ng-container *ngIf="row.inviteType == 'player'">
+              {{row.inviteOriName}}より選手として招待されています。
+            </ng-container>
+            <ng-container *ngIf="row.inviteType == 'organizerTeamCompetition' || row.inviteType == 'organizerOrganCompetition' || row.inviteType == 'teamCompetition'">
+              {{row.inviteDestName}}が{{row.inviteOriName}}に招待されています。
+            </ng-container>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="action">
+          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            <button mat-raised-button color="primary" type="button" (click)="onClickAccept(row)">承諾</button>
+            <button mat-raised-button color="accent" type="button" (click)="onClickDecline(row)">拒否</button>
+          </mat-cell>
+        </ng-container>
+        <mat-row *matRowDef="let row; columns: ['message', 'action']"></mat-row>
+      </mat-table>
+    </mat-card>
+  </ng-container>
+</div>

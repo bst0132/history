@@ -1,0 +1,293 @@
+@import '../../../mylib/var';
+@import '../../../mylib/mixin';
+
+// タイトル
+p {
+  margin-bottom: 1em;
+  font-size: 20px;
+  cursor: default;
+  @media (max-width: $media-sp) {
+    font-size: 14px;
+  }
+}
+
+// ダイアログの内容まとまり
+mat-dialog-content {
+  white-space: pre-wrap;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 700px;
+  max-height: 60vh;
+  @media (max-width: $media-pc) {
+    width: 375px;
+  }
+  @media (max-width: $media-tb) {
+    width: 56vw;
+  }
+  @media (max-width: $media-sp) {
+    width: 52vw;
+  }
+}
+
+// ステッパーのアクティブタブの色変更
+:host ::ng-deep .mat-step-icon-selected {
+  background-color: $parts-yellow !important;
+}
+
+// ステッパーのアクティブタブの色変更
+:host ::ng-deep .mat-step-label-selected {
+  color: $submit-color !important;
+}
+
+// ステッパーの通過済みラベルの文字色変更
+:host ::ng-deep .mat-step-header .mat-step-label {
+  color: $submit-color !important;
+}
+
+// ステッパーの通過済みアイコンの背景色変更
+:host ::ng-deep .mat-step-header .mat-step-icon {
+  background-color: $submit-color;
+}
+
+// ステッパーの文字サイズ変更
+:host ::ng-deep .mat-step-label {
+  font-size: 1em;
+  overflow: visible !important;
+  width: auto !important;
+  @media (max-width: $media-sp) {
+    font-size: 0.5em;
+  }
+}
+
+// ステッパーのクリックイベントを無効化
+:host ::ng-deep .mat-horizontal-stepper-header{
+  pointer-events: none !important;
+}
+
+// ステッパーの周辺間隔
+:host ::ng-deep .mat-stepper-horizontal .mat-horizontal-stepper-header {
+  padding: 0;
+  margin: 0 0 1em;
+}
+
+// バータイトル
+.search-bar,
+.result-bar {
+  @include flex-style($align: center);
+  height: 2em;
+  .bar-title {
+    font-size: 18px;
+    margin-left: 10px;
+    @media (max-width: $media-sp) {
+      font-size: 15px;
+    }
+  }
+}
+
+// 検索バー
+.search-bar {
+  @include contents-toolbar;
+  margin: 0.5em auto 0 auto;
+}
+
+// 検索欄 検索前
+.round-box {
+  padding: 1em;
+  margin-bottom: 0;
+  border: 2px solid $contentsbar-color;
+  border-radius: 0 0 5px 5px;
+}
+
+// 検索欄 検索後
+.square-box {
+  padding: 1em;
+  margin: -1px 0 0 0;
+  border: 2px solid $contentsbar-color;
+}
+
+// 検索条件入力フォーム
+mat-form-field {
+  width: 100%;
+  margin-bottom: 1em;
+  .required {
+    color: $required-color;
+  }
+  @media (max-width: $media-sp) {
+    margin-bottom: 1.5em;
+  }
+  mat-error,
+  mat-hint {
+    cursor: default;
+  }
+}
+
+// 検索ボタン
+.search-button {
+  @include update-button;
+  width: 60%;
+  margin: auto;
+  button {
+    width: 100%;
+    padding: 0;
+  }
+}
+
+// 結果バー
+.result-bar {
+  height: 50px;
+  color: white;
+  background-color: $contentsbar-color;
+  cursor: default;
+  margin: 0 auto 0 auto;
+}
+
+// 結果欄
+.result-box {
+  padding: 0;
+  border: 2px solid $contentsbar-color;
+  border-radius: 0 0 5px 5px;
+  @media (min-width: $media-pc) {
+    @include flex-style($display: grid, $justify: space-evenly);
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
+    grid-template-rows: auto;
+  }
+}
+
+// 検索結果なし表示
+.no-result {
+  margin: 20px auto 20px 10px;
+  font-size: 16px;
+  @media (max-width: $media-sp) {
+    font-size: 10px;
+  }
+}
+
+// 検索結果数表示
+.result-text {
+  font-size: 15px;
+  @media (max-width: $media-sp) {
+    font-size: 12px;
+  }
+}
+
+// 検索結果 カード内横並び
+.flex {
+  @include flex-style($align: center, $justify: space-between);
+  // チーム名前
+  .team-name {
+    font-weight: bold;
+    font-size: 16px;
+    cursor: default;
+    @media (max-width: $media-tb) {
+      font-size: 14px;
+    }
+    @media (max-width: $media-sp) {
+      font-size: 10px;
+    }
+  }
+  // チーム住所
+  .team-address {
+    font-size: 14px;
+    cursor: default;
+    @media (max-width: $media-tb) {
+      font-size: 12px;
+    }
+    @media (max-width: $media-sp) {
+      font-size: 7px;
+    }
+  }
+}
+
+// チェックボックスのスタイリング
+::ng-deep .mat-checkbox-ripple .mat-ripple-element {
+  @include focus-visible-outline;
+  background-color: transparent;
+}
+
+.mat-checkbox:has(input:focus-visible) {
+  outline: double thick $focus-color;
+  outline-offset: 1px;
+}
+
+// ボタンの横並びスタイル
+.flex-button {
+  @include flex-style($justify: space-between, $align: center);
+  margin-top: 1em;
+  width: 100%;
+}
+
+// 選択完了ボタン
+.next-button {
+  @include update-button;
+  width: 48%;
+  button {
+    width: 100%;
+    padding: 0;
+  }
+}
+
+// 登録ボタン
+.reg-button {
+  @include update-button;
+  width: 48%;
+  button {
+    width: 100%;
+    padding: 0;
+  }
+}
+
+// キャンセル（戻る）ボタン
+.cancel-button {
+  @include button-effect;
+  width: 48%;
+  button {
+    width: 100%;
+    padding: 0;
+  }
+}
+
+// ステッパーNo.2 ボックス
+.second-box {
+  margin: 0.5em auto 0 auto;
+  text-align: left;
+  p {
+    font-size: 16px;
+    text-indent: -1em;
+    margin-left: 1em;
+    @media (max-width: $media-sp) {
+      font-size: 12px;
+    }
+  }
+  .team-alert {
+    color: $required-color;
+  }
+}
+
+// 合計チーム数
+.sum-number {
+  text-decoration: underline;
+  text-decoration-color: lightgray;
+  text-decoration-style: double;
+}
+
+// ステッパーNo.3 ボックス
+.last-box {
+  margin: 0.5em auto 0 auto;
+  text-align: center;
+  font-size: 16px;
+  cursor: default;
+  @media (max-width: $media-sp) {
+    font-size: 12px;
+  }
+}
+
+// OK（ダイアログ閉じる）ボタン
+.fin-button {
+  margin: auto;
+  width: 60%;
+  button {
+    width: 100%;
+    padding: 0;
+  }
+}

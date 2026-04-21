@@ -1,0 +1,160 @@
+@import '../../../mylib/var';
+@import '../../../mylib/mixin';
+
+// ダイアログ内のスタイル
+mat-dialog-content {
+  white-space: pre-wrap;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 500px;
+  @media (max-width: $media-pc) {
+    width: 72vw;
+    max-width: 500px;
+  }
+  @media (max-width: $media-tb) {
+    width: 65vw;
+  }
+  // タイトルと×ボタンのスタイル
+  .title-and-cancel {
+    justify-content: space-between;
+    display: flex;
+    // タイトル
+    p {
+      font-size: 20px;
+      cursor: default;
+    }
+    // ダイアログ閉じるボタン
+    mat-icon {
+      @include focus-visible-outline-clear;
+      cursor: pointer;
+    }
+  }
+  // 有効期限切れメッセージ
+  .expired-message {
+    margin: 0.4em 1em 1em;
+    line-height: 1.7;
+    cursor: default;
+  }
+  // 有効期限と発行ボタン欄のスタイル
+  .form-and-button {
+    display: flex;
+    @media (max-width: 684px) {
+      flex-direction: column;
+    }
+    .left {
+      width: 50%;
+      @media (max-width: 684px) {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+      // 有効期限入力フォーム
+      mat-form-field {
+        width: 90%;
+        cursor: pointer;
+        .required {
+          color: $required-color;
+        }
+        input {
+          caret-color: transparent;
+          cursor: pointer;
+        }
+      }
+    }
+    .right {
+      width: 50%;
+      @media (max-width: 684px) {
+        width: 100%;
+      }
+    }
+  }
+  // QRコード表示欄のスタイル
+  .qrcode-field {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 270px;
+    user-select: none;
+  }
+  // URL表示欄のスタイル
+  .url-field {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 15px;
+    @media (max-width: 684px) {
+      flex-direction: column;
+      align-items: center;
+    }
+    .url {
+      width: 80%;
+      margin-right: 5px;
+      cursor: default;
+      @media (max-width: 684px) {
+        width: 99%;
+        box-sizing: border-box;
+        outline: none;
+        margin-right: 0;
+        margin-bottom: 5px;
+      }
+    }
+    button {
+      cursor: pointer;
+      @media (min-width: 684px) {
+        margin-right: 5px;
+        font-size: 13px;
+      }
+      @include focus-visible-outline;
+    }
+    // コピーしました！のスタイル
+    .copy-message {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #fff;
+      padding: 6px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      font-size: 15px;
+      @media (max-width: 684px) {
+        font-size: 10px;
+      }
+    }
+  }
+  // ボタンの共通スタイル
+  .both-button {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 5px;
+    @media (max-width: 684px) {
+      justify-content: center;
+      margin-right: 0px;
+    }
+    // QRコード発行ボタンのスタイル
+    .create-qrcode {
+      margin-top: 10px;
+      @media (max-width: 684px) {
+        margin-top: 0px;
+      }
+      @include update-button;
+    }
+    // ダウンロードボタンのスタイル
+    .download {
+      @include button-effect;
+    }
+    .active-button {
+      @include active-button;
+    }
+  }
+}
+
+:host ::ng-deep .mat-form-field-wrapper {
+  padding-bottom: 0 !important;
+}
+
+// タブフォーカス時の枠線のスタイリング
+::ng-deep .mat-datepicker-toggle button:focus-visible {
+  @include focus-visible-outline;
+}

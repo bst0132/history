@@ -1,0 +1,227 @@
+@import '../../../../mylib/var';
+@import '../../../../mylib/mixin';
+@import '../../../../mylib/function';
+
+// 真ん中に配置されたベースのカードのスタイル
+.base-card {
+  @include base-card;
+}
+
+// タイトル用ツールバー
+.title-toolbar {
+  @include title-toolbar;
+  @include flex-style($justify: flex-end);
+  pointer-events: none;
+  a, button {
+    pointer-events: auto;
+  }
+  span {
+    margin-right: auto;
+  }
+  a {
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-right: 5px;
+    transition: 0.1s;
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+  button {
+    @include edit-button;
+  }
+}
+
+// 項目ごとのカードのまとまり部分のスタイル
+.card {
+  @include card;
+}
+
+// 項目タイトル用ツールバー
+.contents-toolbar {
+  @include contents-toolbar;
+}
+
+// 所属選手がいない場合のスタイル
+.nocontents-toolbar {
+  @include contents-toolbar;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+// 項目ごとのカードの白い部分のスタイル
+.contents-card {
+  @include contents-card;
+}
+
+// チームのプロフィール部分のスタイル
+.information {
+  @include flex-style($direction: column, $justify: space-evenly, $align: center);
+  @media (min-width: $media-tb) {
+    flex-direction: row;
+  }
+}
+
+// チームのプロフィールテキスト部分のスタイル
+.text-area {
+  text-align: center;
+  padding: 20px;
+  @media (min-width: $media-tb) {
+    margin-top: 0;
+    width: 50%;
+    text-align: left;
+  }
+}
+
+.item {
+  text-align: left;
+  list-style-type: none;
+  padding-inline-start: 10px;
+  @media (min-width: $media-tb) {
+    display: table-row;
+  }
+}
+
+// チーム名のスタイル
+.team-name {
+  border-bottom: solid 2px $parts-yellow;
+  font-weight: bold;
+}
+
+.item-list {
+  width: 280px;
+  display: inline-block;
+  overflow-wrap: break-word;
+  @media (min-width: $media-tb) {
+    width: auto;
+  }
+}
+
+// 項目名のスタイリング
+.item-name {
+  font-weight: bold;
+  &:before {
+    content: '';
+    @include size($width: 0, $height: 0);
+    display: inline-block;
+    border: 6px solid transparent;
+    border-left-color: #000;
+  }
+  @media (min-width: $media-tb) {
+    display: table-cell;
+    min-width: 100px;
+  }
+}
+
+// チームのプロフィール詳細部分スタイル
+@media (min-width: $media-tb) {
+  .item-contents {
+    display: table-cell;
+    text-align: left;
+    padding-left: 10px;
+  }
+}
+
+// 所属選手一覧のスタイル
+.player-list-sp {
+  span {
+    margin-left: 10px;
+  }
+}
+
+.player-list-pc {
+  display: flex;
+  flex-wrap: wrap;
+  max-height: 400px;
+  overflow-y: auto;
+}
+::ng-deep app-image-panel mat-card {
+  cursor: default !important;
+}
+
+// 過去の所属選手のスタイル
+.date-form {
+  @include flex-style($direction: column);
+  mat-form-field {
+    width: 100%;
+  }
+  @media (min-width: $media-tb) {
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-evenly;
+    .date {
+      width: 70%;
+    }
+  }
+}
+
+// 検索ボタンのスタイル
+.search {
+  text-align: center;
+  width: 100%;
+  @media (min-width: $media-tb) {
+    width: 20%;
+  }
+  button {
+    @include size($width: 100%, $height: 40px);
+    display: block;
+  }
+  .active-button {
+    @include active-button;
+    @include button-effect;
+  }
+}
+
+// 検索結果表示領域のスタイル
+.result {
+  background-color: $back-color;
+  mat-card-title {
+    color: #151c24;
+  }
+}
+
+.avatar-area {
+  @include size($width: 30px, $height: 30px);
+  cursor: pointer;
+  .image {
+    @include size($width: 200px, $height: 200px);
+    overflow: hidden;
+    transform: scale(scaleCalc(30)) translate(-564px, -564px);
+    position: relative;
+    img {
+      border-radius: 50%;
+    }
+  }
+  .no-image {
+    @include size($width: 200px, $height: 200px);
+    overflow: hidden;
+    transform: scale(scaleCalc(30)) translate(-564px, -564px);
+    position: relative;
+    img {
+      width: 100%;
+      border-radius: 50%;
+    }
+  }
+}
+
+// 主催した大会の行のみ色付け
+.changeBackgroudColor {
+  background-color: rgba($bst-blue, 0.25);
+}
+
+// 戻るボタンのスタイル
+.footer-button-area {
+  @include back-button;
+}
+
+// 将来所属予定の選手のスタイル
+.scheduled-belong {
+  width: 100%;
+  font-size: 100%;
+  text-align: center;
+  border-radius: 5px;
+  bottom: 5px;
+  color: $white;
+  background: rgba($color: $blue, $alpha: 0.4);
+  position: absolute;
+}

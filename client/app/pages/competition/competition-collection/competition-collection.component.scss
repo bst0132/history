@@ -1,0 +1,208 @@
+@import '../../../../mylib/var';
+@import '../../../../mylib/mixin';
+
+// 結果欄　背景
+.content {
+  padding-bottom: 20px;
+  background-color: rgb(236, 236, 236);
+}
+
+// タイトル用ツールバー
+.title-toolbar {
+  @include title-toolbar;
+  @include flex-style($justify: flex-end);
+  pointer-events: none;
+
+  // var.scssに記載されているブレークポイントを仮使用
+  @media (min-width: $media-tb) {
+    border-radius: 0;
+  }
+
+  @media (min-width: $media-pc) {
+    border-radius: 5px;
+  }
+
+  span {
+    margin-right: auto;
+  }
+
+  a {
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-right: 5px;
+    transition: 0.1s;
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  button {
+    @include edit-button;
+  }
+
+  a, button {
+      pointer-events: auto;
+    }
+}
+
+// 項目タイトル用ツールバー
+.contents-toolbar {
+  @include contents-toolbar;
+  width: auto;
+  margin: 10px 20px 0px 20px;
+
+  .refine-serch {
+    margin-left: auto;
+    color: orange;
+    font-size: 25px;
+    cursor: pointer;
+    @include focus-visible-outline;
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  p {
+    margin-top: 10px;
+  }
+}
+
+// 日付選択部分
+.date {
+  // フォーム間の記号
+  .mid-mark {
+    font-size: large;
+    text-align: center;
+  }
+  &.pc {
+    @include flex-style($justify: space-between, $align: center);
+    mat-form-field {
+      width: 45%;
+      input[readonly] {
+        cursor: pointer;
+      }
+    }
+  }
+  &.sp {
+    mat-form-field {
+      width: 100%;
+    }
+    // フォーム間の記号
+    .mid-mark {
+      margin: -1em 0 0;
+    }
+  }
+}
+
+// 絞り込み条件カード
+.data-card {
+  margin: 0 20px;
+  cursor: default;
+}
+
+// 検索ボタンのスタイル
+.update-button {
+  @include update-button;
+}
+
+// 検索結果表示枠
+.collection-list {
+  border-radius: 0px 0px 5px 5px;
+  @media (min-width: $media-tb) {
+    @include flex-style($display: grid, $justify: space-evenly);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    grid-template-rows: auto;
+    background-color: white;
+    margin: 0 20px;
+  }
+
+  @media (max-width: $media-tb) {
+    background-color: white;
+    padding: 5px 0;
+    margin: 0 20px;
+  }
+
+  // 検索結果0件のスタイル
+  .no-search{
+    padding: 10px;
+    cursor: default;
+  }
+}
+
+// 大会一覧部分
+.competition-status {
+  @include flex-style($display: flex);
+  margin-left: auto;
+  font-size: small;
+  margin-top: 20px;
+  p {
+    margin: none;
+    height: 45px;
+  }
+
+  .organized,
+  .entry {
+    font-size: small;
+    position: relative;
+    top: 18px;
+    left: 10px;
+  }
+
+  .organized {
+    color: orange;
+  }
+
+  .entry {
+    color: deepskyblue;
+  }
+}
+
+// 検索結果表示カード共通スタイル
+.collection-organized,
+.collection-entry {
+  overflow: hidden;
+  margin: 10px;
+  height: 120px;
+  transition: 0.3s;
+  color: white;
+  font-weight: bold;
+  font-size: large;
+  cursor: pointer;
+  @include focus-visible-card;
+  @include button-effect;
+
+  p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  @media (max-width: $media-tb) {
+    margin: 10px 20px;
+  }
+}
+
+// 検索結果表示カード（主催）
+.collection-organized{
+  background-color: chocolate;
+}
+
+// 検索結果表示カード（参加）
+.collection-entry {
+  background-color: deepskyblue;
+}
+
+// 開催場所
+.collection-place {
+  margin-top: 60px;
+  white-space: nowrap;
+  text-align:right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// タブフォーカス時の枠線のスタイリング
+::ng-deep .mat-datepicker-toggle button:focus-visible {
+  @include focus-visible-outline;
+}

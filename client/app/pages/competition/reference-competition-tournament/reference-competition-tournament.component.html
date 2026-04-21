@@ -1,0 +1,15 @@
+<!-- 画面タイトル部分 -->
+<mat-toolbar class="title-toolbar">
+  <span>トーナメント詳細</span>
+</mat-toolbar>
+<!-- 画面内容 -->
+<mat-card class="base-card">
+  <app-competition-common-tournament [canEdit]="canEdit" [formGroup]="formGroup"
+  (eventTournamentDetail)="tournamentDetail($event)"></app-competition-common-tournament>
+  <!-- 戻るボタン -->
+  <ng-container>
+    <div class="both-button">
+      <button class="back-button" mat-raised-button color="basic" type="button" (click)="onClickBack()">戻る</button>
+    </div>
+  </ng-container>
+</mat-card>

@@ -1,0 +1,194 @@
+@import '../../../../mylib/var';
+@import '../../../../mylib/mixin';
+@import '../../../../mylib/function';
+
+// タイトル用ツールバー
+.title-toolbar {
+  @include title-toolbar;
+  @include flex-style($justify: flex-end);
+  margin-bottom: 20px;
+  span {
+    margin-right: auto;
+  }
+  a {
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-right: 5px;
+    transition: 0.1s;
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+  button {
+    @include edit-button;
+  }
+}
+
+// 項目ごとのカードのまとまり部分のスタイル
+.card {
+  @include card;
+}
+
+// 項目タイトル用ツールバー
+.contents-toolbar {
+  @include contents-toolbar;
+}
+
+// 項目ごとのカードの白い部分のスタイル
+.contents-card {
+  @include contents-card;
+  overflow: hidden;
+  pointer-events: none;
+  a, button {
+    pointer-events: auto;
+  }
+  &.pc {
+    @media (min-width: $media-tb) {
+      min-height: 400px;
+      max-height: 400px;
+      overflow: auto;
+    }
+  }
+  &.profile {
+    min-height: 20vh;
+    border-radius: 5px;
+    position: relative;
+    @include flex-style($justify: center, $align: center);
+    .edit {
+      @include position($position: absolute, $top: 3%, $right: 10px);
+      a {
+        color: white;
+        cursor: pointer;
+        font-size: 0.9rem;
+        margin-right: 5px;
+        transition: 0.1s;
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+      button {
+        @include edit-button;
+        color: white;
+      }
+    }
+  }
+}
+
+// カード表示位置のスタイリング
+.botttom-container {
+  &.pc {
+    @include flex-style($justify: space-between, $align: flex-start);
+  }
+}
+
+.bottom-contents {
+  &.pc {
+    width: 33.3%;
+    height: 100%;
+    min-height: 40vh;
+    margin: 0 3px;
+  }
+}
+
+// 画像表示エリアのスタイリング
+.avatar-back {
+  @include flex-style($justify: center, $align: center);
+  @include size($width: 95px, $height: 95px);
+  background-color: white;
+  border-radius: 50%;
+  @media (min-width: $media-tb) {
+    @include size($width: 155px, $height: 155px);
+  }
+  .avatar-area {
+    @include size($width: 80px, $height: 80px);
+    @media (min-width: $media-tb) {
+      @include size($width: 140px, $height: 140px);
+    }
+    .image {
+      @include size($width: 200px, $height: 200px);
+      border-radius: 50%;
+      overflow: hidden;
+      transform: scale(scaleCalc(80)) translate(-150px, -150px);
+      @media (min-width: $media-tb) {
+        transform: scale(scaleCalc(140)) translate(-43px, -43px);
+      }
+    }
+    .no-image {
+      img {
+        @include size($width: 80px, $height: 80px);
+        border-radius: 50%;
+        @media (min-width: $media-tb) {
+          @include size($width: 140px, $height: 140px);
+        }
+      }
+    }
+  }
+}
+
+// プロフィール部分の表示エリア
+.profile-area {
+  @include size($width: 60%, $height: 90px);
+  @include flex-style($align: center);
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 5px;
+  margin-left: 20px;
+  @media (min-width: $media-tb) {
+    @include size($width: 30%, $height: 120px);
+  }
+  // 内容のスタイリング
+  .item {
+    color: white;
+    opacity: 1;
+    text-align: left;
+    margin: 5px;
+    list-style-type: none;
+    padding-inline-start: 10px;
+  }
+  .item-name {
+    font-weight: bold;
+    font-size: 0.9rem;
+    &:before {
+      content: "";
+      @include size($width: 0, $height: 0);
+      display: inline-block;
+      border: 6px solid transparent;
+      border-left-color: white;
+    }
+    @media (min-width: $media-pc) {
+      display: table-cell;
+      min-width: 100px;
+    }
+  }
+  // プロフィール詳細部分スタイル
+  .item-contents {
+    font-size: 0.9rem;
+    @media (min-width: $media-pc) {
+      text-align: left;
+      padding-left: 10px;
+    }
+  }
+}
+
+// 選手情報・スポーツ情報のエリア
+mat-list-item {
+  height: 100px;
+  .item {
+    @include flex-style($justify: space-between, $align: center);
+    width: 100%;
+    font-size: 0.9rem;
+    .item-title {
+      font-weight: bold;
+    }
+    .item-name {
+      margin-right: 0;
+    }
+  }
+}
+
+// スポーツ名のスタイリング
+.sport {
+  display: inline-block;
+  height: 30px;
+  font-weight: bold;
+  font-size: 16px;
+}

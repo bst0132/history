@@ -1,0 +1,217 @@
+<!-- 画面内容 -->
+<mat-card-content>
+  <div class="card">
+    <mat-card class="contents-card radius">
+      <!-- リーグ情報 -->
+      <div class="control">
+        <mat-form-field hideRequiredMarker class="league-info inert-element">
+          <mat-label>試合グループ名</mat-label>
+          <input matInput [value]="leagueData.gameGroupTitle" readonly maxLength='20' tabindex="-1">
+        </mat-form-field>
+        <ng-container>
+          <button mat-icon-button class="help-button" type="button" (click)="onClickHelp()"><mat-icon>help_outline</mat-icon></button>
+        </ng-container>
+      </div>
+      <div class="flexible-area {{device}}">
+        <mat-form-field hideRequiredMarker class="league-info inert-element">
+          <mat-label>チーム数</mat-label>
+          <ng-container>
+            <input matInput [value]="leagueData.teamCount" readonly tabindex="-1">
+          </ng-container>
+        </mat-form-field>
+        <div class="table-info">
+          <ng-container *ngIf="device === 'sp'">
+            <span><mat-icon>touch_app</mat-icon>チーム名を長押しで全表示</span>
+          </ng-container>
+        </div>
+      </div>
+      <!-- リーグ表 -->
+      <ng-container *ngIf="leagueData.teamCount">
+        <ng-container *ngIf="leagueData.gameGroupInf.length > 0">
+          <div class="scroll-table">
+            <table class="cell-check" border="1">
+              <!-- チーム表示セル -->
+              <thead>
+                <tr class="table-row">
+                  <th class="upper-left"></th>
+                  <ng-container *ngFor="let columnArray of leagueData.leagueArray; index as headNo">
+                    <th class="data-cell">
+                      <ng-container *ngIf="headNo > 0; else headNoZero">
+                        <input matInput class="readonly-team" placeholder="未設定"
+                          [value]="leagueData.gameGroupInf[headNo - 1].criteriaTeamName" readonly
+                          [matTooltip]="leagueData.gameGroupInf[headNo - 1].criteriaTeamName" matTooltipPosition="above" tabindex="-1">
+                      </ng-container>
+                      <ng-template #headNoZero>
+                        <input matInput class="readonly-team" placeholder="未設定"
+                          [value]="leagueData.gameGroupInf[headNo].opponentTeamName" readonly
+                          [matTooltip]="leagueData.gameGroupInf[headNo].opponentTeamName" matTooltipPosition="above" tabindex="-1">
+                      </ng-template>
+                    </th>
+                  </ng-container>
+                  <th class="point-details">順位</th>
+                  <th class="point-details">勝点</th>
+                  <th class="point-details">勝</th>
+                  <th class="point-details">負</th>
+                  <th class="point-details">分</th>
+                  <th class="point-details">得</th>
+                  <th class="point-details">失</th>
+                  <th class="point-details">得失点</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let columnArray of leagueData.leagueArray; index as rowNo">
+                  <tr class="table-row">
+                    <!-- チーム選択セル -->
+                    <th class="game-result data-cell select-team-cell">
+                      <input matInput placeholder="未設定" [value]="leagueData.selectedTeamName[rowNo]" [matTooltip]="leagueData.selectedTeamName[rowNo]"matTooltipPosition="above" readonly tabindex="-1">
+                    </th>
+                    <!-- 各試合情報セル -->
+                    <ng-container *ngFor="let gameNo of columnArray; index as columnNo">
+                      <ng-container *ngIf="rowNo < columnNo">
+                        <td class="game-result data-cell" align="center" (click)="onClickCell(rowNo, columnNo, leagueData.teamCount)" (keyup)="onKeyCheck($event)" [class.selected-cell]="rowNo == rowControl && columnNo == columnControl" tabindex="0">
+                          <div class="flex-score">
+                            <input matInput readonly class="score-area"
+                              [value]="leagueData.gameGroupInf[gameNo].opponentScore" tabindex="-1">
+                            <span>-</span>
+                            <input matInput readonly class="score-area"
+                              [value]="leagueData.gameGroupInf[gameNo].criteriaScore" tabindex="-1">
+                          </div>
+                          <div *ngIf="leagueData.gameGroupInf[gameNo].gameProgressStatus === cns.duringGame">
+                            <span>(試合中)</span>
+                          </div>
+                          <div *ngIf="leagueData.gameGroupInf[gameNo].opponentScore !== null && leagueData.gameGroupInf[gameNo].criteriaScore !== null && leagueData.gameGroupInf[gameNo].gameProgressStatus === cns.afterGame">
+                            <div *ngIf="leagueData.gameGroupInf[gameNo].opponentScore > leagueData.gameGroupInf[gameNo].criteriaScore">
+                              <span>◯</span>
+                            </div>
+                            <div *ngIf="leagueData.gameGroupInf[gameNo].opponentScore === leagueData.gameGroupInf[gameNo].criteriaScore">
+                              <span>△</span>
+                            </div>
+                            <div *ngIf="leagueData.gameGroupInf[gameNo].opponentScore < leagueData.gameGroupInf[gameNo].criteriaScore">
+                              <span>✕</span>
+                            </div>
+                          </div>
+                          <div *ngIf="leagueData.gameGroupInf[gameNo].opponentScore === null || leagueData.gameGroupInf[gameNo].criteriaScore === null">
+                            <span></span>
+                          </div>
+                        </td>
+                      </ng-container>
+                      <ng-container *ngIf="rowNo == columnNo">
+                        <td class="slash data-cell"></td>
+                      </ng-container>
+                      <ng-container *ngIf="rowNo > columnNo">
+                        <td class="game-result data-cell" align="center" (click)="onClickCell(rowNo, columnNo, leagueData.teamCount)" (keyup)="onKeyCheck($event)" [class.selected-cell]="rowNo == rowControl && columnNo == columnControl" tabindex="0">
+                          <div class="flex-score">
+                            <input matInput readonly class="score-area"
+                              [value]="leagueData.gameGroupInf[gameNo].criteriaScore" tabindex="-1">
+                            <span>-</span>
+                            <input matInput readonly class="score-area"
+                              [value]="leagueData.gameGroupInf[gameNo].opponentScore" tabindex="-1">
+                          </div>
+                          <div *ngIf="leagueData.gameGroupInf[gameNo].gameProgressStatus === cns.duringGame">
+                            <span>(試合中)</span>
+                          </div>
+                          <div *ngIf="leagueData.gameGroupInf[gameNo].opponentScore !== null && leagueData.gameGroupInf[gameNo].criteriaScore !== null && leagueData.gameGroupInf[gameNo].gameProgressStatus === cns.afterGame">
+                            <div *ngIf="leagueData.gameGroupInf[gameNo].criteriaScore > leagueData.gameGroupInf[gameNo].opponentScore">
+                              <span>◯</span>
+                            </div>
+                            <div *ngIf="leagueData.gameGroupInf[gameNo].criteriaScore === leagueData.gameGroupInf[gameNo].opponentScore">
+                              <span>△</span>
+                            </div>
+                            <div *ngIf="leagueData.gameGroupInf[gameNo].criteriaScore < leagueData.gameGroupInf[gameNo].opponentScore">
+                              <span>✕</span>
+                            </div>
+                          </div>
+                          <div *ngIf="leagueData.gameGroupInf[gameNo].criteriaScore === null || leagueData.gameGroupInf[gameNo].opponentScore === null">
+                            <span></span>
+                          </div>
+                        </td>
+                      </ng-container>
+                    </ng-container>
+                    <td class="detail-numbers">{{leagueData.teamStats ? leagueData.teamStats[rowNo]?.rank : ''}}</td>
+                    <td class="detail-numbers">{{leagueData.teamStats ? leagueData.teamStats[rowNo]?.winningPoints : ''}}</td>
+                    <td class="detail-numbers">{{leagueData.teamStats ? leagueData.teamStats[rowNo]?.totalWin : ''}}</td>
+                    <td class="detail-numbers">{{leagueData.teamStats ? leagueData.teamStats[rowNo]?.totalLost : ''}}</td>
+                    <td class="detail-numbers">{{leagueData.teamStats ? leagueData.teamStats[rowNo]?.totalDrew : ''}}</td>
+                    <td class="detail-numbers">{{leagueData.teamStats ? leagueData.teamStats[rowNo]?.totalScore : ''}}</td>
+                    <td class="detail-numbers">{{leagueData.teamStats ? leagueData.teamStats[rowNo]?.totalLoss : ''}}</td>
+                    <td class="detail-numbers">{{leagueData.teamStats ? leagueData.teamStats[rowNo]?.totalScore - leagueData.teamStats[rowNo]?.totalLoss : ''}}</td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+          <!-- 各試合情報フォーム -->
+          <div class="input-form inert-element">
+            <ng-container *ngIf="canShow">
+              <ng-container *ngFor="let team of leagueData.gameGroupInf; let i = index">
+                <ng-container *ngIf="i == leagueData.arrayNumber">
+                  <ng-container *ngIf="viewFlg === 'top'; else left">
+                    <div class="flex-game-info">
+                      <mat-form-field appearance="outline" floatLabel="always">
+                        <mat-label>チーム名（左側）</mat-label>
+                        <input matInput placeholder="未設定" [value]="leagueData.gameGroupInf[i].opponentTeamName" readonly tabindex="-1">
+                      </mat-form-field>
+                      <mat-form-field appearance="outline" floatLabel="always">
+                        <mat-label>得点（左側）</mat-label>
+                        <input type="number" matInput placeholder="未設定" [value]="leagueData.gameGroupInf[i].opponentScore" min="0" max="200" readonly tabindex="-1">
+                      </mat-form-field>
+                    </div>
+                    <div class="flex-game-info">
+                      <mat-form-field appearance="outline" floatLabel="always">
+                        <mat-label>チーム名（上側）</mat-label>
+                        <input matInput placeholder="未設定" [value]="leagueData.gameGroupInf[i].criteriaTeamName" readonly tabindex="-1">
+                      </mat-form-field>
+                      <mat-form-field appearance="outline" floatLabel="always">
+                        <mat-label>得点（上側）</mat-label>
+                        <input type="number" matInput placeholder="未設定" [value]="leagueData.gameGroupInf[i].criteriaScore" min="0" max="200" readonly tabindex="-1">
+                      </mat-form-field>
+                    </div>
+                  </ng-container>
+                  <ng-template #left>
+                    <div class="flex-game-info">
+                      <mat-form-field appearance="outline" floatLabel="always">
+                        <mat-label>チーム名（左側）</mat-label>
+                        <input matInput placeholder="未設定" [value]="leagueData.gameGroupInf[i].criteriaTeamName" readonly tabindex="-1">
+                      </mat-form-field>
+                      <mat-form-field appearance="outline" floatLabel="always">
+                        <mat-label>得点（左側）</mat-label>
+                        <input type="number" matInput placeholder="未設定" [value]="leagueData.gameGroupInf[i].criteriaScore" min="0" max="200" readonly tabindex="-1">
+                      </mat-form-field>
+                    </div>
+                    <div class="flex-game-info">
+                      <mat-form-field appearance="outline" floatLabel="always">
+                        <mat-label>チーム名（上側）</mat-label>
+                        <input matInput placeholder="未設定" [value]="leagueData.gameGroupInf[i].opponentTeamName" readonly tabindex="-1">
+                      </mat-form-field>
+                      <mat-form-field appearance="outline" floatLabel="always">
+                        <mat-label>得点（上側）</mat-label>
+                        <input type="number" matInput placeholder="未設定" [value]="leagueData.gameGroupInf[i].opponentScore" min="0" max="200" readonly tabindex="-1">
+                      </mat-form-field>
+                    </div>
+                  </ng-template>
+                  <mat-form-field appearance="outline" floatLabel="always">
+                    <mat-label>場所</mat-label>
+                    <input matInput [value]="leagueData.gameGroupInf[i].gamePlace" placeholder="未設定" maxLength='50' readonly tabindex="-1">
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" floatLabel="always">
+                    <mat-label>試合開始日時</mat-label>
+                    <div class="flex-game-info">
+                      <mat-form-field floatLabel="always">
+                        <mat-label>年月日</mat-label>
+                        <input matInput [value]="leagueData.gameGroupInf[i].gameDate | changeDateDisplay" placeholder="未設定" readonly tabindex="-1">
+                      </mat-form-field>
+                      <mat-form-field floatLabel="always">
+                        <mat-label>時刻</mat-label>
+                        <input matInput [value]="leagueData.gameGroupInf[i].startTimeHour | changeTimeDisplay: leagueData.gameGroupInf[i].startTimeMinute" placeholder="未設定" readonly tabindex="-1">
+                      </mat-form-field>
+                    </div>
+                  </mat-form-field>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </div>
+        </ng-container>
+      </ng-container>
+    </mat-card>
+  </div>
+</mat-card-content>

@@ -1,0 +1,135 @@
+<div class="content">
+  <mat-card>
+    <mat-card-content>
+      <form [formGroup]="formGroup">
+
+        <!-- 大会名 -->
+        <mat-form-field>
+          <mat-label>大会名</mat-label>
+          <input type="text" matInput value={{competition?.compName}} readonly>
+        </mat-form-field>
+
+        <!-- 試合名 -->
+        <mat-form-field class="game-info">
+          <mat-label>試合名</mat-label>
+          <input type="text" matInput value={{game?.gameInfCom.gameName}} readonly>
+        </mat-form-field>
+
+        <div class="team-info">
+          <div>
+            <mat-label>試合経過情報</mat-label>
+          </div>
+          <div class="flex-container">
+            <div class="team-name">
+              <mat-label>チーム名</mat-label>
+            </div>
+            <mat-form-field>
+              <input type="text" matInput value={{getTeamName(teamID)}} readonly>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- タイトル部分 -->
+        <div class="title">
+          <mat-label>試合経過</mat-label>
+        </div>
+
+        <div class="flex-container">
+          <!-- 時間ヘッダ -->
+          <div class="header">
+            <mat-label>経過時間</mat-label>
+          </div>
+          <!-- 選手名ヘッダ -->
+          <div class="header">
+            <mat-label>選手名</mat-label>
+          </div>
+          <!-- 成績種類ヘッダ -->
+          <div class="header">
+            <mat-label>成績種類</mat-label>
+          </div >
+          <div class="btn"></div>
+        </div>
+
+        <ng-container formArrayName="playerResults" *ngFor="let index of getPlayerResults.controls; index as i">
+          <ng-container [formGroupName]="i">
+            <div class="flex-container">
+              <!-- 時間 -->
+              <mat-form-field class="flex-item">
+                <mat-label>経過時間</mat-label>
+                <input matInput placeholder="12:15" formControlName="resultTime">
+              </mat-form-field>
+              <!-- 選手名 -->
+              <mat-form-field class="flex-item">
+                <mat-label>選手名</mat-label>
+                <mat-select formControlName="userID">
+                　<mat-option *ngFor="let player of playerList" value={{player.userID}}>
+                  　{{getPlayerName(player.userID)}}
+                　</mat-option>
+              　</mat-select>
+              </mat-form-field>
+              <!-- 成績種類 -->
+              <mat-form-field class="flex-item">
+                <mat-label>成績種類</mat-label>
+                <mat-select formControlName="recordType">
+                  <mat-option value="得点">得点</mat-option>
+                  <mat-option value="警告">警告</mat-option>
+                  <mat-option value="退場">退場</mat-option>
+                  <mat-option value="オウンゴール">オウンゴール</mat-option>
+                  <mat-option value="交代(IN)">交代(IN)</mat-option>
+                  <mat-option value="交代(OUT) ">交代(OUT) </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <!-- 変更ボタン -->
+              <div class="btn">
+                <button class="button" mat-raised-button color="primary" type="button" (click)="modGameProgress(i)">変更</button>
+              </div>
+              <!-- 削除ボタン -->
+              <div class="btn">
+                <button class="button" mat-raised-button color="primary" type="button" (click)="removeGameProgress(i)">削除</button>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+
+
+        <div class="flex-container">
+          <!-- 時間 -->
+          <mat-form-field class="flex-item">
+            <mat-label>経過時間</mat-label>
+            <input matInput placeholder="12:15" formControlName="resultTime">
+        </mat-form-field>
+        <!-- 選手名 -->
+        <mat-form-field class="flex-item">
+          <mat-label>選手名</mat-label>
+          <mat-select formControlName="userID">
+            <mat-option *ngFor="let player of playerList" value={{player.userID}}>
+              {{getPlayerName(player.userID)}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <!-- 成績種類 -->
+        <mat-form-field class="flex-item">
+          <mat-label>成績種類</mat-label>
+          <mat-select formControlName="recordType">
+            <mat-option value="得点">得点</mat-option>
+            <mat-option value="警告">警告</mat-option>
+            <mat-option value="退場">退場</mat-option>
+            <mat-option value="オウンゴール">オウンゴール</mat-option>
+            <mat-option value="交代(IN)">交代(IN)</mat-option>
+            <mat-option value="交代(OUT) ">交代(OUT) </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <!-- 追加ボタン -->
+        <div class="btn">
+          <button class="button" mat-raised-button color="primary" type="button" (click)="addGameProgress()">追加</button>
+        </div>
+      </div>
+    </form>
+
+      <!-- 戻るボタン -->
+      <div class="return-button">
+        <button class="button" mat-raised-button color="primary" type="button" (click)="pageBack()">戻る</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

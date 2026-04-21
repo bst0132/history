@@ -1,0 +1,184 @@
+@import '../../../../mylib/var';
+@import '../../../../mylib/mixin';
+
+// 真ん中に配置されたベースのカードのスタイル
+.base-card {
+  @include base-card;
+}
+
+// タイトル用ツールバー
+.title-toolbar {
+  @include title-toolbar;
+  @include flex-style($justify: flex-end);
+  span {
+    margin-right: auto;
+  }
+  a {
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-right: 5px;
+    transition: 0.1s;
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+  button {
+    @include edit-button;
+  }
+}
+
+// 項目ごとのカードのまとまり部分のスタイル
+.card {
+  @include card;
+}
+
+// 項目タイトル用ツールバー
+.contents-toolbar {
+  @include contents-toolbar;
+}
+
+// 項目ごとのカードの白い部分のスタイル
+.contents-card {
+  @include contents-card;
+}
+
+// 大会の詳細のスタイル
+.information {
+  @include flex-style($direction: column, $justify: space-evenly, $align: center);
+  @media (min-width: $media-tb) {
+    flex-direction: row;
+  }
+}
+
+// 大会の詳細テキスト部分のスタイル
+.text-area {
+  text-align: center;
+  padding: 20px;
+  @media (min-width: $media-tb) {
+    margin-top: 0;
+    width: 50%;
+    text-align: left;
+  }
+}
+
+.item {
+  text-align: left;
+  list-style-type: none;
+  padding-inline-start: 10px;
+  @media (min-width: $media-tb) {
+    display: table-row;
+  }
+}
+
+// 大会名のスタイル
+.team-name {
+  border-bottom: solid 2px $parts-yellow;
+  font-weight: bold;
+}
+
+.item-list {
+  width: 280px;
+  display: inline-block;
+  overflow-wrap: break-word;
+  @media (min-width: $media-tb) {
+    width: auto;
+  }
+}
+
+// 項目名のスタイリング
+.item-name {
+  font-weight: bold;
+  &:before {
+    content: '';
+    @include size($width: 0, $height: 0);
+    display: inline-block;
+    border: 6px solid transparent;
+    border-left-color: #000;
+  }
+  @media (min-width: $media-tb) {
+    display: table-cell;
+    min-width: 100px;
+  }
+}
+
+// 大会情報詳細部分スタイル
+@media (min-width: $media-tb) {
+  .item-contents {
+    display: table-cell;
+    text-align: left;
+    padding-left: 10px;
+  }
+}
+
+.match-method {
+  @include flex-style($align: center);
+  font-size: 1.1rem;
+  font-weight: bold;
+  padding: 10px;
+  mat-icon {
+    color: $parts-yellow;
+  }
+}
+
+// リーグ・トーナメント情報カードリストのスタイリング
+.list-card {
+  background-color: $back-color;
+  margin: 5px 5px 15px 5px;
+  height: 50px;
+  cursor: pointer;
+  .card-container {
+    @include flex-style($justify: space-between, $align: center);
+    height: 100%;
+  }
+  .group-name {
+    font-weight: bold;
+    font-size: 1.05rem;
+  }
+  .team-cnt {
+    color: #666666;
+    font-size: 0.8rem;
+    margin-left: 5px;
+  }
+}
+
+// カードの配置数のスタイリング
+@media (min-width: $media-tb) {
+  .list-card-container {
+    @include flex-style($display: grid, $justify: space-evenly);
+    grid-template-columns: repeat(3, 200px);
+    grid-template-rows: auto;
+    @media (min-width: 1250px) {
+      grid-template-columns: repeat(4, 200px);
+    }
+    @media (min-width: 1500px) {
+      grid-template-columns: repeat(5, 200px);
+    }
+  }
+  .list-card {
+    overflow: hidden;
+    min-width: 0;
+    height: 70px;
+    transition: 0.3s;
+    &:active {
+      box-shadow: none;
+      transform: translate(0, 2px);
+    }
+    .card-container {
+      height: auto;
+    }
+    .group-name {
+      font-size: 0.8rem;
+    }
+    .team-cnt {
+      font-size: 0.6rem;
+    }
+  }
+  .invisible {
+    display: none;
+  }
+}
+
+// 戻るボタンのスタイル
+.footer-button-area {
+  @include back-button;
+}

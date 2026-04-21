@@ -1,0 +1,21 @@
+div.label-area {
+  width: 60%;
+  height: 50px;
+  border-bottom: 1px solid black;
+  margin-bottom: 10px;
+  div {
+    display: inline-block;
+    height: 100%;
+    span {
+      display: inline-block;
+      vertical-align:  middle;
+      margin: auto;
+    }
+  }
+  .label-header {
+    width: 30%;
+  }
+  .label-value {
+    width: 70%;
+  }
+}

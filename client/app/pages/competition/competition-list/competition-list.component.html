@@ -1,0 +1,73 @@
+<div class="content">
+  <mat-card>
+    <mat-card-content>
+      <mat-card>
+        <mat-card-content>
+          <form [formGroup]="formGroup">
+
+            <!-- 競技 -->
+            <mat-form-field >
+              <mat-label>競技</mat-label>
+              <mat-select formControlName="sports">
+                <mat-option  *ngFor="let s of sports" value={{s.key}}>
+                  {{s.value}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="formGroup.get('sports').hasError('required')">{{msg.unselectErr.replace('※1','競技')}}</mat-error>
+            </mat-form-field>
+
+            <!-- 大会名 -->
+            <mat-form-field>
+              <mat-label>大会名</mat-label>
+              <input type="text" matInput formControlName="compName" required>
+              <mat-error *ngIf="formGroup.get('compName').hasError('required')">{{msg.noenteredErr.replace('※1','大会名')}}</mat-error>
+            </mat-form-field>
+
+            <!-- 主催団体名 -->
+            <mat-form-field>
+              <mat-label>主催団体名</mat-label>
+              <input type="text" matInput formControlName="organName">
+            </mat-form-field>
+
+            <!-- 大会開催日 -->
+            <div>
+              <mat-form-field class="date">
+                <mat-label>大会開催日(from)</mat-label>
+                <input matInput placeholder="2020/01/01" [matDatepicker]="picker1" formControlName="heldDateFrom" tabindex="-1">
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+              </mat-form-field>
+              <span class="swangDash"> ～ </span>
+              <mat-form-field class="date">
+                <mat-label>大会開催日(to)</mat-label>
+                <input matInput placeholder="2020/01/01" [matDatepicker]="picker2" formControlName="heldDateTo" [disabled]="!formGroup.get('heldDateFrom').value" tabindex="-1">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+              </mat-form-field>
+              <mat-error *ngIf="formGroup.hasError('heldDateTo-past')">{{msg.dateConsistencyErr.replace('※1','大会開催日(to)').replace('※2','大会開催日(from)')}}</mat-error>
+              <mat-error *ngIf="formGroup.hasError('heldDateTo-only')">{{msg.unselectDateErr.replace('※1','大会開催日(to)')}}</mat-error>
+            </div>
+
+          </form>
+          <button mat-raised-button color="primary" type="button" (click)="onSearch()" [disabled]="formGroup.invalid">検索</button>
+        </mat-card-content>
+      </mat-card>
+      <mat-card-content class="competition-list">
+        <ng-container *ngFor="let competition of compList">
+          <app-image-panel [imageInfo]="competition.compLogo" (click)="competitionDetail(competition)">
+            <!-- 大会名 -->
+            <div>{{competition.compName}}</div>
+            <!-- 主催団体名 -->
+            <div>{{getorganizerName(competition.organizerInf[0].organizerID)}}</div>
+            <!-- 大会開催日 -->
+            <div>{{competition.heldDate | date:'yyyy/MM/dd'}}</div>
+          </app-image-panel>
+        </ng-container>
+      </mat-card-content>
+      <p *ngIf="count >= 0">
+        {{count}}件中&nbsp;0&nbsp;-&nbsp;{{(count > 100)? 100: count}}件表示　<br />
+        ※ 100件以上は表示されません。
+      </p>
+    </mat-card-content>
+  </mat-card>
+</div>

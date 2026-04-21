@@ -1,0 +1,154 @@
+<div class="content">
+  <mat-card>
+    <ng-container *ngIf="gameLists.length >= 1">
+      <mat-card>
+        <mat-form-field>
+          <mat-label>グループ名称</mat-label>
+          <input matInput [value]="gameLists[0][0].gameInfCom.gameSystemInf.gameSystemName" readonly>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>参加チーム数</mat-label>
+          <input matInput [value]="gameLists[0][0].gameInfCom.gameSystemInf.gameTeamCnt" readonly>
+        </mat-form-field>
+      </mat-card>
+      <mat-card>
+        <!-- 大会全体のブロック -->
+        <div class="tournament">
+          <ng-container *ngFor="let gameList of gameLists; index as idx; first as first; last as last">
+            <!-- 同じ階層のブロック-->
+            <div class="round" [ngClass]="{'final-round': last}">
+              <!-- このブロックで１試合分 -->
+              <ng-container *ngFor="let game of gameList; index as i; odd as isOdd; even as isEven">
+                <div class="flex-container" [ngClass]="{'af-first-round': !first && !last}">
+                  <div class="block">
+                    <ng-container *ngFor="let team of game.teamInfo; index as index">
+                      <!-- １チーム分のブロック-->
+                      <div class="node">
+                        <mat-card class="game-card" [ngClass]="{'winner': isWinner(game, team.teamID)}" (click)="onClickCard(game.gameID)">
+                          <mat-card-content class="game-info">
+                            <span class="team">{{getTeamName(team.teamID) | omitLongSentence: 11: '...'}}</span>
+                            <div class="score-container">
+                              <span class="score">{{tournamentInfoList[idx][i][index].score}}</span>
+                              <span *ngIf="!(tournamentInfoList[idx][i][index].scorePK == 0)">
+                                &nbsp;(PK{{tournamentInfoList[idx][i][index].scorePK}})
+                              </span>
+                            </div>
+                          </mat-card-content>
+                        </mat-card>
+                      </div>
+                    </ng-container>
+                  </div>
+
+                  <ng-container *ngIf="!last">
+                    <!-- 線を引くために用意した幅25pxのボックス ４×４-->
+                    <div class="line-container" [ngClass]="{'even': isEven, 'odd': isOdd}">
+                      <div class="flex-line">
+                        <div class="line"></div>
+                        <div class="line"></div>
+                      </div>
+                      <div class="flex-line">
+                        <div class="line"></div>
+                        <div class="line"></div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+                <!-- ここまでで１試合-->
+              </ng-container>
+            </div>
+            <!-- ここまでで１階層 -->
+          </ng-container>
+
+          <!-- 3位決定戦 -->
+          <div *ngIf="thirdPlaceGame.length != 0">
+            <div class="flex-container third-place-match">
+              <div class="block">
+                <ng-container *ngFor="let game of thirdPlaceGame">
+                  <div class="node">
+                    <mat-card class="game-card" [ngClass]="{'winner': isWinner(game, game.team)}" (click)="onClickCard(game.gameID)">
+                      <mat-card-content class="game-info">
+                        <span class="team">{{getTeamName(game.team) | omitLongSentence: 11: '...'}}</span>
+                        <div class="score-container">
+                          <span class="score">{{game.score}}</span>
+                          <span *ngIf="!(game.scorePK == 0)">&nbsp;(PK{{game.scorePK}})</span>
+                        </div>
+                      </mat-card-content>
+                    </mat-card>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- ここまでで１トーナメント-->
+      </mat-card>
+    </ng-container>
+    <div class="footer-button-area">
+      <button mat-raised-button color="primary" type="button" (click)="pageBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+    </div>
+  </mat-card>
+  <div class="mask" *ngIf="isShowModal" (click)="closeModal()"></div>
+  <!-- モーダルウインドウ -->
+  <div id="modal" *ngIf="isShowModal" class="form">
+    <form [formGroup]="formGroup" class="result-form">
+      <ng-container formArrayName="formList" *ngFor="let form of formList.controls index as i">
+        <ng-container [formGroupName]="i">
+          <div class="flex-form">
+            <mat-form-field>
+              <mat-label>チーム名</mat-label>
+              <mat-select formControlName="team" [disabled]="isEmptyTeamList(teamSelectList[i])">
+                <mat-option></mat-option>
+                <mat-option *ngFor="let team of teamSelectList[i]" [value]="team">{{getTeamName(team)}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>前半</mat-label>
+              <input type="number" matInput placeholder="5" formControlName="score1stHalf">
+              <mat-error *ngIf="form.get('score1stHalf').hasError('required')">{{msg.noenteredErr.replace('※1','前半')}}</mat-error>
+              <mat-error *ngIf="form.get('score1stHalf').hasError('pattern')">{{msg.formatChkErr.replace('※1','半角数字')}}</mat-error>
+              <mat-error *ngIf="form.get('score1stHalf').hasError('max')">{{msg.numMaxChkErr.replace('※1','2文字')}}</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>後半</mat-label>
+              <input type="number" matInput placeholder="5" formControlName="score2ndHalf">
+              <mat-error *ngIf="form.get('score2ndHalf').hasError('required')">{{msg.noenteredErr.replace('※1','後半')}}</mat-error>
+              <mat-error *ngIf="form.get('score2ndHalf').hasError('pattern')">{{msg.formatChkErr.replace('※1','半角数字')}}</mat-error>
+              <mat-error *ngIf="form.get('score2ndHalf').hasError('max')">{{msg.numMaxChkErr.replace('※1','2文字')}}</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>前半(延長戦)</mat-label>
+              <input type="number" matInput placeholder="5" formControlName="scoreEX1stHalf">
+              <mat-error *ngIf="form.get('scoreEX1stHalf').hasError('required')">{{msg.noenteredErr.replace('※1','前半(延長戦)')}}</mat-error>
+              <mat-error *ngIf="form.get('scoreEX1stHalf').hasError('pattern')">{{msg.formatChkErr.replace('※1','半角数字')}}</mat-error>
+              <mat-error *ngIf="form.get('scoreEX1stHalf').hasError('max')">{{msg.numMaxChkErr.replace('※1','2文字')}}</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>後半(延長戦)</mat-label>
+              <input type="number" matInput placeholder="5" formControlName="scoreEX2ndHalf">
+              <mat-error *ngIf="form.get('scoreEX2ndHalf').hasError('required')">{{msg.noenteredErr.replace('※1','後半(延長戦)')}}</mat-error>
+              <mat-error *ngIf="form.get('scoreEX2ndHalf').hasError('pattern')">{{msg.formatChkErr.replace('※1','半角数字')}}</mat-error>
+              <mat-error *ngIf="form.get('scoreEX2ndHalf').hasError('max')">{{msg.numMaxChkErr.replace('※1','2文字')}}</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>試合合計</mat-label>
+              <input type="number" matInput formControlName="totalScore" [value]="calcScore(form)" readonly>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>PK</mat-label>
+              <input type="number" matInput placeholder="5" formControlName="scorePK">
+              <mat-error *ngIf="form.get('scorePK').hasError('required')">{{msg.noenteredErr.replace('※1','PK')}}</mat-error>
+              <mat-error *ngIf="form.get('scorePK').hasError('pattern')">{{msg.formatChkErr.replace('※1','半角数字')}}</mat-error>
+              <mat-error *ngIf="form.get('scorePK').hasError('max')">{{msg.numMaxChkErr.replace('※1','2文字')}}</mat-error>
+            </mat-form-field>
+          </div>
+        </ng-container>
+      </ng-container>
+    </form>
+    <button class="btn" mat-flat-button color="primary" type="button" [disabled]="formGroup.invalid || !formGroup.dirty" (click)="editTournamentInfo()">更新</button>
+    <!-- 閉じるボタン -->
+    <p (click)="closeModal()" class="close-button">✖</p>
+  </div>
+</div>

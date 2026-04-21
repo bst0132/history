@@ -1,0 +1,60 @@
+{
+  "clientHost": "sportshist.com",
+  "https": true,
+  "cloudMode": true,
+  "expressPort": 443,
+  "logger": {
+    "logConfig": {
+      "appenders": {
+        "access": {
+          "type": "dateFile",
+          "filename": "/var/log/history/access/access",
+          "pattern": "yyyy-MM-dd.log",
+          "mode": "0644",
+          "compress": true,
+          "alwaysIncludePattern": true,
+          "layout": {
+            "type": "pattern",
+            "pattern": "%d [%p] %m"
+          },
+          "numBackups": 9999
+        },
+        "app": {
+          "type": "dateFile",
+          "filename": "/var/log/history/app/app",
+          "pattern": "yyyy-MM-dd.log",
+          "mode": "0644",
+          "compress": true,
+          "alwaysIncludePattern": true,
+          "layout": {
+            "type": "pattern",
+            "pattern": "%d [%p] %m"
+          },
+          "numBackups": 9999
+        },
+        "error": {
+          "type": "dateFile",
+          "filename": "/var/log/history/error/error",
+          "pattern": "yyyy-MM.log",
+          "mode": "0644",
+          "compress": true,
+          "alwaysIncludePattern": true,
+          "layout": {
+            "type": "pattern",
+            "pattern": "%d [%p] %m"
+          },
+          "numBackups": 9999
+        }
+      },
+      "categories": {
+        "default": { "appenders": ["app"], "level": "info" },
+        "access": { "appenders": ["access"], "level": "info" },
+        "error": { "appenders": ["error"], "level": "error" },
+        "warn": { "appenders": ["dummy"], "level": "off" }
+      }
+    }
+  },
+  "db":{
+    "dbServers": ["history-doc-db.c0aoqqwpr70l.ap-northeast-1.docdb.amazonaws.com:27017/?tls=true&retryWrites=false"]
+  }
+}

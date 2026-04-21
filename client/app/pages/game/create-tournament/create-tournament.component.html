@@ -1,0 +1,233 @@
+<div class="content">
+  <form [formGroup]="formGroup">
+    <mat-card>
+      <mat-card-content>
+        <mat-card *ngIf="compInfo">
+          <!-- 競技 -->
+          <mat-form-field>
+            <mat-label>競技</mat-label>
+            <input type="text" matInput [value]="compInfo.sports | getSportValue" readonly>
+          </mat-form-field>
+
+          <!-- 大会名 -->
+          <mat-form-field>
+            <mat-label>大会名</mat-label>
+            <input type="text" matInput value={{compInfo?.compName}} readonly>
+          </mat-form-field>
+
+          <!-- 大会ロゴ -->
+          <div class="compInfo-img">
+            <app-image-select [mode]="'show'" [imageInfo]="compInfo.compLogo"></app-image-select>
+          </div>
+        </mat-card>
+      </mat-card-content>
+
+      <div class="tournament-info">
+        <mat-form-field>
+          <mat-label>グループ名称</mat-label>
+          <input matInput formControlName="gameGroupName" readonly>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>参加チーム数</mat-label>
+          <input matInput formControlName="groupPartTeamCnt" readonly>
+        </mat-form-field>
+        <div class="3rd-place-chkbox">
+          <input type="checkbox" formControlName="thirdPlace">
+          <mat-label>３位決定戦を実施する</mat-label>
+        </div>
+      </div>
+
+      <!-- 大会全体のブロック -->
+      <div class="tournament">
+        <ng-container *ngFor="let cnt of arrayNumberLength(logTeamCnt); index as idx">
+
+          <!-- 1回戦 -->
+          <ng-container *ngIf="idx == 0">
+            <!-- 同じ階層のブロック-->
+            <div class="round">
+              <ng-container formArrayName="teams" *ngFor="let team of teams.controls; index as i">
+                <ng-container [formGroupName]="i">
+                  <!-- このブロックで１試合分 -->
+                  <div class="flex-container">
+                    <div class="block">
+
+                      <!-- １チーム分のブロック-->
+                      <div class="node">
+                        <mat-card class="game-card">
+                          <mat-select class="teamNameFirst" formControlName="teamName1">
+                            <mat-option value=""></mat-option>
+                            <mat-option *ngFor="let team of teamList" [value]="team.teamID">{{team.teamName}}</mat-option>
+                          </mat-select>
+                        </mat-card>
+                      </div>
+
+                      <!-- １チーム分のブロック-->
+                      <div class="node">
+                        <mat-card class="game-card">
+                          <mat-select class="teamNameFirst"  formControlName="teamName2">
+                            <mat-option value=""></mat-option>
+                            <mat-option *ngFor="let team of teamList" [value]="team.teamID">{{team.teamName}}</mat-option>
+                          </mat-select>
+                        </mat-card>
+                      </div>
+                    </div>
+
+                    <!-- 線を引くために用意した幅20pxのボックス ４×４-->
+                    <div class="line-container">
+                      <div class="flex-line">
+                        <div class="line"></div>
+                        <div class="line"></div>
+                      </div>
+                      <div class="flex-line">
+                        <div class="line" style="border-right: 2px #999 solid; border-top: 2px #999 solid;"></div>
+                        <div class="line" style="border-bottom: 2px #999 solid;"></div>
+                      </div>
+                    </div>
+
+                  </div>
+                  <!-- ここまでで１試合-->
+
+                  <div class="flex-container">
+                    <div class="block">
+                      <div class="node">
+                        <mat-card class="game-card">
+                          <mat-select class="teamNameFirst" formControlName="teamName3">
+                            <mat-option value=""></mat-option>
+                            <mat-option *ngFor="let team of teamList" [value]="team.teamID">{{team.teamName}}</mat-option>
+                          </mat-select>
+                        </mat-card>
+                      </div>
+
+                      <div class="node">
+                        <mat-card class="game-card">
+                          <mat-select class="teamNameFirst" formControlName="teamName4">
+                            <mat-option value=""></mat-option>
+                            <mat-option *ngFor="let team of teamList" [value]="team.teamID">{{team.teamName}}</mat-option>
+                          </mat-select>
+                        </mat-card>
+                      </div>
+                    </div>
+
+                    <div class="line-container">
+                      <div class="flex-line">
+                        <div class="line" style="border-bottom: 2px #999 solid; border-right: 2px #999 solid;"></div>
+                        <div class="line"></div>
+                      </div>
+                      <div class="flex-line">
+                        <div class="line"></div>
+                        <div class="line"></div>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+            <!-- ここまでで１階層 -->
+          </ng-container>
+
+          <!-- 1回戦～準決勝 -->
+          <ng-container *ngIf="(idx != 0) && (idx + 1 != logTeamCnt)">
+            <div class="round not-first">
+              <ng-container *ngFor="let n of arrayNumberLength(formGroup.get('groupPartTeamCnt').value / getPowNum(idx + 2))">
+                <div class="flex-container not-first">
+                  <div class="block">
+                    <!-- １チーム分のブロック-->
+                    <div class="node">
+                      <mat-card class="game-card"></mat-card>
+                    </div>
+                    <!-- １チーム分のブロック-->
+                    <div class="node">
+                      <mat-card class="game-card"></mat-card>
+                    </div>
+                  </div>
+
+                  <!-- 線を引くために用意した幅20pxのボックス ４×４-->
+                  <div class="line-container not-first">
+                    <div class="flex-line">
+                      <div class="line"></div>
+                      <div class="line"></div>
+                    </div>
+                    <div class="flex-line">
+                      <div class="line" style="border-right: 2px #999 solid; border-top: 2px #999 solid;"></div>
+                      <div class="line" style="border-bottom: 2px #999 solid;"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex-container not-first">
+                  <div class="block">
+                    <!-- １チーム分のブロック-->
+                    <div class="node">
+                      <mat-card class="game-card"></mat-card>
+                    </div>
+                    <!-- １チーム分のブロック-->
+                    <div class="node">
+                      <mat-card class="game-card"></mat-card>
+                    </div>
+                  </div>
+                  <div class="line-container not-first">
+                    <div class="flex-line">
+                      <div class="line" style="border-bottom: 2px #999 solid; border-right: 2px #999 solid;"></div>
+                      <div class="line"></div>
+                    </div>
+                    <div class="flex-line">
+                      <div class="line"></div>
+                      <div class="line"></div>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </ng-container>
+
+          <!-- 決勝戦 -->
+          <ng-container *ngIf="idx + 1 == logTeamCnt">
+            <!-- 同じ階層のブロック-->
+            <div class="final-round not-first">
+              <!-- このブロックで１試合分 -->
+              <div class="flex-container">
+                <div class="block">
+
+                  <!-- １チーム分のブロック-->
+                  <div class="node">
+                    <mat-card class="game-card"></mat-card>
+                  </div>
+
+                  <!-- １チーム分のブロック-->
+                  <div class="node">
+                    <mat-card class="game-card"></mat-card>
+                  </div>
+
+                </div>
+              </div>
+              <!-- ここまでで１試合 -->
+            </div>
+            <!-- ここまでで１階層 -->
+          </ng-container>
+        </ng-container>
+
+        <!-- ３位決定戦 -->
+        <ng-container *ngIf="formGroup.get('thirdPlace').value">
+          <div class="flex-container third-place-match">
+            <div class="block">
+              <!-- １チーム分のブロック-->
+              <div class="node">
+                <mat-card class="game-card"></mat-card>
+              </div>
+
+              <!-- １チーム分のブロック-->
+              <div class="node">
+                <mat-card class="game-card"></mat-card>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <!-- ここまでで１試合-->
+      </div>
+      <!-- ここまでで１トーナメント-->
+      <div class="footer-button-area">
+        <button mat-raised-button color="primary" type="button" (click)="onSubmit()">登録</button>
+        <button mat-raised-button color="primary" type="button" (click)="pageBack()">戻る</button>
+      </div>
+    </mat-card>
+  </form>
+</div>

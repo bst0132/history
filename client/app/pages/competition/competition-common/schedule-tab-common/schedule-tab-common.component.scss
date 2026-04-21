@@ -1,0 +1,127 @@
+@import '../../../../../mylib/var';
+@import '../../../../../mylib/mixin';
+
+// タブ毎のカードスタイル
+.contents-card {
+  @include contents-card;
+  // スケジュールタブ パネルスタイリング
+  mat-expansion-panel-header {
+    background: $quill-gray !important;
+    @include focus-visible-outline($offset: -5px);
+    // パネルタイトル
+    mat-panel-title {
+      font-weight: bold;
+    }
+  }
+  // パネル ベース色・スペース・角
+  mat-expansion-panel {
+    background: #efefef;
+    margin-bottom: 4px;
+    border-radius: 5px !important;
+  }
+  // スケジュールタブ パネル内日付
+  .each-date {
+    margin: 1em auto auto -1em;
+    font-weight: 600;
+  }
+  // スケジュールタブ パネル内カード
+  .card-container {
+    @media (min-width: 768px) {
+      @include flex-style($display: grid, $justify: space-evenly);
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0 20px;
+      grid-template-rows: auto;
+    }
+  }
+  // 編集・大会方式登録・試合詳細画面遷移ボタン共通スタイル
+  .edit-button,
+  .edit-game,
+  .game-detail {
+    text-align: right;
+    a {
+      color: $parts-yellow;
+      cursor: pointer;
+      font-size: 16px;
+      margin-right: 5px;
+      transition: 0.1s;
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+    button {
+      @include edit-button;
+      color: white;
+    }
+  }
+  // 試合編集・試合詳細画面遷移ボタン
+  .edit-game,
+  .game-detail {
+    margin-top: 10px;
+    pointer-events: none;
+    a, button {
+      pointer-events: auto;
+    }
+    a {
+      @media (max-width: $media-sp) {
+        font-size: 14px;
+      }
+    }
+    button {
+      transform: scale(0.8);
+    }
+  }
+  // 試合追加ボタン
+  .add-game-button {
+    pointer-events: none;
+    a, button {
+      pointer-events: auto;
+    }
+    a {
+      color: $submit-color;
+      cursor: pointer;
+      margin-right: 5px;
+      transition: 0.1s;
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+    button {
+      @include button-effect;
+      @include focus-visible-button($brightness: 1.5);
+      color: white;
+      background-color: $submit-color;
+      @media (max-width: $media-sp) {
+        transform: scale(0.8);
+      }
+    }
+  }
+  // 大会方式名と試合追加ボタンのまとまり
+  .create-game {
+    @include flex-style($justify: space-between, $align: center);
+  }
+  // 大会方式名と新規登録文字
+  .comp-system,
+  .add-game-button,
+  .game-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    @media (max-width: $media-sp) {
+      font-size: 14px;
+    }
+  }
+  // 2方式大会の場合のトーナメント表示
+  .league-and-tournament {
+    @include flex-style($justify: space-between, $align: center);
+    margin-top: 40px;
+  }
+  // トーナメント試合グループ名
+  .game-title {
+    margin: 10px auto;
+  }
+}
+
+// パネルトグル
+:host ::ng-deep .mat-expansion-indicator:after {
+  color: white;
+}

@@ -1,0 +1,33 @@
+<ng-container *ngIf="commonService.isLogined">
+  <app-common-header (menuToggle)="sidemenu.toggle()" (closeMenu)="sidemenu.close()"></app-common-header>
+</ng-container>
+<ng-container *ngIf="!commonService.isLogined">
+  <app-reference-common-header></app-reference-common-header>
+</ng-container>
+
+<mat-sidenav-container [hasBackdrop]="commonService.isLogined">
+  <!-- メニューを被せるように表示 -->
+  <mat-sidenav class="{{device}}" #sidemenu mode="over" position="end">
+    <div class="header-blank-area-menu"></div>
+    <div class="page-name">
+    <h3>マイページ</h3>
+      <button type="button" class="mat-menu-item" (click)="onClickNavigate(cns.pathToProfileDetail)" (keyup)="onKeyCheck($event)" (keydown)="onKeydown($event)" [disabled]="!commonService.isLogined">個人情報</button>
+      <button type="button" class="mat-menu-item" (click)="onClickNavigate(cns.pathToTeamHistoryList)" (keyup)="onKeyCheck($event)" (keydown)="onKeydown($event)" [disabled]="!commonService.isPlayer">所属チーム履歴</button>
+      <button type="button" class="mat-menu-item" (click)="onClickNavigate(cns.pathToManageTmOrgList)" (keyup)="onKeyCheck($event)" (keydown)="onKeydown($event)" [disabled]="!commonService.isAdminTeam && !commonService.isAdminOrgan">管理チーム/団体</button>
+    <h3>検索</h3>
+      <button type="button" data-test="teamList" class="mat-menu-item" (click)="onClickNavigate(cns.pathToTeamList)" (keyup)="onKeyCheck($event)" (keydown)="onKeydown($event)" [disabled]="!commonService.isLogined">チーム</button>
+      <button type="button" class="mat-menu-item" (click)="onClickNavigate(cns.pathToCollectionCompetition)" (keyup)="onKeyCheck($event)" (keydown)="onKeydown($event)" [disabled]="!commonService.isLogined">大会</button>
+      <button type="button" class="mat-menu-item" (click)="onClickNavigate(cns.pathToOrganList)" (keyup)="onKeyCheck($event)" (keydown)="onKeydown($event)" [disabled]="!commonService.isLogined">団体</button>
+    <h3>登録</h3>
+      <button type="button" data-test="createTeam" class="mat-menu-item" (click)="onClickNavigate(cns.pathToCreateTeam)" (keyup)="onKeyCheck($event)" (keydown)="onKeydown($event)" [disabled]="!commonService.isLogined">チーム</button>
+      <button type="button" class="mat-menu-item" (click)="onClickCreateComp()" (keyup)="onKeyCheck($event)" (keydown)="onKeydown($event)" [disabled]="!commonService.isLogined">大会</button>
+      <button type="button" data-test="createOrgan" class="mat-menu-item" (click)="onClickNavigate(cns.pathToCreateOrganization)" (keyup)="onKeyCheck($event)" (keydown)="onKeydown($event)" [disabled]="!commonService.isLogined">団体</button>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <div class="content {{device}}">
+      <router-outlet></router-outlet>
+    </div>
+    <app-common-footer></app-common-footer>
+  </mat-sidenav-content>
+</mat-sidenav-container>

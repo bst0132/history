@@ -1,0 +1,47 @@
+{
+  "clientHost": "localhost:4200",
+  "expressPort": 3000,
+  "https": false,
+  "cloudMode": false,
+  "logger": {
+    "logConfig": {
+      "appenders": {
+        "out": {
+          "type": "stdout",
+          "layout": {
+            "type": "pattern",
+            "pattern": "%d [%p] %m%n"
+          }
+        },
+        "dummy": {
+          "type": "stdout"
+        }
+      },
+      "categories": {
+        "default": { "appenders": ["out"], "level": "debug" },
+        "access": { "appenders": ["dummy"], "level": "off" },
+        "error": { "appenders": ["out"], "level": "error" },
+        "warn": { "appenders": ["out"], "level": "warn" }
+      }
+    }
+  },
+  "mail": {
+    "senderAddress": "no-reply@sportshist.com",
+    "smtpAccount": "smtp-auth@bestaff.co.jp",
+    "mailPassword": "spam2makeruna",
+    "smtpServer": "mail.bestaff.co.jp"
+  },
+  "db":{
+    "dbServers": ["localhost:27017"],
+    "dbName": "ITForSports",
+    "user": "bstadmin",
+    "password": "Bestaff0101"
+  },
+  "aws": {
+    "ses": {
+      "region": "ap-northeast-1",
+      "accessKeyId": "dummy-key-id",
+      "secretAccessKey": "dummy-secret-key"
+    }
+  }
+}

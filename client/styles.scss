@@ -1,0 +1,33 @@
+/* You can add global styles to this file, and also import other style files */
+@import 'mylib/var';
+@import 'mylib/base/normalize';
+
+body {
+  background-color: $back-color;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+mat-form-field {
+  width: 60%;
+}
+
+mat-card {
+  margin: 20px 0;
+  mat-card-title {
+    color: $bst-blue;
+  }
+}
+mat-card:first {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+mat-card:last {
+  margin-top: 20px;
+  margin-bottom: 0;
+}
+
+.zoom-block {
+  font-size: 16px !important;
+  transform: scale(0.8);
+  transform-origin: left bottom;
+}

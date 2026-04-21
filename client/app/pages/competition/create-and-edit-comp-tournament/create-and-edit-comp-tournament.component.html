@@ -1,0 +1,20 @@
+<!-- 画面タイトル部分 -->
+<mat-toolbar class="title-toolbar">
+  <span>{{canEdit? newGameFlg ? 'トーナメント新規登録' : 'トーナメント編集' : 'トーナメント詳細'}}</span>
+</mat-toolbar>
+<!-- 画面内容 -->
+<mat-card class="base-card">
+  <app-competition-common-tournament [newGameFlg]="newGameFlg" [formGroup]="formGroup" [canEdit]="canEdit" [allTeamsSelectedFlg]="allTeamsSelectedFlg"
+  (eventOnClickDeleteGame)="onClickDeleteGame()" (eventTournamentDetail)="tournamentDetail($event)" (eventOnClickGameStart)="onClickGameStart()"
+  (eventOnClickInputMatchTeam)="onClickInputMatchTeam($event)" (eventOnClickInputMatch)="onClickInputMatch($event)"></app-competition-common-tournament>
+  <!-- 戻る／登録・更新ボタン -->
+  <ng-container>
+    <div class="both-button">
+      <button class="back-button" mat-raised-button color="basic" type="button" (click)="onClickBack()">戻る</button>
+      <button *ngIf="canEdit === true" class="reg-and-update" mat-raised-button type="button" (click)="newGameFlg ? onClickReg() : onClickUpdate()"
+        [disabled]="formGroup.invalid || canDeactive()" [class.active-button]="!formGroup.invalid && !canDeactive()">
+        <mat-icon>done</mat-icon>{{newGameFlg ? '登録' : '更新'}}
+      </button>
+    </div>
+  </ng-container>
+</mat-card>

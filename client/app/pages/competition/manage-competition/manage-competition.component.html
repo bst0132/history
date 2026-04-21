@@ -1,0 +1,269 @@
+<div class="content">
+  <form [formGroup]="formGroup">
+    <mat-card>
+      <mat-card-content>
+
+        <!-- 競技 -->
+        <mat-form-field >
+          <mat-label>競技</mat-label>
+          <input type="text" matInput [value]="compInfo?.sports | getSportValue" readonly>
+        </mat-form-field>
+
+        <!-- 大会名 -->
+        <mat-form-field >
+          <mat-label>大会名</mat-label>
+          <input type="text" matInput formControlName="compName" required>
+          <mat-error *ngIf="formGroup.get('compName').hasError('required')">{{msg.noenteredErr.replace('※1','大会名')}}</mat-error>
+        </mat-form-field>
+
+        <!-- 大会開催日 -->
+        <mat-form-field class="date">
+          <mat-label>大会開催日</mat-label>
+          <input matInput placeholder="2020/01/01" [matDatepicker]="picker1" formControlName="heldDate" required>
+          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+          <mat-error *ngIf="formGroup.get('heldDate').hasError('required')">{{msg.noenteredErr.replace('※1','大会開催日')}}</mat-error>
+        </mat-form-field>
+
+        <!-- 大会ロゴ -->
+        <app-image-select [mode]="'edit'" [imageInfo]="imageInfo" (imageChange)="onChangeDataUrl($event)">大会ロゴを選択</app-image-select>
+
+        <!-- 大会紹介 -->
+        <mat-form-field class="compIntro">
+          <mat-label>大会紹介</mat-label>
+          <textarea matInput cdkTextareaAutosize cdkAutosizeMaxRows="10" formControlName="compIntro"></textarea>
+        </mat-form-field>
+
+        <!-- 各種ボタン -->
+        <div class="footerButtonArea">
+          <button class="button-left" mat-raised-button color="primary" type="button" (click)="onSubmit()" [disabled]="!formGroup.dirty || formGroup.invalid">変更</button>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+  </form>
+
+  <!-- 主催団体 -->
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>主催団体</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="info-panel">
+        <ng-container *ngFor="let organ of organList">
+          <app-image-panel [imageInfo]="organ.organLogo">
+            <div>{{organ.organName}}</div>
+            <div class="del-button" *ngIf="organList.length>=2" (click)="removeCompInfo(organ.id, organ.organName, 'organ')">解除</div>
+          </app-image-panel>
+        </ng-container>
+      </div>
+      <div class="button-area">
+        <button mat-raised-button color="primary" type="button" (click)="navigateNextPage('inviteOrgan')">主催団体を追加</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- 大会管理者 -->
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>大会管理者</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="info-panel">
+        <ng-container *ngFor="let member of memberList">
+          <app-image-panel [imageInfo]="member.userImage">
+            <div>{{member.name}}</div>
+            <div class="org-area">
+            <ng-container *ngFor="let orgName of member.organizerNames">
+              <div class="org-list">{{orgName}}</div>
+            </ng-container>
+            </div>
+            <div class="del-button" *ngIf="memberList.length>=2" (click)="removeCompInfo(member.id, member.name, 'member')">解除</div>
+          </app-image-panel>
+        </ng-container>
+      </div>
+      <div class="button-area">
+        <button mat-raised-button color="primary" type="button" (click)="navigateNextPage('inviteMember')">大会管理者を追加</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- 参加チーム -->
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>参加チーム</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="info-panel">
+        <ng-container *ngFor="let team of teamList">
+          <app-image-panel [imageInfo]="team.teamLogo">
+            <div>{{team.teamName}}</div>
+            <div>{{team.teamAddInf.teamPrefecture}}</div>
+            <div class="del-button" (click)="removeCompInfo(team._id, team.teamName, 'team')">解除</div>
+          </app-image-panel>
+        </ng-container>
+      </div>
+      <div class="button-area">
+        <button mat-raised-button color="primary" type="button" (click)="navigateNextPage('inviteTeam')">参加チームを追加</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- 開催地 -->
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>開催地</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-table [dataSource]="placeList" class="scroll-table">
+        <ng-container matColumnDef="placeName">
+          <mat-header-cell *matHeaderCellDef>開催地</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.placeName}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="delete">
+          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            <button mat-raised-button color="primary" type="button" class="delete-button table-button" (click)="removeCompInfo(row.id, row.placeName, 'place')">削除</button>
+          </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="['placeName', 'delete']" class="table-label"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: ['placeName', 'delete']"></mat-row>
+      </mat-table>
+      <div class="button-area">
+        <button mat-raised-button color="primary" type="button" (click)="navigateNextPage('placeList')">以前の開催地を検索</button>
+        <button mat-raised-button color="primary" type="button" (click)="navigateNextPage('createPlace')">新たな開催地追加</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- リーグ/トーナメント -->
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>リーグ/トーナメント</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-table [dataSource]="gameList" class="scroll-table">
+        <ng-container matColumnDef="gameSystem">
+          <mat-header-cell *matHeaderCellDef>試合形式</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.gameSystem}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="gameSystemName">
+          <mat-header-cell *matHeaderCellDef>グループ名称</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.groupName}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="count">
+          <mat-header-cell *matHeaderCellDef>参加チーム数</mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            <mat-accordion displayMode="flat">
+              <mat-expansion-panel [hideToggle]="true">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>{{row.groupPartTeamCnt}}</mat-panel-title>
+                </mat-expansion-panel-header>
+                <ng-container *ngIf="!isEmptyTeamList(row.teamIdList); else noTeam">
+                  <ng-container *ngFor="let teamId of row.teamIdList">
+                    <p class="team">{{getTeamName(teamId)}}</p>
+                  </ng-container>
+                </ng-container>
+                <ng-template #noTeam><p class="team">未定</p></ng-template>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </mat-cell>
+        </ng-container>
+        <!-- ページ遷移アイコン -->
+        <ng-container matColumnDef="edit">
+          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          <mat-cell *matCellDef="let row" class='navigate-icon'>
+            <mat-icon (click)="navigateGameGroupEdit(row)">navigate_next</mat-icon>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="delete">
+          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            <ng-container *ngIf="row.gameConfirmFlg == 0">
+              <button mat-raised-button color="primary" type="button" class="delete-button table-button" (click)="removeGame(row)">削除</button>
+            </ng-container>
+          </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="['gameSystem', 'gameSystemName', 'count', 'edit', 'delete']" class="table-label"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: ['gameSystem', 'gameSystemName', 'count', 'edit', 'delete']"></mat-row>
+      </mat-table>
+      <div class="button-area">
+        <button mat-raised-button color="primary" type="button" (click)="createGame()">リーグ/トーナメントを追加</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- 試合一覧 -->
+  <form [formGroup]="searchForm">
+    <mat-card>
+      <mat-card-header class="games">
+        <mat-card-title>試合一覧</mat-card-title>
+      </mat-card-header>
+
+      <mat-form-field class="gameInfoList">
+        <mat-label>試合形式</mat-label>
+        <mat-select formControlName="searchGameSystem">
+          <mat-option value="リーグ">リーグ</mat-option>
+          <mat-option value="トーナメント">トーナメント</mat-option>
+        </mat-select>
+        <mat-error *ngIf="searchForm.get('searchGameSystem').hasError('required')">試合形式を選択してください</mat-error>
+      </mat-form-field>
+      <div class="submit">
+        <button mat-raised-button color="primary" type="button" (click)="onSearch()" [disabled]="!searchForm.dirty || searchForm.invalid">検索</button>
+      </div>
+
+      <mat-card *ngIf="isDispFlg">
+        <mat-card-header>
+          <mat-card-title>検索結果：{{gameInfoList.length}}件</mat-card-title>
+        </mat-card-header>
+
+        <mat-table [dataSource]="gameInfoList">
+          <ng-container matColumnDef="eventDate">
+            <mat-header-cell *matHeaderCellDef>開催日</mat-header-cell>
+            <mat-cell *matCellDef="let row">
+              <ng-container *ngIf="!row.gameInfCom.eventDate">未定</ng-container>
+              {{row.gameInfCom.eventDate | date:'yyyy/MM/dd'}}
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="gameStartTime">
+            <mat-header-cell *matHeaderCellDef>開始時間</mat-header-cell>
+            <mat-cell *matCellDef="let row">
+              <ng-container *ngIf="!row.gameInfCom.gameStartTime">未定</ng-container>
+              {{row.gameInfCom.gameStartTime}}
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="gamePlaceName">
+            <mat-header-cell *matHeaderCellDef>開催場所</mat-header-cell>
+            <mat-cell *matCellDef="let row">
+              <ng-container *ngIf="!row.gameInfCom.gamePlaceName">未定</ng-container>
+              {{row.gameInfCom.gamePlaceName}}
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="teamInfo">
+            <mat-header-cell *matHeaderCellDef>チーム名</mat-header-cell>
+            <mat-cell *matCellDef="let row">
+              <ng-container *ngIf="!row.teamInfo[0].teamID && !row.teamInfo[0].teamID">未定</ng-container>
+              {{getTeamName(row.teamInfo[0].teamID)}}<br>{{getTeamName(row.teamInfo[1].teamID)}}
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="scoreResult">
+            <mat-header-cell *matHeaderCellDef>試合結果</mat-header-cell>
+            <mat-cell *matCellDef="let row">{{getGameResult(row)}}</mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="edit">
+            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+            <mat-cell *matCellDef="let row">
+              <button mat-raised-button color="primary" type="button" (click)="navigateGameDetail(row)">詳細</button>
+            </mat-cell>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="['edit', 'eventDate', 'gameStartTime', 'gamePlaceName', 'teamInfo', 'scoreResult']"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: ['edit', 'eventDate', 'gameStartTime', 'gamePlaceName', 'teamInfo', 'scoreResult']"></mat-row>
+        </mat-table>
+      </mat-card>
+    </mat-card>
+
+    <div class="footer-button-area">
+      <button mat-raised-button color="primary" class="back-button" type="button" (click)="returnToBeforePage()">戻る</button>
+    </div>
+  </form>
+</div>

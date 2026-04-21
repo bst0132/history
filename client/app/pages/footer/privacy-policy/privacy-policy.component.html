@@ -1,0 +1,25 @@
+<div class="content">
+  <mat-toolbar class="title-toolbar">
+    <span class='toolbar-text'>個人情報保護方針</span>
+  </mat-toolbar>
+  <mat-card class="base-card">
+    <div class="card">
+      <mat-card class="contents-card radius">
+        <div class="policy-explanation">{{privacyPolicy.header}}</div>
+        <ng-container *ngFor="let body of privacyPolicy.body">
+          <div class="policy-title">{{body.title}}</div>
+          <ng-container *ngFor="let firstContents of body.firstContents">
+            <div [ngClass]="{'policy-first-contents': !firstContents.class,'policy-inquiry': firstContents.class=='inquiry', 'policy-not-clause': firstContents.class=='notClause'}">{{firstContents.text}}</div>
+            <ng-container *ngFor="let secondContents of firstContents.secondContents">
+              <div class="policy-second-contents">{{secondContents.text}}</div>
+              <ng-container *ngFor="let thirdContents of secondContents.thirdContents">
+                <div class="policy-third-contents">{{thirdContents.text}}</div>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+        <div class="policy-end">{{privacyPolicy.footer}}</div>
+      </mat-card>
+    </div>
+  </mat-card>
+</div>

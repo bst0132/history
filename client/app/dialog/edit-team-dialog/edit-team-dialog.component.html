@@ -1,0 +1,22 @@
+<p mat-dialog-title>チーム名を編集</p>
+<!-- 編集フォーム -->
+<mat-dialog-content>
+  <form [formGroup]="formGroup">
+    <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+      <mat-label>チーム名</mat-label>
+      <input matInput formControlName="teamName" placeholder="チーム神奈川" maxlength="50" required>
+      <mat-error *ngIf="formGroup.get('teamName').hasError('required')">{{msg.noenteredErr.replace('※1', 'チーム名')}}</mat-error>
+      <mat-hint>{{msg.wordMaxChkErr.replace('※1','50')}}</mat-hint>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<!-- ボタン -->
+<mat-dialog-actions class="flex-button">
+  <div class="back-button">
+    <button mat-stroked-button type="button" color="basic" [mat-dialog-close]="false">キャンセル</button>
+  </div>
+  <div class="update-button">
+    <button mat-raised-button type="button" [disabled]="formGroup.invalid || canDeactive()"
+      [class.active-button]="!formGroup.invalid && !canDeactive()" (click)="onClickUpdate()">更新</button>
+  </div>
+</mat-dialog-actions>

@@ -1,0 +1,268 @@
+<div class="content">
+  <!-- 画面タイトル部分 -->
+  <mat-toolbar class="title-toolbar">
+    <span>チーム情報</span>
+    <div *ngIf="isEditableTeam" (click)="editTeam()">
+      <a >編集する</a>
+      <button mat-icon-button type="button"><mat-icon>create</mat-icon></button>
+    </div>
+  </mat-toolbar>
+  <!-- 画面内容部分 -->
+  <mat-card class="base-card">
+    <mat-card-content>
+      <!-- 基本情報 -->
+      <div class="card">
+        <mat-toolbar class="contents-toolbar">
+          <span>チームのプロフィール</span>
+        </mat-toolbar>
+        <mat-card class="contents-card">
+          <div class="information">
+            <app-image-select [mode]="'show'" [imageInfo]="teamInfo?.teamLogo" ></app-image-select>
+            <div class="text-area">
+              <h2 class="team-name">{{teamInfo?.teamName}}</h2>
+              <div class="item-list">
+                <ul class="item">
+                  <li class="item-name">競技</li>
+                  <li class="item-contents">{{teamInfo?.sports | getSportValue}}</li>
+                </ul>
+                <ul class="item">
+                  <li class="item-name">チーム設立日</li>
+                  <li class="item-contents">{{teamInfo?.teamEstDate | date:'yyyy/MM/dd'}}</li>
+                </ul>
+                <ul class="item">
+                  <li class="item-name">所在地</li>
+                  <li class="item-contents">{{teamInfo?.teamAddInf?.teamPrefecture + teamInfo?.teamAddInf?.teamCity}}</li>
+                </ul>
+                <ul *ngIf="teamInfo?.teamIntro" class="item">
+                  <li class="item-name">チーム紹介</li>
+                  <li class="item-contents">{{teamInfo?.teamIntro}}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+
+      <!--<mat-card>
+        <mat-card-header>
+          <mat-card-title>所属選手</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-table [dataSource]="players">
+            <ng-container matColumnDef="playerName">
+              <mat-header-cell *matHeaderCellDef>選手名</mat-header-cell>
+              <mat-cell *matCellDef="let row">{{row.playerName}}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="uninum">
+              <mat-header-cell *matHeaderCellDef>背番号</mat-header-cell>
+              <mat-cell *matCellDef="let row">{{row.uniNum}}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="gamePosition">
+              <mat-header-cell *matHeaderCellDef>ポジション</mat-header-cell>
+              <mat-cell *matCellDef="let row">{{row.gamePosition}}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="teamStartDate">
+              <mat-header-cell *matHeaderCellDef>所属開始年月</mat-header-cell>
+              <mat-cell *matCellDef="let row">{{row.teamStartDate | date: 'yyyy/MM'}}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="teamEndDate">
+              <mat-header-cell *matHeaderCellDef>所属終了年月</mat-header-cell>
+              <mat-cell *matCellDef="let row">{{row.teamEndDate | date: 'yyyy/MM'}}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="detail">
+              <mat-header-cell *matHeaderCellDef></mat-header-cell>
+              <mat-cell *matCellDef="let row">
+                <button mat-raised-button color="primary" type="button">詳細</button>
+              </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="['detail', 'playerName', 'uninum', 'gamePosition', 'teamStartDate', 'teamEndDate']"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: ['detail', 'playerName', 'uninum', 'gamePosition', 'teamStartDate', 'teamEndDate']"></mat-row>
+          </mat-table>
+        </mat-card-content>
+      </mat-card>-->
+
+      <!-- 所属選手 -->
+      <div class="card">
+        <mat-toolbar [ngClass]="{'contents-toolbar' : players?.length!==0 || futurePlayers?.length!==0, 'nocontents-toolbar' : players?.length==0 && futurePlayers?.length==0}">
+          <span>所属選手 ({{players?.length + futurePlayers?.length || 0}}人)</span>
+        </mat-toolbar>
+        <mat-card class="contents-card" *ngIf="players?.length!==0 || futurePlayers?.length!==0">
+          <!-- PCの場合の表示内容 -->
+          <mat-card-content *ngIf="device == 'pc'" class="player-list-pc">
+            <ng-container *ngFor="let player of players">
+              <app-image-panel [mode]="'picture'" [imageInfo]="player.userImage">
+                {{player.playerName}}
+              </app-image-panel>
+            </ng-container>
+            <ng-container *ngFor="let futurePlayer of futurePlayers">
+              <app-image-panel [mode]="'picture'" [imageInfo]="futurePlayer.userImage">
+                {{futurePlayer.playerName}}
+                <p class="scheduled-belong">所属予定</p>
+              </app-image-panel>
+            </ng-container>
+          </mat-card-content>
+          <!-- SPの場合の表示内容 -->
+          <mat-list *ngIf="device == 'sp'" class="player-list-sp">
+            <mat-list-item *ngFor="let player of players">
+              <div class="avatar-area">
+                <div class="no-image" *ngIf="!player.userImage">
+                  <img [src]="'assets/images/no_image.png'">
+                </div>
+                <div class="image" *ngIf="player.userImage">
+                  <img [src]="player.userImage.dataUrl" [style.transform]="player.userImage.transform">
+                </div>
+              </div>
+              <span>{{player.playerName}}</span>
+              <mat-divider></mat-divider>
+            </mat-list-item>
+            <mat-list-item *ngFor="let futurePlayer of futurePlayers">
+              <div class="avatar-area">
+                <div class="no-image" *ngIf="!futurePlayer.userImage.dataUrl">
+                  <img [src]="'assets/images/no_image.png'">
+                  <div class="scheduled-belong">所属予定</div>
+                </div>
+                <div class="image" *ngIf="futurePlayer.userImage">
+                  <img [src]="futurePlayer.userImage.dataUrl" [style.transform]="futurePlayer.userImage.transform">
+                  <div class="scheduled-belong">所属予定</div>
+                </div>
+              </div>
+              <span>{{futurePlayer.playerName}}</span>
+              <mat-divider></mat-divider>
+            </mat-list-item>
+          </mat-list>
+        </mat-card>
+      </div>
+
+      <!--<mat-card>
+        <mat-card-header>
+          <mat-card-title>過去の所属選手</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-table [dataSource]="pastPlayers">
+            <ng-container matColumnDef="playerName">
+              <mat-header-cell *matHeaderCellDef>選手名</mat-header-cell>
+              <mat-cell *matCellDef="let row">{{row.playerName}}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="uninum">
+              <mat-header-cell *matHeaderCellDef>背番号</mat-header-cell>
+              <mat-cell *matCellDef="let row">{{row.uniNum}}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="gamePosition">
+              <mat-header-cell *matHeaderCellDef>ポジション</mat-header-cell>
+              <mat-cell *matCellDef="let row">{{row.gamePosition}}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="teamStartDate">
+              <mat-header-cell *matHeaderCellDef>所属開始年月</mat-header-cell>
+              <mat-cell *matCellDef="let row">{{row.teamStartDate | date: 'yyyy/MM'}}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="teamEndDate">
+              <mat-header-cell *matHeaderCellDef>所属終了年月</mat-header-cell>
+              <mat-cell *matCellDef="let row">{{row.teamEndDate | date: 'yyyy/MM'}}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="detail">
+              <mat-header-cell *matHeaderCellDef></mat-header-cell>
+              <mat-cell *matCellDef="let row">
+                <button mat-raised-button color="primary" type="button">詳細</button>
+              </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="['detail', 'playerName', 'uninum', 'gamePosition', 'teamStartDate', 'teamEndDate']"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: ['detail', 'playerName', 'uninum', 'gamePosition', 'teamStartDate', 'teamEndDate']"></mat-row>
+          </mat-table>
+        </mat-card-content>
+      </mat-card>-->
+
+      <!-- 過去の所属選手 -->
+      <div class="card">
+        <mat-toolbar class="contents-toolbar">
+          <span>過去の所属選手</span>
+        </mat-toolbar>
+        <mat-card class="contents-card">
+          <mat-card-content>
+            <p>過去に所属していた選手を検索します。所属していた年を入力してください。</p>
+            <div class="date-form">
+              <form [formGroup]="formGroup" class="date">
+                <mat-form-field appearance="outline" floatLabel="always">
+                  <mat-label>所属年</mat-label>
+                  <mat-select formControlName="year" required>
+                    <mat-option *ngFor="let year of years" [value]="year">{{year}}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="formGroup.get('year').hasError('required')">{{msg.unselectErr.replace('※1','所属年')}}</mat-error>
+                </mat-form-field>
+              </form>
+              <div class="search">
+                <button mat-raised-button type="button" (click)="onSearch()" [disabled]="formGroup.invalid" [class.active-button]="!formGroup.invalid">
+                  <mat-icon>search</mat-icon>検索
+                </button>
+              </div>
+            </div>
+            <mat-card class="result" *ngIf="isDispFlg">
+              <mat-card-header>
+                <mat-card-title>検索結果：{{pastPlayersList.length}}件</mat-card-title>
+              </mat-card-header>
+              <mat-card-content *ngIf="device == 'pc'" class="player-list-pc">
+                <ng-container *ngFor="let player of pastPlayersList">
+                  <app-image-panel [mode]="'picture'" [imageInfo]="player.userImage">{{player.playerName}}</app-image-panel>
+                </ng-container>
+              </mat-card-content>
+              <mat-list *ngIf="device == 'sp'" class="player-list-sp">
+                <mat-list-item *ngFor="let player of pastPlayersList">
+                  <div class="avatar-area">
+                    <div class="no-image" *ngIf="!player.userImage">
+                      <img [src]="'assets/images/no_image.png'">
+                    </div>
+                    <div class="image" *ngIf="player.userImage">
+                      <img [src]="player.userImage.dataUrl" [style.transform]="player.userImage.transform">
+                    </div>
+                  </div>
+                  <span>{{player.playerName}}</span>
+                  <mat-divider></mat-divider>
+                </mat-list-item>
+              </mat-list>
+            </mat-card>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- 大会参加履歴 -->
+      <div class="card">
+        <mat-toolbar class="contents-toolbar">
+          <span>大会参加履歴</span>
+        </mat-toolbar>
+        <mat-card class="contents-card">
+          <mat-card-content>
+            <div *ngIf="partCompHisList?.length === 0">大会に参加していません</div>
+            <mat-table *ngIf="partCompHisList?.length > 0" [dataSource]="partCompHisList">
+              <ng-container matColumnDef="compName">
+                <mat-header-cell *matHeaderCellDef>大会名</mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.compName | omitLongSentence: (device === 'pc' ? 20 : 10):'...'}} </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="openingDate">
+                <mat-header-cell *matHeaderCellDef>開催日</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{row.openingDate | date: 'yyyy/MM/dd'}}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="compOrganName">
+                <mat-header-cell *matHeaderCellDef>主催団体名</mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                  <ng-container *ngFor="let org of row.organizer; first as isFirst">
+                    <!-- 1件目の10文字まで表示 -->
+                    <ng-container *ngIf="isFirst">
+                      {{organizerNameList[org.orgId.toString()] | omitLongSentence: 10:'...'}}
+                    </ng-container>
+                  </ng-container>
+                  <!-- 2件以上省略 -->
+                  <span *ngIf="row.organizer.length > 1">&nbsp;etc.</span>
+                </mat-cell>
+              </ng-container>
+              <mat-header-row *matHeaderRowDef="['compName', 'openingDate', 'compOrganName']"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: ['compName', 'openingDate', 'compOrganName']" [ngClass]="{'changeBackgroudColor': organizeCompIds.includes(row.compId)}"></mat-row>
+            </mat-table>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="footer-button-area">
+        <button mat-raised-button color="basic" type="button" (click)="returnToList()">戻る</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,86 @@
+<div class="content">
+  <mat-card>
+    <mat-card-content>
+      <mat-card>
+        <mat-card-content>
+          <ng-container [ngSwitch]="searchType">
+            <!-- 選手招待の場合以下の検索条件を表示 -->
+            <ng-container *ngSwitchCase="'team'">
+              <form [formGroup]="formGroup">
+                <mat-form-field>
+                  <mat-label>ID</mat-label>
+                  <input type="text" matInput placeholder="ID000001" formControlName="userUniqueID" maxLength='20' required>
+                  <mat-error *ngIf="formGroup.get('userUniqueID').hasError('required')">{{msg.noenteredErr.replace('※1','ID')}}</mat-error>
+                  <mat-error *ngIf="formGroup.get('userUniqueID').hasError('pattern')">{{msg.idFormChkErr}}</mat-error>
+                  <mat-hint>{{msg.idFormChkErr}}</mat-hint>
+                </mat-form-field>
+              </form>
+            </ng-container>
+            <!-- 選手検索の場合以下の検索条件を表示 -->
+            <ng-container *ngSwitchCase="'user'">
+              <form [formGroup]="formGroup">
+                <mat-form-field>
+                  <mat-label>競技</mat-label>
+                  <mat-select formControlName="sports" required>
+                    <mat-option *ngFor="let s of sports" [value]="s.key">
+                      {{s.value}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="formGroup.get('sports').hasError('required')">競技を選択してください</mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                  <mat-label>選手名</mat-label>
+                  <input type="text" matInput placeholder="山田 太郎" formControlName="playerName">
+                </mat-form-field>
+                <mat-form-field >
+                  <mat-label>チーム名</mat-label>
+                  <input type="text" matInput formControlName="teamName">
+                </mat-form-field>
+                <mat-error id="input-error" *ngIf="formGroup.hasError('eitherRequired')">※選手名またはチーム名のいずれかを入力してください</mat-error>
+              </form>
+            </ng-container>
+          </ng-container>
+          <button id="search-button" class="focus-button" mat-raised-button color="primary" type="button" (click)="onSearch()" [disabled]="formGroup.invalid">検索</button>
+        </mat-card-content>
+      </mat-card>
+    </mat-card-content>
+    <mat-card-content class="player-list">
+      <ng-container *ngIf="playerList.length != 0 || playerInfo">
+        <mat-card>
+          <!-- 選手検索と選手招待で表示を切り替え -->
+          <ng-container [ngSwitch]="searchType">
+            <!-- 選手検索の場合 -->
+            <ng-container *ngSwitchCase="'user'">
+              <ng-container *ngFor="let player of playerList">
+                <app-image-panel [imageInfo]="player.userImage">
+                  <!-- 選手名 -->
+                  <div> {{player.playerName}} </div>
+                  <!-- 身長 -->
+                  <div> {{player.heightNum}} {{player.heightUnit}}</div>
+                  <!-- 体重 -->
+                  <div>{{player.weightNum}} {{player.weightUnit}}</div>
+                </app-image-panel>
+              </ng-container>
+            </ng-container>
+            <!-- 選手招待の場合 -->
+            <ng-container *ngSwitchCase="'team'">
+              <app-image-panel [imageInfo]="playerInfo.userImage">
+                <div class="player-name">{{playerInfo.playerName}}</div>
+                <button mat-raised-button class="invite-button" color="primary" type="button" (click)="invitePlayer(playerInfo)" [disabled]="isInvited(playerInfo) || belongToTeam(playerInfo)">
+                  <ng-container *ngIf="belongToTeam(playerInfo)">参加済み</ng-container>
+                  <ng-container *ngIf="!belongToTeam(playerInfo)" [ngSwitch]="isInvited(playerInfo)">
+                    <ng-container *ngSwitchCase="false">招待する</ng-container>
+                    <ng-container *ngSwitchCase="true">招待済み</ng-container>
+                  </ng-container>
+                </button>
+              </app-image-panel>
+            </ng-container>
+          </ng-container>
+        </mat-card>
+      </ng-container>
+    </mat-card-content>
+    <ng-container *ngIf="searchType =='team'">
+      <button data-test="pageBackBtn" class="focus-button" mat-raised-button color="primary" type="button" (click)="onClickBack()">戻る</button>
+    </ng-container>
+  </mat-card>
+</div>

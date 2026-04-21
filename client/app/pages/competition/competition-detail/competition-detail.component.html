@@ -1,0 +1,86 @@
+<div class="content">
+  <!-- 画面タイトル部分 -->
+  <mat-toolbar class="title-toolbar">
+    <span>大会情報</span>
+    <div *ngIf="isEditableComp" (click)="manageCompetition()">
+      <a>編集する</a>
+      <button mat-icon-button type="button"><mat-icon>create</mat-icon></button>
+    </div>
+  </mat-toolbar>
+  <mat-card class="base-card">
+    <mat-card-content>
+      <!-- 大会の詳細 -->
+      <div class="card">
+        <mat-toolbar class="contents-toolbar">
+          <span>大会の詳細</span>
+        </mat-toolbar>
+        <mat-card class="contents-card">
+          <div class="information">
+            <app-image-select [mode]="'show'" [imageInfo]="compInfo?.compLogo"></app-image-select>
+            <div class="text-area">
+              <h2 class="team-name">{{compInfo?.compName}}</h2>
+              <div class="item-list">
+                <ul class="item">
+                  <li class="item-name">競技</li>
+                  <li class="item-contents">{{compInfo?.sports | getSportValue}}</li>
+                </ul>
+                <ul class="item">
+                  <li class="item-name">大会開催日</li>
+                  <li class="item-contents">{{compInfo?.heldDate | date:'yyyy/MM/dd'}}</li>
+                </ul>
+                <ul *ngIf="compInfo?.compIntro" class="item">
+                  <li class="item-name">大会紹介</li>
+                  <li class="item-contents">{{compInfo?.compIntro}}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+      <!-- リーグ/トーナメント -->
+      <div class="card">
+        <mat-toolbar class="contents-toolbar">
+          <span>リーグ/トーナメント情報</span>
+        </mat-toolbar>
+        <mat-card class="contents-card">
+          <mat-card-content>
+            <!-- リーグ -->
+            <div *ngIf="leagueList?.length > 0" class="match-method"><mat-icon>sports_soccer</mat-icon>リーグ</div>
+            <div class="list-card-container">
+              <ng-container *ngFor="let league of leagueList">
+                <mat-card (click)="navigateGameGroupDetail(league)" class="list-card">
+                  <div class="card-container">
+                    <div class="text-container">
+                      <div class="group-name">{{league.groupName}}</div>
+                      <div class="team-cnt">全{{league.groupPartTeamCnt}}チーム</div>
+                    </div>
+                    <mat-icon class="invisible">navigate_next</mat-icon>
+                  </div>
+                </mat-card>
+              </ng-container>
+            </div>
+            <!-- トーナメント -->
+            <div *ngIf="tournamentList?.length > 0" class="match-method"><mat-icon>sports_soccer</mat-icon>トーナメント</div>
+            <div class="list-card-container">
+              <ng-container *ngFor="let tournament of tournamentList">
+                <mat-card (click)="navigateGameGroupDetail(tournament)" class="list-card">
+                  <div class="card-container">
+                    <div class="text-container">
+                      <div class="group-name">{{tournament.groupName}}</div>
+                      <div class="team-cnt">全{{tournament.groupPartTeamCnt}}チーム</div>
+                    </div>
+                    <mat-icon class="invisible">navigate_next</mat-icon>
+                  </div>
+                </mat-card>
+              </ng-container>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <!-- 戻るボタン -->
+      <div class="footer-button-area">
+        <button mat-raised-button color="basic" type="button" (click)="pageBack()">戻る</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

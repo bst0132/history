@@ -1,0 +1,195 @@
+<div class="content">
+  <mat-toolbar class="title-toolbar">
+    <span>プロフィール編集</span>
+  </mat-toolbar>
+  <mat-card class="base-card">
+    <div class="card">
+      <mat-tab-group mat-stretch-tabs animationDuration="0ms" selectedIndex="0">
+
+        <!-- プロフィール編集タブ -->
+        <mat-tab label="プロフィール">
+          <mat-card class="contents-card profile" [style.background-image]="image">
+            <app-image-select [mode]="'edit'" [shape]="'round'" [imageInfo]="userImage" (imageChange)="onChangeDataUrl($event)">プロフィール画像を選択</app-image-select>
+          </mat-card>
+          <mat-card class="contents-card">
+            <form [formGroup]="formGroup">
+              <div class="flex-form {{device}}">
+                <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                  <mat-label>ニックネーム<span class="required">(必須)</span></mat-label>
+                  <input matInput formControlName="nickname" maxLength='30' required>
+                  <mat-error *ngIf="formGroup.get('nickname').hasError('required')">{{msg.noenteredErr.replace('※1','ニックネーム')}}</mat-error>
+                  <mat-hint>{{msg.wordMaxChkErr.replace('※1','30')}}</mat-hint>
+                </mat-form-field>
+                <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                  <mat-label>ID<span class="required">(必須)</span></mat-label>
+                  <input matInput placeholder="ID000001" formControlName="userUniqueID" maxLength='20' required>
+                  <mat-error *ngIf="formGroup.get('userUniqueID').hasError('required')">{{msg.noenteredErr.replace('※1','ID')}}</mat-error>
+                  <mat-error *ngIf="formGroup.get('userUniqueID').hasError('pattern')">{{msg.idFormChkErr}}</mat-error>
+                  <mat-hint>{{msg.idFormChkErr}}</mat-hint>
+                </mat-form-field>
+              </div>
+              <p class="check-box"><mat-checkbox color="primary" formControlName="isSearchable">ID検索を許可する</mat-checkbox></p>
+            </form>
+          </mat-card>
+        </mat-tab>
+
+        <!-- 選手情報編集タブ -->
+        <mat-tab label="選手情報">
+          <mat-card class="contents-card">
+            <ng-container *ngIf="!userInfo?.playerInf && !editFlg">
+              <div class="flex">
+                <div class="add">選手情報を追加する</div>
+                <div class="button-area">
+                  <button mat-icon-button class="add-button" type="button" (click)="editFlgChange()"><mat-icon>add</mat-icon></button>
+                </div>
+              </div>
+            </ng-container>
+            <form *ngIf="userInfo?.playerInf || playerInf.enabled" [formGroup]="playerInf">
+              <div class="flex-form {{device}}">
+                <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                  <mat-label>姓<span class="required">(必須)</span></mat-label>
+                  <input matInput placeholder="山田" formControlName="lastName" maxLength='30' required>
+                  <mat-error *ngIf="playerInf.get('lastName').hasError('required')">{{msg.noenteredErr.replace('※1','姓')}}</mat-error>
+                  <mat-hint>{{msg.wordMaxChkErr.replace('※1','30')}}</mat-hint>
+                </mat-form-field>
+                <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                  <mat-label>名<span class="required">(必須)</span></mat-label>
+                  <input matInput placeholder="太郎" formControlName="firstName" maxLength='30' required>
+                  <mat-error *ngIf="playerInf.get('firstName').hasError('required')">{{msg.noenteredErr.replace('※1','名')}}</mat-error>
+                  <mat-hint>{{msg.wordMaxChkErr.replace('※1','30')}}</mat-hint>
+                </mat-form-field>
+              </div>
+              <div class="flex-form {{device}}">
+                <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                  <mat-label>姓（全角カナ）<span class="required">(必須)</span></mat-label>
+                  <input matInput placeholder="ヤマダ" formControlName="lastNameKana" maxLength='60' required>
+                  <mat-error *ngIf="playerInf.get('lastNameKana').hasError('required')">{{msg.noenteredErr.replace('※1','姓（全角カナ）')}}</mat-error>
+                  <mat-error *ngIf="playerInf.get('lastNameKana').hasError('pattern')">{{msg.formatChkErr.replace('※1','全角カナ')}}</mat-error>
+                  <mat-hint>{{msg.wordMaxChkErr.replace('※1','60')}}</mat-hint>
+                </mat-form-field>
+                <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                  <mat-label>名（全角カナ）<span class="required">(必須)</span></mat-label>
+                  <input matInput placeholder="タロウ" formControlName="firstNameKana" maxLength='60' required>
+                  <mat-error *ngIf="playerInf.get('firstNameKana').hasError('required')">{{msg.noenteredErr.replace('※1','名（全角カナ）')}}</mat-error>
+                  <mat-error *ngIf="playerInf.get('firstNameKana').hasError('pattern')">{{msg.formatChkErr.replace('※1','全角カナ')}}</mat-error>
+                  <mat-hint>{{msg.wordMaxChkErr.replace('※1','60')}}</mat-hint>
+                </mat-form-field>
+              </div>
+              <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                <mat-label>生年月日<span class="required">(必須)</span></mat-label>
+                <input matInput readonly placeholder="2020/01/01" [matDatepicker]="picker1" formControlName="birthDate" required tabindex="-1" (click)="picker1.open()">
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+                <mat-error *ngIf="playerInf.get('birthDate').hasError('required')">{{msg.unselectErr.replace('※1','生年月日')}}</mat-error>
+                <mat-hint>{{msg.unselectErr.replace('※1','生年月日')}}</mat-hint>
+              </mat-form-field>
+              <mat-form-field appearance="outline" floatLabel="always">
+                <mat-label>出身地(任意)</mat-label>
+                <input matInput placeholder="神奈川県" formControlName="birthPlace" maxLength='100'>
+                <mat-hint>{{msg.wordMaxChkErr.replace('※1','100')}}</mat-hint>
+              </mat-form-field>
+              <mat-form-field appearance="outline" floatLabel="always" class="unit-input">
+                <mat-label>身長(任意)</mat-label>
+                <input matInput placeholder="175.0" formControlName="heightNum" maxLength='5'>
+                <mat-error *ngIf="playerInf.get('heightNum').hasError('pattern')">{{msg.formatChkErr.replace('※1','半角数字')}}</mat-error>
+                <mat-hint>{{msg.wordMaxChkErr.replace('※1','5')}}</mat-hint>
+                <mat-select formControlName="heightUnit">
+                  <mat-option value="cm">cm</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline" floatLabel="always" class="unit-input">
+                <mat-label>体重(任意)</mat-label>
+                <input matInput placeholder="70.0" formControlName="weightNum" maxLength='5'>
+                <mat-error *ngIf="playerInf.get('weightNum').hasError('pattern')">{{msg.formatChkErr.replace('※1','半角数字')}}</mat-error>
+                <mat-hint>{{msg.wordMaxChkErr.replace('※1','5')}}</mat-hint>
+                <mat-select formControlName="weightUnit">
+                  <mat-option value="kg">kg</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline" floatLabel="always">
+                <mat-label>血液型(任意)</mat-label>
+                <mat-select formControlName="bloodType" placeholder="血液型を選択してください">
+                  <mat-option value="A">A</mat-option>
+                  <mat-option value="B">B</mat-option>
+                  <mat-option value="O">O</mat-option>
+                  <mat-option value="AB">AB</mat-option>
+                  <mat-option value="不明">不明</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                <mat-label>国籍<span class="required">(必須)</span></mat-label>
+                <input matInput placeholder="日本" formControlName="nationallity" maxLength='60' required>
+                <mat-error *ngIf="playerInf.get('nationallity').hasError('required')">{{msg.noenteredErr.replace('※1','国籍')}}</mat-error>
+                <mat-hint>{{msg.wordMaxChkErr.replace('※1','60')}}</mat-hint>
+              </mat-form-field>
+              <ng-container *ngIf="!userInfo?.playerInf && editFlg">
+                <div class="button">
+                  <button mat-raised-button class="cancel-edit" type="button" (click)="editFlgChange()">編集をキャンセルする</button>
+                </div>
+              </ng-container>
+            </form>
+          </mat-card>
+        </mat-tab>
+
+        <!-- スポーツ情報編集タブ -->
+        <mat-tab label="スポーツ情報">
+          <mat-card class="contents-card">
+            <form [formGroup]="formGroup">
+              <ng-container formArrayName="sportsInf">
+                <ng-container *ngFor="let sports of getSports?.controls; let i = index">
+                  <mat-card [formGroupName]="i" class="card-color">
+                    <a (click)="onDelSports(i)" (keyup)="onKeyCheck($event)" tabindex="0">✖</a>
+                    <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                      <mat-label>競技<span class="required">(必須)</span></mat-label>
+                      <mat-select formControlName="sport" required>
+                        <mat-option value="Football">サッカー</mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="sports.get('sport').hasError('required')">{{msg.unselectErr.replace('※1','スポーツ')}}</mat-error>
+                    </mat-form-field>
+                    <ng-container [ngSwitch]="sports.get('sport').value">
+                      <ng-container *ngSwitchCase="'Football'">
+                        <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                          <mat-label>ポジション<span class="required">(必須)</span></mat-label>
+                          <input matInput placeholder="GK" formControlName="position" maxLength='25' required>
+                          <mat-error *ngIf="sports.get('position').hasError('required')">{{msg.noenteredErr.replace('※1','ポジション')}}</mat-error>
+                          <mat-hint>{{msg.wordMaxChkErr.replace('※1','25')}}</mat-hint>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                          <mat-label>利き足<span class="required">(必須)</span></mat-label>
+                          <input matInput placeholder="右足" formControlName="dominantFoot" maxLength='5' required>
+                          <mat-error *ngIf="sports.get('dominantFoot').hasError('required')">{{msg.noenteredErr.replace('※1','利き足')}}</mat-error>
+                          <mat-hint>{{msg.wordMaxChkErr.replace('※1','5')}}</mat-hint>
+                        </mat-form-field>
+                      </ng-container>
+                    </ng-container>
+                  </mat-card>
+                </ng-container>
+                <!-- <div class="button-area" *ngIf="!canAddSports">
+                  <button mat-icon-button class="add-button" type="button" (click)="onAddSports()"><mat-icon>add</mat-icon></button>
+                </div> -->
+              </ng-container>
+              <ng-container *ngIf="canAddSports">
+                <div div class="flex">
+                  <div class="add">スポーツ情報を追加する</div>
+                  <div class="button-area">
+                    <button mat-icon-button class="add-button" type="button" (click)="onAddSports()"><mat-icon>add</mat-icon></button>
+                  </div>
+                </div>
+              </ng-container>
+            </form>
+          </mat-card>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+    <div class="update-button">
+      <button mat-raised-button type="button" (click)="onSubmit()" [disabled]="formGroup.invalid || playerInf.invalid || canDeactive()"
+      [class.active-button]="!formGroup.invalid && !playerInf.invalid && !canDeactive()">
+        <mat-icon>cached</mat-icon>変更
+      </button>
+    </div>
+    <!-- 戻るボタン -->
+    <div class="footer-button-area">
+      <button mat-raised-button type="button" (click)="onClickReturnToDetail()">戻る</button>
+    </div>
+  </mat-card>
+</div>

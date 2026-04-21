@@ -1,0 +1,44 @@
+@import '../../../mylib/mixin';
+
+// ダイアログのタイトル
+.title {
+  font-size: 0.8rem;
+  margin-bottom: 10px;
+  @media (min-width: $media-tb) {
+    font-size: 1rem;
+  }
+}
+
+// 位置調整
+.content {
+  display: flex;
+  justify-content: center;
+  align-items: center
+}
+
+// 画像周囲のエリア調整
+.img-container {
+  width: 450px;
+  height: 450px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+// 画像の表示サイズ調整
+:host ::ng-deep img {
+  width:auto;
+  height:auto;
+  max-width:100%;
+  max-height:100%;
+}
+
+// クロッパーの不要なパディング調整
+.cropper {
+  padding: 0;
+}
+
+// ボタン位置のスタイル
+.btn-area {
+  @include flex-style($justify: flex-end);
+}

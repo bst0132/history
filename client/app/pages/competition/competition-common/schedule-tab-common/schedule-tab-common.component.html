@@ -1,0 +1,114 @@
+<mat-card class="contents-card">
+  <mat-accordion>
+    <!-- リーグ表示 -->
+    <ng-container *ngIf="compInfo?.compSystemInf?.compSystem === cns.league|| compInfo?.compSystemInf?.compSystem === cns.leagueTournament">
+      <div class="create-game">
+        <span class="comp-system">リーグ</span>
+        <ng-container *ngIf="canEdit">
+          <span class="add-game-button" (click)="onClickRegAndEditGame(cns.league)">
+            <a>新規登録する</a>
+            <button mat-icon-button type="button"><mat-icon>add</mat-icon></button>
+          </span>
+        </ng-container>
+      </div>
+    </ng-container>
+    <ng-container *ngFor="let leagues of leagueList">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>{{leagues?.gameGroupTitle}}</mat-panel-title>
+        </mat-expansion-panel-header>
+        <ng-container *ngIf="!canEdit">
+          <div class="game-detail">
+            <span (click)="onClickToGameDetail(leagues.gameSystem, leagues.gameGroupId)">
+              <a>リーグ表を見る</a>
+              <button mat-icon-button type="button"><mat-icon>pageview</mat-icon></button>
+            </span>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="canEdit">
+          <div class="edit-game">
+            <span (click)="onClickRegAndEditGame(leagues.gameSystem, leagues.gameGroupId)">
+              <a>編集する</a>
+              <button mat-icon-button type="button"><mat-icon>create</mat-icon></button>
+            </span>
+          </div>
+        </ng-container>
+        <ng-container *ngFor="let perDates of leagues?.perDate">
+          <p class="each-date">
+            ●
+            <ng-container *ngIf="perDates?.gameDate">{{perDates?.gameDate | date: 'yyyy/MM/dd'}}</ng-container>
+            <ng-container *ngIf="!perDates?.gameDate">試合日未登録</ng-container>
+          </p>
+          <div class="card-container">
+            <ng-container *ngFor="let perGames of perDates?.gamesInf">
+              <app-game-panel [gamesInf]="perGames"></app-game-panel>
+            </ng-container>
+          </div>
+        </ng-container>
+      </mat-expansion-panel>
+    </ng-container>
+    <!-- リーグ試合情報なし・編集権限なし -->
+    <ng-container *ngIf="!leagueList?.length && !canEdit">
+      <p>試合情報はございません。</p>
+    </ng-container>
+    <!-- トーナメント表示 -->
+    <ng-container *ngIf="compInfo?.compSystemInf?.compSystem === cns.tournament || compInfo?.compSystemInf?.compSystem === cns.leagueTournament">
+      <div [ngClass]="{'create-game': compInfo?.compSystemInf?.compSystem == cns.tournament, 'league-and-tournament': compInfo?.compSystemInf?.compSystem == cns.leagueTournament}">
+        <span class="comp-system">トーナメント</span>
+        <ng-container *ngIf="canEdit">
+          <span class="add-game-button" (click)="onClickRegAndEditGame(cns.tournament)">
+            <a>新規登録する</a>
+            <button mat-icon-button type="button"><mat-icon>add</mat-icon></button>
+          </span>
+        </ng-container>
+      </div>
+    </ng-container>
+    <ng-container *ngFor="let tournaments of tournamentList">
+      <p class="game-title">【{{tournaments?.gameGroupTitle}}】</p>
+      <mat-expansion-panel *ngFor="let perDates of tournaments?.perDate">
+        <mat-expansion-panel-header>
+          <ng-container *ngIf="perDates?.gameDate">
+            <mat-panel-title>{{perDates?.gameDate | date: 'yyyy/MM/dd'}}</mat-panel-title>
+          </ng-container>
+          <ng-container *ngIf="!perDates?.gameDate">
+            <mat-panel-title>試合日未登録</mat-panel-title>
+          </ng-container>
+        </mat-expansion-panel-header>
+        <ng-container *ngIf="!canEdit">
+          <div class="game-detail">
+            <span (click)="onClickToGameDetail(tournaments.gameSystem, tournaments.gameGroupId)">
+              <a>トーナメント表を見る</a>
+              <button mat-icon-button type="button"><mat-icon>pageview</mat-icon></button>
+            </span>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="canEdit">
+          <div class="edit-game">
+            <span (click)="onClickRegAndEditGame(tournaments.gameSystem, tournaments.gameGroupId)">
+              <a>{{tournaments?.gameGroupTitle}}を編集する</a>
+              <button mat-icon-button type="button"><mat-icon>create</mat-icon></button>
+            </span>
+          </div>
+        </ng-container>
+        <div class="card-container">
+          <ng-container *ngFor="let perGames of perDates?.gamesInf">
+            <app-game-panel [gamesInf]="perGames"></app-game-panel>
+          </ng-container>
+        </div>
+      </mat-expansion-panel>
+    </ng-container>
+  </mat-accordion>
+  <!-- 試合情報なし・大会方式未登録・編集権限あり -->
+  <ng-container *ngIf="!leagueList?.length && !tournamentList?.length && !compInfo?.compSystemInf?.compSystem && canEdit">
+    <div class="edit-button">
+      <span (click)="changeToEdit()">
+        <a >大会方式を登録してください</a>
+        <button mat-icon-button type="button"><mat-icon>create</mat-icon></button>
+      </span>
+    </div>
+  </ng-container>
+  <!-- トーナメント試合情報なし・編集権限なし -->
+  <ng-container *ngIf="!tournamentList?.length && !canEdit">
+    <p>試合情報はございません。</p>
+  </ng-container>
+</mat-card>

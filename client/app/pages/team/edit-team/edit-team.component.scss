@@ -1,0 +1,249 @@
+@import '../../../../mylib/var';
+@import '../../../../mylib/mixin';
+
+// タイトル用ツールバー
+.title-toolbar {
+  @include title-toolbar;
+  @include flex-style($justify: flex-end);
+  span {
+    margin-right: auto;
+  }
+}
+
+// 真ん中に配置されたベースのカードのスタイル
+.base-card {
+  @include base-card;
+}
+
+// 項目ごとのカードのまとまり部分のスタイル
+.card {
+  @include card;
+}
+
+.contents-card {
+  @include contents-card;
+}
+
+// angular materialタブ活性状態時の下線削除
+:host ::ng-deep.mat-ink-bar {
+  display: none;
+}
+
+// mat-tab-groupタグで囲われた部分のスタイリング
+mat-tab-group {
+  background-color: $basecard-color;
+}
+
+// タブの背景色と文字色の設定
+:host ::ng-deep .mat-tab-label {
+  background-color: $contentsbar-color;
+  color: white;
+  height: 50px;
+}
+
+// タブのレスポンシブ対応用スタイル
+:host ::ng-deep .mat-tab-label,
+:host ::ng-deep .mat-tab-label-active {
+  min-width: 0 !important;
+  @include focus-visible-outline($offset: -7px);
+}
+
+// タブの角の設定
+:host ::ng-deep .mat-tab-header {
+  border-radius: 5px 5px 0 0;
+  @media (max-width: $media-tb) {
+    .mat-tab-label-container {
+      display: inline;
+    }
+  }
+}
+
+// 選択中のタブの設定
+:host ::ng-deep .mat-tab-label-active {
+  background-color: #151c24 !important;
+  opacity: 1 !important;
+  color: $parts-yellow;
+}
+
+// タブのページネーション非表示設定
+:host ::ng-deep.mat-tab-header-pagination {
+  display: none !important;
+}
+
+// 編集できないフォームのスタイリング
+.disable :host ::ng-deep .mat-form-field-flex {
+  background-color: $back-color;
+  border-radius: 5px;
+}
+
+// フォームの下線削除
+:host ::ng-deep .mat-form-field-underline {
+  display: none;
+}
+
+// フォーム必須項目のカラーリング
+.required {
+  color: $required-color;
+}
+
+// チーム基本情報編集の画像の位置設定
+.image-area {
+  text-align: center;
+}
+
+// チーム情報編集部分のフォームスタイリング
+.container {
+  margin-top: 20px;
+  @media (min-width: $media-tb) {
+    @include flex-style($direction: column, $justify: center, $align: flex-start);
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .image-area {
+    flex: 3;
+    @media (max-width: $media-tb) {
+      margin-bottom: 20px;
+    }
+  }
+  .text-area {
+    flex: 5;
+    text-align: center;
+    mat-form-field {
+      width: 95%;
+      @media (min-width: $media-tb) {
+        width: 90%;
+      }
+    }
+  }
+}
+
+// タブフォーカス時の枠線のスタイリング
+::ng-deep .mat-datepicker-toggle button:focus-visible {
+  @include focus-visible-outline;
+}
+
+// 『選手・スタッフを招待する』のスタイリング
+.invite {
+  color: $parts-yellow;
+  font-size: 1rem;
+  font-weight: bold;
+  &.title {
+    padding-left: 18px;
+    padding-top: 8px;
+  }
+  &.player {
+    position: absolute;
+    padding-top: 8px;
+    left: calc(100% - (13 * 16px));
+    cursor: pointer;
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+  &.staff {
+    position: absolute;
+    padding-top: 8px;
+    left: calc(100% - (15 * 16px));
+    cursor: pointer;
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+}
+
+// 招待ボタンのスタイリング
+.table-right {
+  position: relative;
+}
+
+.button-area {
+  position: absolute;
+  right: 20px;
+  color: white;
+  padding-top: 8px;
+  .add-button {
+    @include edit-button;
+  }
+  .remove-button {
+    @include remove-button;
+  }
+}
+
+// 所属選手編集部分のフォーム位置のスタイリング
+.flex-form {
+  .mat-form-field {
+    width: 100%;
+  }
+  @media (max-width: $media-tb) {
+    .invisible {
+      display: none;
+    }
+  }
+  @media (min-width: $media-tb) {
+    @include flex-style($justify: space-between, $align: center);
+    .mat-form-field {
+      width: 48%;
+    }
+    p {
+      text-align: center;
+      @include position($position: relative, $top: -5px);
+      font-weight: bold;
+    }
+  }
+}
+
+// 年月日入力フォームの共通スタイリング
+.calendar {
+  cursor: pointer;
+}
+
+// リストの線のスタイリング
+.mat-card .mat-divider-horizontal {
+  width: 87vw;
+  left: auto;
+  @media (min-width: $media-tb) {
+    width: 95%;
+  }
+}
+
+// アコーディオンメニューのデフォルトでついている影を削除
+.mat-expansion-panel {
+  box-shadow: none;
+}
+
+// アコーディオン開閉ボタンの位置のスタイリング
+.mat-expansion-panel-header {
+  @include focus-visible-outline($offset: -5px);
+  padding: 0 35px;
+}
+
+// 所属選手タブ　招待中選手、所属スタッフタブ　所属スタッフ・招待中スタッフ
+.staff-list mat-list-item, .invite-list mat-list-item {
+  font-size: 15px !important;
+  div.name {
+    padding-left: 18px !important;
+  }
+  div.btn {
+    padding-top: 0;
+  }
+}
+
+// テーブルコンテンツ位置調整
+.mat-cell {
+  padding: 0 16px 0 35px;
+}
+
+.mat-header-cell {
+  padding: 0 16px 0 35px;
+}
+
+// 変更ボタンのスタイル
+.update-button {
+  @include update-button;
+}
+
+// 戻るボタンのスタイル
+.footer-button-area {
+  @include back-button;
+  margin: 0 0 0 20px;
+}

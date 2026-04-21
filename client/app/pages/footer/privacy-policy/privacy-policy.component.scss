@@ -1,0 +1,80 @@
+@import '../../../../mylib/var';
+@import '../../../../mylib/mixin';
+
+// ベースカードの上の白いカードのスタイリング
+.card {
+  @include card;
+}
+
+// 真ん中に配置されたベースのカードのスタイル
+.base-card {
+  @include base-card;
+}
+
+// カードのスタイル
+.contents-card {
+  @include contents-card;
+  // メインの白いカードのスタイル
+  &.radius {
+    border-radius: 5px;
+  }
+}
+
+// 個人情報保護方針に関する説明のCSS
+.policy-explanation {
+  padding: 10px 0px 35px;
+  margin-bottom: 60px;
+  border-bottom: 2px solid #d3d3d3;
+}
+
+// 条数に関するCSS
+.policy-title {
+  @include text($fontSize: 18px, $textColor: $bst-black);
+  font-weight: bold;
+  margin: 40px 0 20px;
+}
+
+// 条項が存在する個人情報保護方針内容に関するCSS
+.policy-first-contents {
+  text-indent: -1em;
+  padding-left: 1em;
+  padding-bottom: 5px;
+}
+
+// 条項が存在しない個人情報保護方針内容に関するCSS
+.policy-not-clause {
+  padding-bottom: 5px;
+}
+
+// 個人情報保護方針サブ内容に関するCSS
+.policy-second-contents {
+  text-indent: -1em;
+  padding-left: 2em;
+  padding-bottom: 5px;
+}
+
+// 個人情報保護方針サブ内容2に関するCSS
+.policy-third-contents {
+  text-indent: -3em;
+  padding-left: 5em;
+  padding-bottom: 5px;
+}
+
+// 個人情報保護方針お問い合わせ先に関するCSS
+.policy-inquiry {
+  margin-bottom: 10px;
+}
+
+// 個人情報保護方針最終行に関するCSS
+.policy-end {
+  margin-top: 20px;
+}
+
+// ページタイトル用ツールバー
+.title-toolbar {
+  @include title-toolbar;
+  @include flex-style($justify: flex-end);
+  span {
+    margin-right: auto;
+  }
+}

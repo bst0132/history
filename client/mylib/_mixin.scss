@@ -1,0 +1,208 @@
+@import './var';
+
+// 各コンポーネントで使いまわしたいスタイルを定義しておく
+
+// 高さ・幅のスタイル定義
+@mixin size($width, $height) {
+  width: $width;
+  height: $height;
+}
+
+// 位置関係のスタイル定義
+@mixin position($position: static, $top: auto, $right: auto, $bottom: auto, $left: auto) {
+  position: $position;
+  top: $top;
+  right: $right;
+  left: $left;
+  bottom: $bottom;
+}
+
+// 文字サイズ・色
+@mixin text($fontSize, $textColor) {
+  font-size: $fontSize;
+  color: $textColor;
+}
+
+// flexbox用スタイル定義
+@mixin flex-style($display: flex, $direction: null, $justify: null, $align: null) {
+  display: $display;
+  @if ($direction != null) {
+    flex-direction: $direction;
+  }
+  @if ($justify != null) {
+    justify-content: $justify;
+  }
+  @if ($align != null) {
+    align-items: $align;
+  }
+}
+
+// 真ん中に配置されたベースのカードのスタイル
+@mixin base-card {
+  background-color: $basecard-color;
+  margin: 0;
+  border-radius: 0;
+  padding: 20px 0;
+  box-shadow: none;
+  @media (min-width: $media-tb) {
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+}
+
+// ページタイトル用ツールバーのスタイル
+@mixin title-toolbar {
+  background-color: $titlebar-color;
+  color: white;
+  cursor: default;
+  @media (min-width: $media-tb) {
+    border-radius: 5px 5px 0 0;
+  }
+}
+
+// 項目ごとのカードのまとまり部分のスタイル
+@mixin card {
+  margin: 0 8px;
+  @media (min-width: $media-tb) {
+    margin: 0 15px;
+  }
+  @media (min-width: $media-pc) {
+    margin: 0 20px;
+  }
+}
+
+// 項目ごとのタイトル用ツールバーのスタイル
+@mixin contents-toolbar {
+  height: 50px;
+  color: white;
+  background-color: $contentsbar-color;
+  border-radius: 5px 5px 0 0;
+  cursor: default;
+}
+
+// 項目内容のカードのスタイル
+@mixin contents-card {
+  margin-top: 0;
+  border-radius: 0 0 5px 5px;
+  overflow: hidden;
+  cursor: default;
+}
+
+// 画面項目が一つの場合のカードのスタイル
+@mixin one-content-card {
+  padding: 16px;
+  margin-top: 0;
+  border-radius: 5px;
+  overflow: hidden;
+  cursor: default;
+}
+
+// 戻るボタンのスタイル定義
+@mixin back-button {
+  margin-top: 20px;
+  margin-left: 8px;
+  @media (min-width: $media-tb) {
+    margin-left: 15px;
+  }
+  @media (min-width: $media-pc) {
+    margin-left: 20px;
+  }
+  button {
+    @include button-effect;
+  }
+}
+
+// 編集ボタンのスタイル定義
+@mixin edit-button {
+  background-color: $parts-yellow;
+  @include button-effect;
+  @include focus-visible-button;
+}
+
+// 削除ボタンのスタイル定義
+@mixin remove-button {
+  background-color: $remove-color;
+  @include button-effect;
+  @include focus-visible-button($brightness: 3.5);
+}
+
+// キャンセルボタンのスタイル定義
+@mixin cancel-button {
+  background-color: $back-color;
+  @include button-effect;
+  width: 100%;
+  @media (min-width: $media-tb) {
+    width: 40%;
+  }
+}
+
+// 登録・変更ボタンのスタイル定義
+@mixin update-button {
+  button {
+    display: inline-block;
+    width: 100%;
+  }
+  @media (min-width: $media-tb) {
+    text-align: center;
+    button {
+      width: 40%;
+    }
+  }
+  // 活性状態時の変更ボタンのスタイル
+  .active-button {
+    @include active-button;
+    @include button-effect;
+  }
+}
+
+// ボタンエフェクトのスタイリング
+@mixin button-effect {
+  transition: 0.2s;
+  &:hover {
+    opacity: 0.7;
+  }
+  &:active {
+    -webkit-transform: translateY(2px);
+    transform: translateY(2px);
+    box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.2);
+    border-bottom: none;
+  }
+}
+
+// 非活性から活性時のボタンのスタイリング
+@mixin active-button {
+  background-color: #195481;
+  color: white;
+  @include focus-visible-button($brightness: 1.5);
+}
+
+// タブフォーカス時の枠線のスタイリング
+@mixin focus-visible-outline($offset: 1px) {
+  &:focus-visible {
+    outline: double thick $focus-color;
+    outline-offset: $offset;
+  }
+}
+
+// ダイアログのクリアボタンのタブフォーカス時のスタイリング
+@mixin focus-visible-outline-clear($outline-offset: -2px) {
+  &:focus-visible {
+    outline: solid 2px $focus-color;
+    outline-offset: $outline-offset;
+  }
+}
+
+// タブフォーカス時のボタンのスタイリング
+@mixin focus-visible-button($brightness: 1.3) {
+  &:focus-visible {
+    filter: brightness($brightness);
+  }
+}
+
+// タブフォーカス時のカードのスタイリング
+@mixin focus-visible-card($brightness: 1.3) {
+  &:focus-visible {
+    filter: brightness($brightness);
+    outline: none;
+  }
+}

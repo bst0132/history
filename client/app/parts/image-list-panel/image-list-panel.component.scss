@@ -1,0 +1,48 @@
+@import '../../../mylib/var';
+@import '../../../mylib/mixin';
+@import '../../../mylib/function';
+
+
+// 各カードのスタイル
+mat-card {
+  overflow: hidden;
+  transition: 0.3s;
+  position: relative;
+  padding: 2px 6px;
+  margin: 0;
+  height: 60px;
+  @media (max-width: $media-pc) {
+    padding: 1px 6px;
+    margin: 1px;
+    height: 60px;
+    border-bottom-color: black;
+  }
+}
+
+// カードの内容
+.list-card-contents {
+  @include flex-style($align: center);
+  height: 100%;
+}
+
+// 画像・文字部分のスタイル(画面サイズ：小・中)
+.avatar-area {
+  @include size($width: 50px, $height: 50px);
+  .image {
+    @include size($width: 200px, $height: 200px);
+    border-radius: 5px;
+    overflow: hidden;
+    transform: scale(scaleCalc(50)) translate(-300px, -300px);
+  }
+  .no-image {
+    img {
+      @include size($width: 50px, $height: 50px);
+      border-radius: 5px;
+    }
+  }
+}
+// テキスト部分のスタイリング
+.text-container {
+  margin-left: 5px;
+  width: 100%;
+}

@@ -1,0 +1,218 @@
+@import '../../../../mylib/var';
+@import '../../../../mylib/mixin';
+@import '../../../../mylib/function';
+
+// 真ん中に配置されたベースのカードのスタイル
+.base-card {
+  @include base-card;
+}
+
+// タイトル用ツールバー
+.title-toolbar {
+  @include title-toolbar;
+  @include flex-style($justify: flex-end);
+  span {
+    margin-right: auto;
+  }
+}
+
+// 項目ごとのカードのまとまり部分のスタイル
+.card {
+  @include card;
+}
+
+.contents-card {
+  @include contents-card;
+  &.profile {
+    margin-bottom: 0;
+    border-radius: 0;
+    min-height: 200px;
+    position: relative;
+    app-image-select {
+      @include flex-style($justify: center, $align: center);
+      @include position($position: absolute, $top: 0, $left: 0, $bottom: 0, $right: 0);
+    }
+  }
+}
+
+// angular materialタブ活性状態時の下線削除
+:host ::ng-deep.mat-ink-bar {
+  display: none;
+}
+
+// mat-tab-groupタグで囲われた部分のスタイリング
+mat-tab-group {
+  background-color: $basecard-color;
+}
+
+// タブの背景色と文字色の設定
+:host ::ng-deep .mat-tab-label {
+  background-color: $contentsbar-color;
+  color: white;
+  height: 50px;
+}
+
+// タブのレスポンシブ対応用スタイル
+:host ::ng-deep .mat-tab-label,
+:host ::ng-deep .mat-tab-label-active {
+  min-width: 0 !important;
+  @include focus-visible-outline($offset: -7px);
+}
+
+// タブの角の設定
+:host ::ng-deep .mat-tab-header {
+  border-radius: 5px 5px 0 0;
+  @media (max-width: $media-tb) {
+    .mat-tab-label-container {
+      display: inline;
+    }
+  }
+}
+
+// 選択中のタブの設定
+:host ::ng-deep .mat-tab-label-active {
+  background-color: #151c24 !important;
+  opacity: 1 !important;
+  color: $parts-yellow;
+}
+
+// タブのページネーション非表示設定
+:host ::ng-deep .mat-tab-header-pagination {
+  display: none !important;
+}
+
+// フォームの下線削除
+:host ::ng-deep .mat-form-field-underline {
+  display: none;
+}
+
+// フォーム必須項目のカラーリング
+.required {
+  color: $required-color;
+}
+
+// フォーム幅の修正
+.mat-form-field {
+  width: 100%;
+}
+
+// ホバー時に背景色白
+:host ::ng-deep .mat-form-field-flex:hover .mat-form-field-outline {
+  background-color: white;
+  border-radius: 5px;
+}
+
+// フォーム内背景白
+:host ::ng-deep .mat-form-field-outline {
+  background-color: white;
+  border-radius: 5px;
+}
+
+// 横並びフォームの設定
+.flex-form {
+  &.pc{
+    @include flex-style($justify: space-between, $align: center);
+    .mat-form-field {
+      width: 48%;
+    }
+  }
+}
+
+// 単位付きフォームの設定
+.unit-input {
+  input {
+    width: 60%;
+  }
+  mat-select {
+    width: 40%;
+    @include focus-visible-outline;
+  }
+}
+
+// 文字の横並び設定
+.flex {
+  @include flex-style($justify: space-between, $align: center);
+}
+
+// アバター画像背景のスタイリング
+.avatar-back {
+  background-color: white;
+  @include size($width: 215px, $height: 215px);
+  border-radius: 50%;
+  position: relative;
+}
+
+// チェックボックスのスタイリング
+.check-box {
+  text-align: right;
+  margin: 15px;
+}
+
+// チェックボックスのスタイリング
+::ng-deep .mat-checkbox-ripple .mat-ripple-element {
+  @include focus-visible-outline;
+  background-color: transparent !important;
+}
+
+.mat-checkbox:has(input:focus-visible) {
+  outline: double thick $focus-color;
+  outline-offset: 1px;
+}
+
+// タブフォーカス時の枠線のスタイリング
+::ng-deep .mat-datepicker-toggle button:focus-visible {
+  @include focus-visible-outline;
+}
+
+// 生年月日のスタイリング
+input[readonly] {
+  cursor: pointer;
+}
+
+// 追加ボタンのスタイリング
+.add {
+  color: $parts-yellow;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-left: 20px;
+}
+
+.button-area {
+  color: white;
+  margin-right: 20px;
+  .add-button {
+    @include edit-button;
+  }
+}
+
+// スポーツ情報カードのスタイリング
+.card-color {
+  background-color: $back-color;
+  a {
+    float: right;
+    cursor: pointer;
+    @include focus-visible-outline;
+  }
+}
+
+// 登録ボタンのスタイル
+.update-button {
+  margin: 0 8px;
+  @media (min-width: $media-tb) {
+    margin: 0 15px;
+  }
+  @include update-button;
+}
+
+// 戻るボタンのスタイル
+.footer-button-area {
+  @include back-button;
+}
+
+// 編集をキャンセルボタンのスタイル
+.button {
+  text-align: center;
+  .cancel-edit {
+    @include cancel-button;
+  }
+}

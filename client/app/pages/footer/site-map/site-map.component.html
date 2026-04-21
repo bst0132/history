@@ -1,0 +1,44 @@
+<div class="content">
+  <!-- ページタイトル -->
+  <h1>Personal Sports History サイトマップ</h1>
+  <!-- メイン部分 -->
+  <nav>
+    <!-- 当サイトについて -->
+    <ul id="about-site">
+      <h3>当サイトについて</h3>
+      <li class="link" (click)="onClickNavigate(cns.pathToTermsUse)" (keyup)="onKeyCheck($event)" tabindex="0">{{cns.userPolicy}}</li>
+      <li class="link" (click)="onClickNavigate(cns.pathToCompanyProfile)" (keyup)="onKeyCheck($event)" tabindex="0">{{cns.operatingCompany}}</li>
+      <li class="link" (click)="onClickNavigate(cns.pathToPrivacyPolicy)" (keyup)="onKeyCheck($event)" tabindex="0">{{cns.privacyPolicy}}</li>
+      <li class="link" (click)="onClickNavigate(cns.pathToLogin)" (keyup)="onKeyCheck($event)" tabindex="0">{{cns.login}}</li>
+    </ul>
+    <!-- マイページ -->
+    <ul>
+      <h3>マイページ</h3>
+      <li class="link" (click)="onClickNavigate(cns.pathToProfileDetail)" (keyup)="onKeyCheck($event)" tabindex="0">{{cns.profileDetail}}</li>
+      <li class="link" [class.link-disable]="!commonService.isPlayer" (click)="onClickNavigate(cns.pathToTeamHistoryList)" (keyup)="onKeyCheck($event)" tabindex="0">{{cns.teamHistoryList}}</li>
+      <li class="detail">┗ {{cns.teamDetail}}</li>
+      <li class="link" [class.link-disable]="!commonService.isAdminOrgan && !commonService.isAdminTeam" (click)="onClickNavigate(cns.pathToManageTmOrgList)" (keyup)="onKeyCheck($event)" tabindex="0">{{cns.manageTmOrgList}}</li>
+      <li class="detail">┗ {{cns.teamDetail}}</li>
+      <li class="detail">┗ {{cns.organDetail}}</li>
+    </ul>
+    <!-- 検索 -->
+    <ul>
+      <h3>検索</h3>
+      <li class="link" (click)="onClickNavigate(cns.pathToTeamList)" (keyup)="onKeyCheck($event)" tabindex="0">{{cns.teamList}}</li>
+      <li class="detail">┗ {{cns.teamDetail}}</li>
+      <li class="link" (click)="onClickNavigate(cns.pathToCollectionCompetition)" (keyup)="onKeyCheck($event)" tabindex="0">{{cns.competitionList}}</li>
+      <li class="detail">┗ {{cns.competitionDetail}}</li>
+      <li class="sub-detail">┗ {{cns.createGame}}</li>
+      <li class="sub-detail">┗ {{cns.gameDetail}}</li>
+      <li class="link" (click)="onClickNavigate(cns.pathToOrganList)" (keyup)="onKeyCheck($event)" tabindex="0">{{cns.organList}}</li>
+      <li class="detail">┗ {{cns.organDetail}}</li>
+    </ul>
+    <!-- 登録 -->
+    <ul>
+      <h3>登録</h3>
+      <li class="link" (click)="onClickNavigate(cns.pathToCreateTeam)" (keyup)="onKeyCheck($event)" tabindex="0">{{cns.createTeam}}</li>
+      <li class="link" (click)="onClickCreateComp()" (keyup)="onKeyCheck($event)" tabindex="0">{{cns.createCompetition}}</li>
+      <li class="link" (click)="onClickNavigate(cns.pathToCreateOrganization)" (keyup)="onKeyCheck($event)" tabindex="0">{{cns.createOrgan}}</li>
+    </ul>
+  </nav>
+</div>

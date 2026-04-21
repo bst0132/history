@@ -1,0 +1,252 @@
+<div class="content">
+
+  <!-- 大会情報 -->
+  <mat-card *ngIf="gameDetail?.compInf">
+    <mat-card-content>
+      <div>
+        <!-- 大会ロゴ -->
+        <div class="compInfo-img">
+          <app-image-select [mode]="'show'" [imageInfo]="gameDetail.compInf.compLogo"></app-image-select>
+        </div>
+        <!-- 大会名 -->
+        <mat-form-field class="colCompName">
+          <input type="text" matInput value={{gameDetail.compInf.compName}} readonly>
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- 試合情報 -->
+  <mat-card *ngIf="gameDetail?.gameInf">
+    <mat-card-content>
+      <div>
+        <mat-form-field class="colWidth15">
+          <!-- 開催日 -->
+          <mat-label>開催日</mat-label>
+          <input type="text" matInput [value]="gameDetail.gameInf.gameInfCom.eventDate | date:'yyyy/MM/dd'" readonly>
+        </mat-form-field>
+        <mat-form-field class="colWidth15">
+          <!-- 開始時間 -->
+          <mat-label>開始時間</mat-label>
+          <input type="text" matInput value={{gameDetail.gameInf.gameInfCom.gameStartTime}} readonly>
+        </mat-form-field>
+        <mat-form-field class="colWidth15">
+          <!-- 終了時間 -->
+          <mat-label>終了時間</mat-label>
+          <input type="text" matInput value={{gameDetail.gameInf.gameInfCom.gameEndTime}} readonly>
+        </mat-form-field>
+        <mat-form-field class="colWidth15">
+          <!-- 入場者数 -->
+          <mat-label>入場者数</mat-label>
+          <input type="text" matInput value={{gameDetail.gameInf.gameInfCom.gameAttendance}} readonly>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="colWidth15">
+          <!-- 開催場所-->
+          <mat-label>開催場所</mat-label>
+          <input type="text" matInput value={{gameDetail.gameInf.gameInfCom.gamePlaceName}} readonly>
+        </mat-form-field>
+        <mat-form-field class="colWidth32">
+          <!-- 住所 -->
+          <mat-label>住所</mat-label>
+          <input type="text" matInput value={{gameDetail.gameInf.gameInfCom.gamePlaceAdd}} readonly>
+        </mat-form-field>
+        <mat-form-field class="colWidth15">
+          <!-- 電話番号 -->
+          <mat-label>電話番号</mat-label>
+          <input type="text" matInput value={{gameDetail.gameInf.gameInfCom.gamePlaceTel}} readonly>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="colWidth15">
+          <!-- 天気 -->
+          <mat-label>天気</mat-label>
+          <input type="text" matInput value={{gameDetail.gameInf.gameInfCom.gamePlaceWeather}} readonly>
+        </mat-form-field>
+        <mat-form-field class="colWidth15">
+          <!-- 気温 -->
+          <mat-label>気温</mat-label>
+          <input type="text" matInput value={{gameDetail.gameInf.gameInfCom.gamePlaceTemp}} readonly>
+        </mat-form-field>
+        <mat-form-field class="colWidth15">
+          <!-- 湿度 -->
+          <mat-label>湿度</mat-label>
+          <input type="text" matInput value={{gameDetail.gameInf.gameInfCom.gamePlaceHumi}} readonly>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="colWidth15">
+          <!--試合形式  -->
+          <mat-label>試合形式</mat-label>
+          <input type="text" matInput value={{gameDetail.gameInf.gameInfCom.gameSystemInf.gameSystem}} readonly>
+        </mat-form-field>
+        <mat-form-field class="colWidth15">
+          <!--試合紹介  -->
+          <mat-label>試合紹介</mat-label>
+          <input type="text" matInput value={{gameDetail.gameInf.gameInfCom.gameIntro}} gameIntro readonly>
+        </mat-form-field>
+        <mat-form-field class="colWidth15">
+          <!-- グループ名 -->
+          <mat-label>グループ名</mat-label>
+          <input type="text" matInput value={{gameDetail.gameInf.gameInfCom.gameName}} readonly>
+        </mat-form-field>
+      </div>
+      <div>
+        <button *ngIf="isEditableGameComp" mat-raised-button color="primary" type="button" (click)="onClickEditGame()">試合編集</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- 試合結果情報 -->
+  <mat-card *ngIf="gameDetail?.teamInf">
+    <tr>
+      <td>
+        <div>
+          <button *ngIf="isEditableGameComp||isEditableGameTeam" mat-raised-button color="primary" type="button" (click)="onClickEditGameResult(this.teamSpecificInf[0])" [disabled]="!this.teamSpecificInf[0]">試合結果登録</button>
+        </div>
+      </td>
+      <td></td>
+      <td>
+        <div>
+          <button *ngIf="isEditableGameComp||isEditableGameTeam" mat-raised-button color="primary" type="button" (click)="onClickEditGameResult(this.teamSpecificInf[1])" [disabled]="!this.teamSpecificInf[1]">試合結果登録</button>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <mat-table [dataSource]="gameResultList1">
+        <ng-container matColumnDef="gameResultList1">
+          <mat-header-cell *matHeaderCellDef>{{getTeamName(this.teamSpecificInf[0])}}</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row}}</mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="['gameResultList1']"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: ['gameResultList1']"></mat-row>
+        </mat-table>
+      </td>
+      <td>
+        <mat-table [dataSource]="gameResultListC">
+          <ng-container matColumnDef="gameResultListC">
+            <mat-header-cell *matHeaderCellDef>－</mat-header-cell>
+            <mat-cell *matCellDef="let row" >{{row}}</mat-cell>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="['gameResultListC']"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: ['gameResultListC']"></mat-row>
+        </mat-table>
+      </td>
+      <td>
+        <mat-table [dataSource]="gameResultList2">
+          <ng-container matColumnDef="gameResultList2">
+            <mat-header-cell *matHeaderCellDef>{{getTeamName(this.teamSpecificInf[1])}}</mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row}}</mat-cell>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="['gameResultList2']"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: ['gameResultList2']"></mat-row>
+        </mat-table>
+      </td>
+    </tr>
+  </mat-card>
+
+  <!-- 試合参加者情報 -->
+  <mat-card *ngIf="gameDetail?.teamInf">
+    <tr>
+      <td>
+        <div>
+          <div>{{gameDetail.teamInf[0]?.teamName}}</div>
+          <button *ngIf="isEditableGameComp||isEditableGameTeam" mat-raised-button color="primary" type="button" (click)="onClickEditGamePlayer(this.teamSpecificInf[0])" [disabled]="!this.teamSpecificInf[0]">選手登録</button>
+        </div>
+      </td>
+      <td>
+        <div>
+          <div>{{gameDetail.teamInf[1]?.teamName}}</div>
+          <button *ngIf="isEditableGameComp||isEditableGameTeam" mat-raised-button color="primary" type="button" (click)="onClickEditGamePlayer(this.teamSpecificInf[1])" [disabled]="!this.teamSpecificInf[1]">選手登録</button>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <mat-table [dataSource]="startPlayerList1">
+        <ng-container matColumnDef="startPlayerList1">
+          <mat-header-cell *matHeaderCellDef>スターティングメンバー</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row}}</mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="['startPlayerList1']"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: ['startPlayerList1']"></mat-row>
+        </mat-table>
+      </td>
+      <td>
+        <mat-table [dataSource]="startPlayerList2">
+          <ng-container matColumnDef="startPlayerList2">
+            <mat-header-cell *matHeaderCellDef>スターティングメンバー</mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row}}</mat-cell>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="['startPlayerList2']"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: ['startPlayerList2']"></mat-row>
+        </mat-table>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <mat-table [dataSource]="subPlayerList1">
+        <ng-container matColumnDef="subPlayerList1">
+          <mat-header-cell *matHeaderCellDef>控えメンバー</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row}}</mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="['subPlayerList1']"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: ['subPlayerList1']"></mat-row>
+        </mat-table>
+      </td>
+      <td>
+        <mat-table [dataSource]="subPlayerList2">
+          <ng-container matColumnDef="subPlayerList2">
+            <mat-header-cell *matHeaderCellDef>控えメンバー</mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row}}</mat-cell>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="['subPlayerList2']"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: ['subPlayerList2']"></mat-row>
+        </mat-table>
+      </td>
+    </tr>
+  </mat-card>
+
+
+  <!-- 試合経過情報 -->
+  <mat-card *ngIf="gameDetail?.teamInf">
+      <div class="btnLeft">
+        <div>{{gameDetail.teamInf[0]?.teamName}}</div>
+        <button *ngIf="isEditableGameComp||isEditableGameTeam" mat-raised-button color="primary" type="button" (click)="onClickEditGameProgress(this.teamSpecificInf[0])" [disabled]="!this.teamSpecificInf[0]">個人成績登録</button>
+      </div>
+      <div class="btnRight">
+        <div>{{gameDetail.teamInf[1]?.teamName}}</div>
+        <button *ngIf="isEditableGameComp||isEditableGameTeam" mat-raised-button color="primary" type="button" (click)="onClickEditGameProgress(this.teamSpecificInf[1])" [disabled]="!this.teamSpecificInf[1]">個人成績登録</button>
+      </div>
+      <br>
+      <br>
+      <br>
+      <mat-table [dataSource]="playerResultList">
+      <ng-container matColumnDef="team1RecordType">
+        <mat-header-cell *matHeaderCellDef>成績種類</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.team1RecordType}}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="team1UserID">
+        <mat-header-cell *matHeaderCellDef>選手</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{getUserName(row.team1UserID)}}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="resultTime">
+        <mat-header-cell *matHeaderCellDef>時間</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.resultTime}}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="team2UserID">
+        <mat-header-cell *matHeaderCellDef>選手</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{getUserName(row.team2UserID)}}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="team2RecordType">
+        <mat-header-cell *matHeaderCellDef>成績種類</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.team2RecordType}}</mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="['team1RecordType','team1UserID','resultTime','team2UserID','team2RecordType']"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: ['team1RecordType','team1UserID','resultTime','team2UserID','team2RecordType']"></mat-row>
+    </mat-table>
+  </mat-card>
+
+</div>

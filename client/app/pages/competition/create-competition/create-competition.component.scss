@@ -1,0 +1,28 @@
+@import '../../../../mylib/var';
+@import '../../../../mylib/mixin';
+
+mat-form-field {
+  width: 100%;
+}
+
+.date {
+  width: 30%;
+  display: block;
+}
+
+// タブフォーカス時の枠線のスタイリング
+::ng-deep .mat-datepicker-toggle button:focus-visible {
+  @include focus-visible-outline;
+}
+
+.button-right {
+  float: right;
+}
+
+.organSport {
+  display: flex;
+}
+
+@media (max-width: $media-pc) {
+  .organSport { display: block; }
+}

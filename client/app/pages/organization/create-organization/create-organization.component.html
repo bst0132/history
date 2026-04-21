@@ -1,0 +1,59 @@
+<div class="content">
+  <!-- 画面名表示 -->
+  <mat-toolbar class="title-toolbar">
+    <span>団体登録</span>
+  </mat-toolbar>
+  <mat-card class="base-card">
+    <mat-card-content>
+      <div class="card">
+        <mat-card class="contents-card">
+          <form [formGroup]="formGroup" class="container">
+            <div class="image-area">
+              <app-image-select [mode]="'edit'" [imageInfo]="imageInfo" (imageChange)="onChangeDataUrl($event)">団体ロゴを選択</app-image-select>
+            </div>
+            <div class="text-area">
+              <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                <mat-label>競技<span class="required">(必須)</span></mat-label>
+                <mat-select placeholder="競技を選択してください" formControlName="sports" required>
+                  <mat-option *ngFor="let item of sportslist" [value]="item.key">{{item.value}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="formGroup.get('sports').hasError('required')">{{msg.unselectErr.replace('※1','競技')}}</mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                <mat-label>団体名<span class="required">(必須)</span></mat-label>
+                <input matInput placeholder="団体名を入力してください" formControlName="organName" required maxLength='50'>
+                <mat-error *ngIf="formGroup.get('organName').hasError('required')">{{msg.noenteredErr.replace('※1','団体名')}}</mat-error>
+                <mat-hint>{{msg.wordMaxChkErr.replace('※1', '50')}}</mat-hint>
+              </mat-form-field>
+              <div formGroupName="organAddInf">
+                <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                  <mat-label>都道府県<span class="required">(必須)</span></mat-label>
+                  <mat-select placeholder="都道府県を選択してください" formControlName="organPrefecture" required>
+                    <mat-option *ngFor="let prefecture of prefectures" [value]="prefecture">{{prefecture}}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="formGroup.get('organAddInf').get('organPrefecture').hasError('required')">{{msg.unselectErr.replace('※1', '都道府県')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                  <mat-label>市区町村<span class="required">(必須)</span></mat-label>
+                  <input matInput placeholder="横浜市西区" formControlName="organCity" maxLength='100' required/>
+                  <mat-error *ngIf="formGroup.get('organAddInf').get('organCity').hasError('required')">{{msg.noenteredErr.replace('※1', '市区町村')}}</mat-error>
+                  <mat-hint>{{msg.wordMaxChkErr.replace('※1','100')}}</mat-hint>
+                </mat-form-field>
+              </div>
+              <mat-form-field appearance="outline" floatLabel="always">
+                <mat-label>団体紹介(任意)</mat-label>
+                <textarea matInput placeholder="団体のプロフィールを入力できます" cdkTextareaAutosize cdkAutosizeMaxRows="10" formControlName="organIntro" maxlength="1000"></textarea>
+                <mat-hint>{{msg.wordMaxChkErr.replace('※1', '1000')}}</mat-hint>
+              </mat-form-field>
+            </div>
+          </form>
+          <div class="update-button">
+            <button mat-raised-button type="button" (click)="onClickSubmit()" [disabled]="formGroup.invalid" [class.active-button]="!formGroup.invalid">
+              <mat-icon>done</mat-icon>登録
+            </button>
+          </div>
+        </mat-card>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

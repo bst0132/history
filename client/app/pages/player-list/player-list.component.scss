@@ -1,0 +1,37 @@
+@import '../../../mylib/mixin';
+
+.player-list{
+  text-align: center;
+}
+
+.player-name {
+  margin-top: 10px;
+}
+
+.focus-button,
+.invite-button {
+  @include focus-visible-button;
+}
+
+.invite-button {
+  // パネル下部中央に配置
+  position: absolute;
+  transform: translateX(-50%) translateY(25%);
+  -webkit-transform: translateX(-50%) translateY(25%);
+}
+
+#search-button {
+  margin-top: 30px;
+}
+
+#input-error {
+  color: rgba(0, 0, 0, 0.40);
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+::ng-deep app-image-panel mat-card {
+  cursor: default !important;
+}

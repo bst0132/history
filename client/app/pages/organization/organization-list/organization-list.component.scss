@@ -1,0 +1,180 @@
+@import '../../../../mylib/var';
+@import '../../../../mylib/mixin';
+@import '../../../../mylib/function';
+
+// 真ん中に配置されたベースのカードのスタイル
+.base-card {
+  @include base-card;
+}
+
+// カードのまとまり部分のスタイル
+.card {
+  @include card;
+}
+
+// 項目タイトル用ツールバー
+.contents-toolbar {
+  @include contents-toolbar;
+  margin-top: 20px;
+  // 画面サイズによって文字サイズ変更
+  @media (max-width: 350px) {
+    font-size: 0.7rem;
+  }
+  @media (min-width: 350px) and (max-width: $media-tb) {
+    font-size: 0.8rem;
+  }
+  @media (min-width: $media-tb) and (max-width: $media-pc) {
+    font-size: 0.9rem;
+  }
+}
+
+// カードのスタイル
+.contents-card {
+  @include contents-card;
+  // メインの白いカードのスタイル
+  &.radius {
+    border-radius: 5px;
+  }
+  // 検索結果のカードのスタイル
+  &.result {
+    background-color: $back-color;
+    padding: 10px;
+    box-shadow: none;
+    @media (min-width: $media-tb) {
+      overflow: auto;
+      max-height: 1310px;
+    }
+  }
+}
+
+// ページタイトル用ツールバー
+.title-toolbar {
+  @include title-toolbar;
+  @include flex-style($justify: flex-end);
+  span {
+    margin-right: auto;
+  }
+}
+
+// 検索ボタンのスタイル
+.search-button {
+  @include update-button;
+}
+
+// 検索結果カードリストのスタイリング(PC版表示)
+@media (min-width: $media-tb) {
+  .list-card-container {
+    @include flex-style($display: grid, $justify: space-evenly);
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    grid-template-rows: auto;
+  }
+  // 団体表示用カードのスタイリング
+  .list-card {
+    @include focus-visible-outline;
+    overflow: hidden;
+    padding: 0 10px;
+    margin: 0;
+    min-width: 0;
+    height: 120px;
+    transition: 0.3s;
+    cursor: pointer;
+    &:active {
+      box-shadow: none;
+      transform: translate(0, 2px);
+    }
+    &:hover {
+      opacity: 0.8;
+    }
+    .list-card-contents {
+      @include flex-style($align: center);
+      height: 100%;
+      // 画像表示エリアのスタイリング
+      .avatar-area {
+        @include size($width: 100px, $height: 100px);
+        .image {
+          @include size($width: 200px, $height: 200px);
+          border-radius: 5px;
+          overflow: hidden;
+          transform: scale(scaleCalc(100)) translate(-100px, -100px);
+        }
+        .no-image {
+          img {
+            @include size($width: 100px, $height: 100px);
+            border-radius: 5px;
+          }
+        }
+      }
+      // テキスト部分のスタイリング
+      .text-container {
+        margin-left: 10px;
+      }
+    }
+  }
+}
+
+// 検索結果リストの表示(SP版表示)
+.list-container {
+  mat-card {
+    margin: 0;
+    max-height: 280px;
+    overflow: auto;
+    box-shadow: none;
+  }
+  // 団体画像のスタイリング
+  .avatar-area {
+    @include size($width: 50px, $height: 50px);
+    cursor: pointer;
+    .image {
+      @include size($width: 200px, $height: 200px);
+      border-radius: 5px;
+      overflow: hidden;
+      transform: scale(scaleCalc(50)) translate(-300px, -300px);
+    }
+    .no-image {
+      img {
+        @include size($width: 50px, $height: 50px);
+        border-radius: 5px;
+      }
+    }
+  }
+  // 画面サイズごとに文字サイズ変更
+  .media-small {
+    @media (max-width: 350px) {
+      font-size: 0.8rem;
+    }
+  }
+  .place {
+    font-size: 0.8rem;
+    &.media-small {
+      @media (max-width: 350px) {
+        font-size: 0.6rem;
+      }
+    }
+  }
+}
+
+// AngularMaterialリストのpadding削除
+:host ::ng-deep .mat-list-item-content {
+  padding: 0 !important;
+}
+
+// sp・pc表示切替
+.sp {
+  @media (min-width: $media-tb) {
+    display: none;
+  }
+}
+
+.pc {
+  @media (max-width: $media-tb) {
+    display: none;
+  }
+}
+
+mat-form-field {
+  width: 100%;
+  .required {
+    color: $required-color;
+  }
+}

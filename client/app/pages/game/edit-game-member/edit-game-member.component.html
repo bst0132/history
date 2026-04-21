@@ -1,0 +1,92 @@
+<div class="content">
+  <mat-card>
+    <mat-card-content>
+      <form [formGroup]="formGroup">
+
+        <!-- 大会名 -->
+        <mat-form-field>
+          <mat-label>大会名</mat-label>
+          <input type="text" matInput value={{competition?.compName}} readonly>
+        </mat-form-field>
+
+        <!-- 試合名 -->
+        <mat-form-field>
+          <mat-label>試合名</mat-label>
+          <input type="text" matInput value={{game?.gameInfCom.gameName}} readonly>
+        </mat-form-field>
+
+        <div>
+          <mat-label>チーム情報</mat-label>
+        </div>
+        <!-- チーム名 -->
+        <mat-form-field>
+          <input type="text" matInput value={{getTeamName(teamID)}} readonly>
+        </mat-form-field>
+
+        <!-- 監督 -->
+        <div>
+          <mat-label>監督</mat-label>
+        </div>
+        <mat-form-field>
+          <input type="text" matInput [value]="getManager()" readonly>
+        </mat-form-field>
+
+        <div class="scroll-table">
+          <table>
+            <thead>
+              <td>選手名</td>
+              <td>背番号</td>
+              <td>ポジション</td>
+              <td>出場登録</td>
+            </thead>
+            <tbody>
+              <ng-container formArrayName="playerInfo" *ngFor="let index of getPlayer.controls; index as i">
+                <ng-container [formGroupName]="i" class="table-data">
+                  <tr>
+                    <td>
+                      <mat-form-field>
+                        <mat-label>選手名</mat-label>
+                        <input type="text" matInput formControlName="playerName" readonly>
+                      </mat-form-field>
+                    </td>
+                    <td>
+                      <mat-form-field>
+                        <mat-label>背番号</mat-label>
+                        <input type="text" matInput placeholder="1" formControlName="uniNum">
+                      </mat-form-field>
+                    </td>
+                    <td>
+                      <mat-form-field>
+                        <mat-label>ポジション</mat-label>
+                        <input type="text" matInput placeholder="GK" formControlName="gamePosition">
+                      </mat-form-field>
+                    </td>
+                    <td>
+                      <mat-form-field>
+                        <mat-label>出場登録</mat-label>
+                        <mat-select formControlName="entrantStatus">
+                          <mat-option value="スタメン">スタメン</mat-option>
+                          <mat-option value="控え">控え</mat-option>
+                          <mat-option value="応援">応援</mat-option>
+                          <mat-option value="不参加">不参加</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </td>
+                  </tr>
+                </ng-container>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+      </form>
+
+      <!-- 各種ボタン -->
+      <div class="footer-button-area">
+        <button class="button" mat-raised-button color="primary" type="button" (click)="modGameMemberInf()">更新</button>
+      </div>
+      <div class="return-button">
+        <button class="button" mat-raised-button color="primary" type="button" (click)="pageBack()">戻る</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

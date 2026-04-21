@@ -1,0 +1,70 @@
+<div>
+  <input type="file" style="display: none" #image accept="image/*" (change)="onChangeImage()" />
+  <ng-container *ngIf="(!imageInfo?.dataUrl && mode == 'edit'); else imageView">
+    <div class="container {{shape}}">
+      <div class="no-image {{shape}}">
+        <img class="{{shape}}" [src]="'assets/images/no_image.png'">
+      </div>
+      <ng-container *ngIf="device == 'sp'">
+        <div class="button-area sp">
+          <button mat-icon-button type="button" class="file-select-button" (click)="onClickFileInputButton()">
+            <mat-icon>add_photo_alternate</mat-icon>
+          </button>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="device == 'pc'">
+        <div class="button-area pc {{shape}}">
+          <button mat-raised-button type="button" class="file-select-button" (click)="onClickFileInputButton()">
+            <mat-icon>add_photo_alternate</mat-icon>
+            <ng-container *ngTemplateOutlet="imageSelectText"></ng-container>
+          </button>
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+  <ng-template #imageView>
+    <div class="container {{shape}}">
+      <ng-container *ngIf="!imageInfo?.dataUrl">
+        <div class="no-image">
+          <img class="{{shape}}" [src]="'assets/images/no_image.png'">
+        </div>
+      </ng-container>
+      <ng-container *ngIf="imageInfo?.dataUrl">
+        <div class="back {{shape}}">
+          <div class="avator {{shape}}">
+            <div class="image-area {{shape}}">
+              <img [src]="imageInfo?.dataUrl" [style.transform]="imageInfo?.transform">
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="mode == 'edit'">
+        <ng-container *ngIf="device == 'sp'">
+          <div class="button-area sp">
+            <button mat-icon-button type="button" class="add-button" (click)="onClickFileInputButton()">
+              <mat-icon>add_photo_alternate</mat-icon>
+            </button>
+            <button mat-icon-button type="button" class="delete-button" (click)="onClickDeleteImage()">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="device == 'pc'">
+          <div class="button-area pc {{shape}}">
+            <button mat-raised-button type="button" color="primary" class="add-button" (click)="onClickFileInputButton()">
+              <mat-icon>add_photo_alternate</mat-icon>
+              <ng-container *ngTemplateOutlet="imageSelectText"></ng-container>
+            </button>
+            <button mat-raised-button type="button" class="delete-button" (click)="onClickDeleteImage()">
+              <mat-icon>delete_outline</mat-icon>
+              削除
+            </button>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
+  </ng-template>
+  <ng-template #imageSelectText>
+    <ng-content></ng-content>
+  </ng-template>
+</div>

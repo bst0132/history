@@ -1,0 +1,9 @@
+<mat-card class="{{device}}">
+  <div class="image-area">
+    <img [src]="team.teamLogo?.dataUrl || '../../../assets/images/history_logo.png'"
+    [style.transform]="team.teamLogo?.transform || ''">
+  </div>
+  <div class="text-area">
+    <span>{{team.teamName}}</span><br>
+  </div>
+</mat-card>

@@ -1,0 +1,281 @@
+@import '../../../../mylib/var';
+@import '../../../../mylib/mixin';
+
+// 真ん中に配置されたベースのカードのスタイル
+.base-card {
+  @include base-card;
+}
+
+// カードのマージン
+.card {
+  @include card;
+}
+
+// タイトル用ツールバー
+.title-toolbar {
+  @include title-toolbar;
+  @include flex-style($justify: flex-end);
+  span {
+    margin-right: auto;
+  }
+}
+
+// タブ毎のカードスタイル
+.contents-card {
+  @include contents-card;
+}
+
+// 以下タブ関連スタイリング
+mat-tab-group {
+  background-color: $basecard-color;
+}
+// タブ：背景色と文字色の設定
+:host ::ng-deep .mat-tab-label {
+  background-color: $contentsbar-color;
+  color: white;
+  height: 50px;
+  border-radius: 10px 10px 0 0;
+}
+// タブ：レスポンシブ対応用スタイル
+:host ::ng-deep .mat-tab-label,
+:host ::ng-deep .mat-tab-label-active {
+  min-width: 0 !important;
+  @include focus-visible-outline($offset: -7px);
+}
+// タブ：角の設定
+:host ::ng-deep .mat-tab-header {
+  @media (max-width: $media-tb) {
+    .mat-tab-label-container {
+      display: inline;
+    }
+  }
+}
+// タブ：選択中の設定
+:host ::ng-deep .mat-tab-label-active {
+  background-color: #151c24 !important;
+  opacity: 1 !important;
+  color: $parts-yellow;
+}
+// タブ：ページネーション非表示設定
+:host ::ng-deep .mat-tab-header-pagination {
+  display: none !important;
+}
+
+// タブフォーカス時の枠線のスタイリング
+::ng-deep .mat-datepicker-toggle button:focus-visible {
+  @include focus-visible-outline;
+}
+
+// 横並び画像・フォームの設定
+.flex-image {
+  @media (min-width: $media-tb) {
+    @include flex-style($justify: space-between, $align: center);
+    // 横並び画像・フォーム
+    .flex-image-item {
+      width: 48%;
+    }
+    margin-bottom: 2em;
+  }
+  // 画像
+  .image-area {
+    margin-bottom: 1.5em;
+  }
+}
+
+// 横並びフォームの設定
+.flex-form {
+  // フォーム間の記号
+  .mid-mark {
+    font-weight: bold;
+  }
+  &.pc {
+    @include flex-style($justify: space-between, $align: center);
+    // 両サイドのフォーム
+    .flex-form-side {
+      width: 48%;
+    }
+    // ３列のフォーム
+    .flex-form-three {
+      width: 32%;
+    }
+  }
+  &.sp {
+    // フォームの高さ
+    .form-height {
+      line-height: 1.225;
+    }
+    // フォーム間の記号
+    .mid-mark {
+      width: 1em;
+      margin: 0 auto;
+      &.colon {
+        display: none;
+      }
+    }
+  }
+}
+
+.flex-container {
+  display: flex;
+  align-items: center;
+}
+
+.toggle-container {
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+:host ::ng-deep mat-slide-toggle button:focus-visible {
+  .mdc-switch__track {
+    outline: double thick $focus-color;
+    outline-offset: 1px;
+  }
+}
+
+// フォーム幅・配置
+mat-form-field {
+  width: 100%;
+  margin-bottom: 1em;
+  input[readonly] {
+    cursor: pointer;
+  }
+}
+
+// フォームの背景色
+:host ::ng-deep {
+  .form-color .mat-form-field-flex {
+    background-color: $white;
+  }
+}
+
+// フォーム必須項目
+.required {
+  color: $required-color;
+}
+
+// 大会方式ラジオボタン
+.radio-buttons {
+  @media (min-width: $media-tb) {
+    @include flex-style($justify: space-between, $align: center);
+    margin-bottom: 1.5em;
+  }
+  .radio-btn {
+    width: 100%;
+    vertical-align: 1em;
+    margin: auto 1.5em;
+  }
+}
+
+// 複数要素を持つ入力フォームの外枠
+.form-box {
+  margin: 0.5em 0 2em 0;
+  padding: 1em 1em 0em 1em;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  position: relative;
+}
+// 上記外枠のラベル
+.form-label {
+  position: absolute;
+  display: inline-block;
+  top: -6px;
+  left: 8px;
+  padding: 0 5px;
+  line-height: 1;
+  font-size: 11px;
+  background: white;
+  color: #747474;
+}
+
+// 要素追加ボタン
+.button-area {
+  justify-content: flex-end;
+  display: flex;
+  @media (max-width: 799px) {
+    display: block;
+  }
+  // 共通スタイル
+  .add-button {
+    color: $parts-yellow;
+    display: block;
+    margin-bottom: 5px;
+    width: auto;
+    text-align: right;
+    pointer-events: none;
+    a, button {
+      pointer-events: auto;
+    }
+    button {
+      @include edit-button;
+      color: white;
+      transform: scale(0.9);
+      @media (max-width: 799px) {
+        transform: scale(0.7);
+      }
+    }
+    a {
+      cursor: pointer;
+      font-weight: bold;
+      margin-right: 3px;
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+  // 登録済み団体・チーム追加ボタン
+  .select-button {
+    a {
+      color: $select-color;
+    }
+    button {
+      background-color: $select-color;
+      margin-right: 20px;
+      @media (max-width: 799px) {
+        margin-right: 0;
+      }
+      @include focus-visible-button($brightness: 1.5);
+    }
+  }
+  // 未登録追加ボタン
+  .input-button {
+    a {
+      color: $input-color;
+    }
+    button {
+      background-color: $input-color;
+    }
+  }
+}
+
+// 要素削除ボタン
+.delete-btn {
+  @include focus-visible-outline;
+  cursor: pointer;
+  min-width: 20px;
+}
+
+// 登録・更新ボタン
+.reg-btn,
+.update-btn {
+  @include update-button;
+  margin: 0 8px;
+  @media (min-width: $media-tb) {
+    margin: 0 15px;
+  }
+}
+
+// 戻るボタン
+.back-button {
+  @include back-button;
+}
+
+// 大会方式 制御メッセージ
+.control-message {
+  font-weight: bold;
+  padding-left: 1em;
+  text-indent: -1em;
+  letter-spacing: 0.05em;
+  &.pc {
+    font-size: larger;
+  }
+}

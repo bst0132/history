@@ -1,0 +1,589 @@
+@import "../../../../../mylib/var";
+@import "../../../../../mylib/mixin";
+
+// ページタイトル用ツールバー
+.title-toolbar {
+  @include title-toolbar;
+  @include flex-style($justify: flex-end);
+
+  margin-top: -10px;
+
+  span {
+    margin-right: auto;
+  }
+}
+
+// 真ん中に配置されたベースのカードのスタイル
+.control {
+  @include flex-style($justify: space-between);
+
+  // 削除ボタンのスタイル
+  .del-button {
+    @include button-effect;
+    @include active-button;
+    height: 5%;
+    padding: 0 16px;
+  }
+}
+
+// カードのまとまり部分のスタイル
+.card {
+  @include card;
+  // カードの角のスタイル
+  .radius {
+    border-radius: 5px;
+  }
+}
+
+// カードのスタイル
+.contents-card {
+  @include contents-card;
+  overflow-y: auto;
+  overflow-x: auto;
+  // 不活性要素のスタイル
+  .inert-element {
+    pointer-events: none;
+  }
+}
+
+// トーナメント情報入力欄・削除/試合開始ボタンのスタイル
+.fixed {
+  // 試合グループ名入力欄
+  .competition-name {
+    width: 65%;
+  }
+  // 大会規模、参加チーム数入力欄
+  .competition-select {
+    mat-form-field {
+      width: 45%;
+    }
+  }
+  // フォーム必須項目のスタイル
+  .required {
+    color: $required-color;
+  }
+  // 不活性フォームのスタイル
+  .inert-form {
+    pointer-events: none;
+  }
+  // 非活性時のメッセージ・試合開始ボタンのスタイル
+  .game-start {
+    text-align: right;
+    // 試合開始ボタン非活性時のメッセージ
+    .disable-start-message {
+      font-size: 80%;
+      line-height: 1.3;
+      margin-bottom: 5px;
+    }
+    // 試合開始ボタン
+    button{
+      @include button-effect;
+      height: 5%;
+      padding: 0 8px;
+      box-sizing: border-box;
+      &.active-button{
+        @include active-button
+      }
+    }
+  }
+}
+
+// トーナメントカード表示スタイル
+.tournament-card {
+  display: flex;
+  overflow-x: scroll;
+  margin-top: -20px;
+  .input-match-button {
+    &:hover {
+      opacity: 1 !important;
+      filter:brightness(1.2);
+    }
+  }
+  mat-card {
+    @include button-effect;
+    background-color: lightgray;
+    width: 120px;
+  }
+
+  mat-card.top-card {
+    height: 15px;
+    margin-top: 10px;
+    cursor: pointer;
+    @include focus-visible-card($brightness: 1.1);
+  }
+  mat-card.under-card {
+    top: 125px;
+    height: 15px;
+    cursor: pointer;
+    @include focus-visible-card($brightness: 1.1);
+  }
+
+  .red-border {
+    border-color: red !important;
+    z-index: 1;
+  }
+
+  .hidden {
+    visibility: hidden;
+  }
+
+  // 同点だった場合のコメント表示を共通化
+  .match-freetext {
+      position: relative;
+      width: 150px;
+      height:77px;
+      left: 77px;
+      font-size: 13px;
+      overflow-wrap: break-word;
+      word-break: break-all;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 4;
+      z-index: 1;
+    }
+
+  .first-round {
+    .first-round-column {
+      display: flex;
+      height: 240px;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      mat-card{
+        p{
+          overflow-wrap: break-word;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 1;
+          overflow: hidden;
+        }
+        &.disable-card {
+          //チーム選択欄非活性時のスタイル
+          background-color: white;
+          box-shadow: none;
+          cursor: default;
+          //チーム選択欄を非活性化(ツールチップ表示のため、クリック時のみ無効化)
+          &:active{
+            pointer-events: none;
+          }
+          p {
+            //2行表示
+            -webkit-line-clamp: 2;
+            font-size: 150%;
+          }
+        }
+      }
+    }
+    .first-match-top-border {
+      width: 190px;
+      height: 95px;
+      border-top: 3px solid;
+      border-right: 3px solid;
+      position: relative;
+      top: 31px;
+
+      button {
+        @include edit-button;
+        left: 170px;
+        top: 72px;
+        z-index: 10;
+      }
+    }
+
+    .first-match-under-border {
+      width: 190px;
+      height: 94px;
+      border-bottom: 3px solid;
+      border-right: 3px solid;
+      position: relative;
+      top: 28.5px;
+    }
+
+    .first-match-middle-border {
+      width: 210px;
+      height: 85px;
+      border-top: 3px solid;
+      position: relative;
+      top: 126px;
+      z-index: 0;
+    }
+
+    .match-freetext {
+      &.even {
+        top: -55px;
+      }
+      &.odd {
+        top: 66px;
+      }
+    }
+
+    .match-text {
+      position: relative;
+      width: 150px;
+      height: 130px;
+      left: 10px;
+      top: -110px;
+      font-size: 17px;
+      .game-place {
+        overflow-wrap: break-word;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+      }
+    }
+
+    .match-score {
+      position: relative;
+      left: 35px;
+      top: -74px;
+      font-size: 17px;
+    }
+  }
+
+  .second-round {
+    .second-round-column {
+      height: 520px;
+    }
+    .second-match-top-border {
+      height: 130px;
+      border-left: 3px solid;
+      position: relative;
+      top: 145.5px;
+
+      button {
+        @include edit-button;
+        left: -22px;
+        top: 108px;
+        z-index: 10;
+      }
+    }
+
+    .match-freetext {
+      position: relative;
+      width: 150px;
+      height:77px;
+      left: 77px;
+      font-size: 13px;
+      overflow-wrap: break-word;
+      word-break: break-all;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 4;
+      z-index: 1;
+      &.even {
+        top: -188px;
+      }
+      &.odd {
+        top: -62px;
+      }
+    }
+
+    .match-text {
+      position: relative;
+      width: 150px;
+      height: 100px;
+      right: 180px;
+      top: -32px;
+      font-size: 17px;
+      .game-place {
+        overflow-wrap: break-word;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+      }
+    }
+
+    .match-score {
+      position: relative;
+      left: 35px;
+      top: -202px;
+      font-size: 17px;
+    }
+
+    .second-match-under-border {
+      height: 133px;
+      border-left: 3px solid;
+      position: relative;
+      top: 145px;
+    }
+
+    .second-match-middle-border {
+      width: 190px;
+      border-top: 3px solid;
+      position: relative;
+      top: -243px;
+      z-index: 0;
+    }
+  }
+
+  .third-round {
+    .third-round-column {
+      height: 1040px;
+    }
+
+    .third-match-top-border {
+      height: 262px;
+      border-left: 3px solid;
+      position: relative;
+      top: 273px;
+
+      button {
+        @include edit-button;
+        left: -22px;
+        top: 240px;
+        z-index: 10;
+      }
+    }
+
+    .match-freetext {
+      &.even {
+        top: -191px;
+      }
+      &.odd {
+        top: -66px;
+      }
+    }
+
+    .match-text {
+      position: relative;
+      width: 150px;
+      height: 100px;
+      right: 180px;
+      top: -30px;
+      font-size: 17px;
+      .game-place {
+        overflow-wrap: break-word;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+      }
+    }
+
+    .match-score {
+      position: relative;
+      left: 35px;
+      top: -203px;
+      font-size: 17px;
+    }
+
+    .third-match-middle-border {
+      width: 190px;
+      border-top: 3px solid;
+      position: relative;
+      top: -244px;
+      z-index: 0;
+    }
+
+    .third-match-under-border {
+      height: 261px;
+      border-left: 3px solid;
+      position: relative;
+      top: 272.5px;
+    }
+  }
+
+  .fourth-round {
+    .fourth-round-column {
+      height: 2080px;
+    }
+
+    .fourth-match-top-border {
+      height: 523px;
+      border-left: 3px solid;
+      position: relative;
+      top: 532px;
+
+      button {
+        @include edit-button;
+        left: -22px;
+        top: 502px;
+        z-index: 10;
+      }
+    }
+
+    .match-text {
+      position: relative;
+      width: 150px;
+      height: 100px;
+      right: 180px;
+      top: -30px;
+      font-size: 17px;
+      .game-place {
+        overflow-wrap: break-word;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+      }
+    }
+
+    .match-freetext {
+      &.even {
+        top: -193px;
+      }
+      &.odd {
+        top: -62px;
+      }
+    }
+
+    .match-score {
+      position: relative;
+      left: 35px;
+      top: -204px;
+      font-size: 17px;
+    }
+
+    .fourth-match-middle-border {
+      width: 190px;
+      border-top: 3px solid;
+      position: relative;
+      top: -245px;
+      z-index: 0;
+    }
+
+    .fourth-match-under-border {
+      height: 522px;
+      border-left: 3px solid;
+      position: relative;
+      top: 530px;
+    }
+  }
+
+  .fifth-round {
+    .fifth-round-column {
+      height: 4160px;
+    }
+
+    .fifth-match-top-border {
+      height: 1042px;
+      border-left: 3px solid;
+      position: relative;
+      top: 1053px;
+
+      button {
+        @include edit-button;
+        left: -22px;
+        top: 1020px;
+        z-index: 10;
+      }
+    }
+
+    .match-freetext {
+      &.even {
+        top: -190px;
+      }
+      &.odd {
+        top: -61px;
+      }
+    }
+
+    .match-text {
+      position: relative;
+      width: 150px;
+      height: 100px;
+      right: 180px;
+      top: -30px;
+      font-size: 17px;
+      .game-place {
+        overflow-wrap: break-word;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+      }
+    }
+
+    .match-score {
+      position: relative;
+      left: 35px;
+      top: -203px;
+      font-size: 17px;
+    }
+
+    .fifth-match-middle-border {
+      width: 190px;
+      border-top: 3px solid;
+      position: relative;
+      top: -244px;
+      z-index: 0;
+    }
+
+    .fifth-match-under-border {
+      height: 1041px;
+      border-left: 3px solid;
+      position: relative;
+      top: 1052.5px;
+    }
+  }
+
+  .sixth-round {
+    .sixth-round-column {
+      height: 8320px;
+    }
+
+    .sixth-match-top-border {
+      height: 2080px;
+      border-left: 3px solid;
+      position: relative;
+      top: 2092px;
+
+      button {
+        @include edit-button;
+        left: -22px;
+        top: 2060px;
+        z-index: 10;
+      }
+    }
+
+    .match-freetext {
+      &.even {
+        top: -189px;
+      }
+      &.odd {
+        top: 100px;
+      }
+    }
+
+    .match-text {
+      position: relative;
+      width: 150px;
+      height: 100px;
+      right: 180px;
+      top: -30px;
+      font-size: 17px;
+      .game-place {
+        overflow-wrap: break-word;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+      }
+    }
+
+    .match-score {
+      position: relative;
+      left: 35px;
+      top: -200px;
+      font-size: 17px;
+    }
+
+    .sixth-match-middle-border {
+      width: 190px;
+      border-top: 3px solid;
+      position: relative;
+      top: -241px;
+      z-index: 0;
+    }
+
+    .sixth-match-under-border {
+      height: 2080px;
+      border-left: 3px solid;
+      position: relative;
+      top: 2095px;
+    }
+  }
+}

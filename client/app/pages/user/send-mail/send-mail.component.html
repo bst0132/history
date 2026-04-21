@@ -1,0 +1,59 @@
+<div class="content">
+  <mat-toolbar class="title-toolbar">
+    <span *ngIf="path == 'sendMail' && !sentMailFlg">アカウント作成</span>
+    <span *ngIf="path == 'resetPassword'&& !sentMailFlg">パスワード再設定</span>
+    <span *ngIf="sentMailFlg">メール送信完了</span>
+  </mat-toolbar>
+  <mat-card class="base-card">
+    <mat-card-content>
+      <div class="card">
+        <mat-card class="contents-card">
+          <ng-container *ngIf="!sentMailFlg">
+            <mat-horizontal-stepper labelPosition="bottom" appDisableStepperFocus>
+              <mat-step>
+                <ng-template matStepLabel *ngIf="path == 'sendMail'">アカウント作成<br>メール送信</ng-template>
+                <ng-template matStepLabel *ngIf="path == 'resetPassword'">パスワード再設定<br>メール送信</ng-template>
+                <p class="text">
+                  <span *ngIf="path == 'sendMail'">アカウントを作成</span>
+                  <span *ngIf="path == 'resetPassword'">パスワードを変更</span>
+                  するためのURLをメールでお送りします。<br>
+                  メールアドレスをご入力のうえ、<br class={{device}}>『送信』ボタンを押してください。
+                </p>
+                <p class="mail-config">※ 「no-reply&#64;sportshist.com」からのメールを受け取れるように設定してください。</p>
+                <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                  <mat-label>メールアドレス<span class="required">(必須)</span></mat-label>
+                  <input type="text" matInput placeholder="xxxxx@xxx.com" [formControl]="email" maxLength='100' required>
+                  <mat-error *ngIf="email.hasError('required')">{{msg.noenteredErr.replace('※1','メールアドレス')}}</mat-error>
+                  <mat-error *ngIf="email.hasError('illegal')">{{msg.formatChkErr.replace('※1','メールアドレス形式')}}</mat-error>
+                  <mat-hint>{{msg.wordMaxChkErr.replace('※1','100')}}</mat-hint>
+                </mat-form-field>
+                <div class="send-button">
+                  <button mat-raised-button type="button" (click)="onSubmit()" [disabled]="email.invalid" [class.active-button]="!email.invalid"><mat-icon>send</mat-icon>送信</button>
+                </div>
+              </mat-step>
+              <mat-step>
+                <ng-template matStepLabel>メール送信<br>完了</ng-template>
+              </mat-step>
+              <mat-step>
+                <ng-template matStepLabel *ngIf="path == 'sendMail'">アカウント情報<br>入力</ng-template>
+                <ng-template matStepLabel *ngIf="path == 'resetPassword'">パスワード<br>再設定</ng-template>
+              </mat-step>
+              <mat-step>
+                <ng-template matStepLabel>完了</ng-template>
+              </mat-step>
+            </mat-horizontal-stepper>
+          </ng-container>
+          <!-- メール送信後の画面 -->
+          <ng-container *ngIf="sentMailFlg">
+            <ng-container *ngIf="path == 'sendMail'">
+              <app-complete-screen [mode]="'mail'" [url]="'createUser'">></app-complete-screen>
+            </ng-container>
+            <ng-container *ngIf="path == 'resetPassword'">
+              <app-complete-screen [mode]="'mail'" [url]="'resetPassword'"></app-complete-screen>
+            </ng-container>
+          </ng-container>
+        </mat-card>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

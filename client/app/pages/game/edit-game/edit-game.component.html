@@ -1,0 +1,179 @@
+<div class="content">
+  <mat-card>
+    <mat-card-content>
+      <form [formGroup]="formGroup">
+
+        <!-- 競技 -->
+        <div class="flex-container">
+          <mat-form-field>
+            <mat-label>競技</mat-label>
+            <input type="text" matInput [value]="competition.sports | getSportValue" readonly>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>主催者名</mat-label>
+            <input type="text" matInput value={{getOrganName(competition?.organizerInf[0].organizerID)}} readonly>
+          </mat-form-field>
+        </div>
+
+        <!-- 大会名 -->
+        <mat-form-field>
+          <mat-label>大会名</mat-label>
+          <input type="text" matInput value={{competition?.compName}} readonly>
+        </mat-form-field>
+
+        <!-- 大会ロゴ -->
+        <div class="compInfo-img">
+              <app-image-select [mode]="'show'" [imageInfo]="competition.compLogo"></app-image-select>
+        </div>
+
+        <!-- 開催日 -->
+        <div class="flex-container">
+          <mat-form-field>
+            <mat-label>開催日</mat-label>
+            <input matInput placeholder="2020/01/01" [matDatepicker]="picker1" formControlName="eventDate">
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+          </mat-form-field>
+
+          <!-- 開始時間 -->
+          <mat-form-field>
+            <mat-label>開始時間</mat-label>
+            <input matInput placeholder="12:00" formControlName="gameStartTime">
+          </mat-form-field>
+
+          <!-- 終了時間 -->
+          <mat-form-field>
+            <mat-label>終了時間</mat-label>
+            <input matInput placeholder="12:00" formControlName="gameEndTime">
+          </mat-form-field>
+
+          <!-- 入場者数 -->
+          <mat-form-field>
+            <mat-label>入場者数</mat-label>
+            <input matInput placeholder="1,000" formControlName="gameAttendance">
+          </mat-form-field>
+        </div>
+
+        <!-- 開催場所 -->
+        <div class="flex-container">
+          <mat-form-field>
+            <mat-label>開催場所</mat-label>
+            <mat-select formControlName="gamePlaceName">
+              <mat-option></mat-option>
+              <mat-option *ngFor="let place of competition.placeID" [value]="getPlaceName(place)">{{getPlaceName(place)}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- 住所 -->
+          <mat-form-field>
+            <mat-label>住所</mat-label>
+            <input matInput formControlName="gamePlaceAdd" [value]="getPlaceAdd(formGroup.get('gamePlaceName').value)" readonly>
+          </mat-form-field>
+
+          <!-- 電話番号 -->
+          <mat-form-field>
+            <mat-label>電話番号</mat-label>
+            <input matInput formControlName="gamePlaceTel" [value]="getPlaceTel(formGroup.get('gamePlaceName').value)" readonly>
+          </mat-form-field>
+        </div>
+
+        <!-- 天気 -->
+        <div class="flex-container">
+          <mat-form-field>
+            <mat-label>天気</mat-label>
+            <input matInput placeholder="晴れ" formControlName="gamePlaceWeather">
+          </mat-form-field>
+
+          <!-- 気温 -->
+          <mat-form-field>
+            <mat-label>気温</mat-label>
+            <input matInput placeholder="25℃" formControlName="gamePlaceTemp">
+          </mat-form-field>
+
+          <!-- 湿度 -->
+          <mat-form-field>
+            <mat-label>湿度</mat-label>
+            <input matInput placeholder="50%" formControlName="gamePlaceHumi">
+          </mat-form-field>
+        </div>
+
+        <!-- 試合形式 -->
+        <div class="flex-container">
+          <div class="flex-column">
+            <mat-form-field>
+              <mat-label>試合形式</mat-label>
+              <input matInput formControlName="gameSystem" readonly>
+            </mat-form-field>
+
+            <!-- グループ名 -->
+            <mat-form-field>
+              <mat-label>グループ名</mat-label>
+              <input matInput formControlName="gameSystemName" readonly>
+            </mat-form-field>
+          </div>
+
+          <!-- 試合紹介 -->
+          <mat-form-field>
+            <mat-label>試合紹介</mat-label>
+            <textarea matInput cdkTextareaAutosize  cdkAutosizeMaxRows="5" formControlName="gameIntro"></textarea>
+          </mat-form-field>
+        </div>
+        <div class="space-area"></div>
+
+        <!-- 試合名 -->
+        <div class="flex-container">
+          <mat-form-field>
+            <mat-label>試合名</mat-label>
+            <input matInput placeholder="第一試合" formControlName="gameName">
+          </mat-form-field>
+        </div>
+
+        <!-- 主審 -->
+        <div class="flex-container">
+          <mat-form-field>
+            <mat-label>主審</mat-label>
+            <input matInput placeholder="山田 太郎" formControlName="chiefUmpire">
+          </mat-form-field>
+
+          <!-- 副審 -->
+          <mat-form-field>
+            <mat-label>副審</mat-label>
+            <input matInput placeholder="辺須田 一郎" formControlName="subUmpire">
+          </mat-form-field>
+
+          <!-- 第４の審判 -->
+          <mat-form-field>
+            <mat-label>第４の審判</mat-label>
+            <input matInput placeholder="田中 一郎" formControlName="fourthUmpire">
+          </mat-form-field>
+        </div>
+        <div class="space-area"></div>
+
+        <!-- チーム情報 -->
+        <mat-label>チーム情報</mat-label>
+        <div class="flex-container">
+          <mat-form-field>
+            <mat-select formControlName="teamInfo1">
+              <mat-option *ngFor="let team of competition.teamID" value={{team}}>{{getTeamName(team)}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-select formControlName="teamInfo2">
+              <mat-option *ngFor="let team of competition.teamID" value={{team}}>{{getTeamName(team)}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </form>
+
+      <!-- 各種ボタン -->
+      <div class="footer-button-area">
+        <button class="button" mat-raised-button color="primary" type="button" (click)="modGameInfo()">更新</button>
+        <button class="button" mat-raised-button color="primary" type="button" (click)="confirmGame()">試合情報確定</button>
+      </div>
+      <div class="return-button">
+        <button class="button" mat-raised-button color="primary" type="button" (click)="pageBack()">戻る</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,157 @@
+@import '../../../../mylib/mixin';
+
+mat-card-content {
+  display: flex;
+  &.game-info {
+    justify-content: space-between;
+    font-size: 12px;
+  }
+}
+
+mat-card {
+  &.game-card {
+    @include size($width: 225px, $height: 20px);
+    margin: 0;
+    padding: 3px 16px;
+    background-color: rgba($color: lightslategray, $alpha: 0.2);
+    &.winner {
+      background-color: rgba($color: mediumturquoise, $alpha: 0.2);
+    }
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.even {
+  div:nth-child(2) {
+    div:nth-child(1) {
+      border-right: 2px #999 solid;
+      border-top: 2px #999 solid;
+    }
+    div:nth-child(2) {
+      border-bottom: 2px #999 solid;
+    }
+  }
+}
+
+.odd {
+  div:nth-child(1) {
+    div:nth-child(1) {
+      border-bottom: 2px #999 solid;
+      border-right: 2px #999 solid;
+    }
+  }
+}
+
+.score-container {
+  display: flex;
+  span {
+    justify-content: space-between;
+  }
+}
+
+.line {
+  width: 25px;
+}
+
+.tournament {
+  display: flex;
+  overflow: scroll;
+}
+
+.round {
+  @include flex-style($direction: column);
+}
+
+.flex-container {
+  display: flex;
+  flex: 0 0 auto;
+  &.af-first-round {
+    flex-grow: 1;
+  }
+}
+
+.block {
+  @include flex-style($direction: column);
+  padding: 7px 0;
+  margin: auto 0;
+  position: relative;
+}
+
+.node {
+  display: flex;
+}
+
+.line-container {
+  @include flex-style($direction: column);
+}
+
+.flex-line {
+  display: flex;
+  flex-grow: 1;
+}
+
+.final-round {
+  justify-content: center;
+}
+
+.third-place-match {
+  @include position($position: relative, $top: 75%, $right: 257px)
+}
+
+.footer-button-area {
+  @include flex-style($justify: space-between);
+  margin-left: 25px;
+}
+
+.mask {
+  @include position($position: fixed, $left: 0, $top: 0, $bottom: 0, $right: 0);
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+#modal {
+  @include size($width: 70%, $height: 50%);
+  @include position($position: fixed, $left: 0, $top: 20%, $right: 0);
+  background: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  margin: 0 auto;
+  z-index: 2;
+  overflow-y: scroll;
+}
+
+.close-button {
+  @include position($position: absolute, $top: 0, $right: 0);
+  @include text($fontSize: 1.4em, $textColor: black);
+  padding: 20px 20px;
+  cursor: pointer;
+}
+
+.form {
+  text-align: center;
+  position: relative;
+}
+
+.result-form {
+  @include flex-style($justify: space-around);
+}
+
+.flex-form {
+  @include flex-style($direction: column);
+  width: 30%;
+  mat-form-field {
+    width: 100%;
+    &:nth-child(n + 2) {
+      margin-bottom: 7.75px;
+    }
+    &:nth-child(7) {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.btn {
+  width: 10%;
+}

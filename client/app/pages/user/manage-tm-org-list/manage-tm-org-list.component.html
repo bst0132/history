@@ -1,0 +1,39 @@
+<div class="content">
+  <mat-card>
+    <!-- 管理チーム -->
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>管理チーム</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="org-list">
+          <ng-container *ngFor="let team of teamList">
+            <app-image-panel [imageInfo]="team.teamLogo" tabindex="0" (click)="navigateTeamDetail(team)" (keyup)="onKeyCheck($event)">
+              <div class="manage-info">{{team.teamName}}</div>
+              <hr>
+              <div>{{team.teamAddInf.teamPrefecture}}</div>
+            </app-image-panel>
+          </ng-container>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- 管理団体 -->
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>管理団体</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="org-list">
+          <ng-container *ngFor="let organ of organList">
+            <app-image-panel [imageInfo]="organ.organLogo" tabindex="0" (click)="navigateOrganDetail(organ)" (keyup)="onKeyCheck($event)">
+              <div class="manage-info">{{organ.organName}}</div>
+              <hr>
+              <div class="manage-info">{{organ.organAddInf.organPrefecture}} {{organ.organAddInf.organCity}}</div>
+            </app-image-panel>
+          </ng-container>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </mat-card>
+</div>

@@ -1,0 +1,93 @@
+@import '../../../mylib/var';
+@import '../../../mylib/mixin';
+
+// タイトル
+p {
+  font-size: 20px;
+  cursor: default;
+  @media (max-width: $media-sp) {
+    font-size: 14px;
+  }
+}
+
+// ダイアログの内容欄
+mat-dialog-content {
+  white-space: pre-wrap;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin-bottom: 15px;
+  width: 400px;
+  @media (max-width: $media-tb) {
+    width: 280px;
+  }
+  @media (max-width: $media-sp) {
+    width: 220px;
+  }
+}
+
+// 入力フォーム
+mat-form-field {
+  width: 100%;
+  margin-bottom: 15px;
+  mat-error,
+  mat-hint {
+    cursor: default;
+  }
+}
+
+// 要素削除ボタン
+.delete-btn {
+  cursor: pointer;
+  @include focus-visible-outline;
+}
+
+// 要素追加ボタン
+.button-area {
+  color: $parts-yellow;
+  text-align: right;
+  .add-button {
+    @include edit-button;
+    color: white;
+    transform: scale(0.7);
+  }
+  a {
+    cursor: pointer;
+  }
+  // チーム名入力をホバーした時の挙動
+  .add-context {
+    @include button-effect;
+  }
+}
+
+// ボタンの横並びスタイル
+.flex-button {
+  @include flex-style($justify: space-between, $align: center);
+}
+
+// 登録ボタン
+.update-button {
+  @include update-button;
+  width: 48%;
+  button {
+    width: 100%;
+  }
+}
+
+// キャンセルボタン
+.back-button {
+  @include button-effect;
+  width: 48%;
+  button {
+    width: 100%;
+  }
+}
+
+// 注意メッセージ
+.alert-msg {
+  color: $required-color;
+  font-size: 15px;
+  cursor: default;
+  @media (max-width: $media-sp) {
+    font-size: 15px;
+  }
+}

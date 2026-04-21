@@ -1,0 +1,41 @@
+@import '../../../mylib/var';
+
+// メールが届かない場合の案内文のスタイリング
+.not-receive-mail {
+  padding: 0.5em 1em;
+  border: solid 3px $submit-color;
+  border-radius: 10px;
+  margin-top: 3em;
+  margin-bottom: 2em;
+}
+
+// 案内文のタイトル
+.mail-header-title {
+  margin-top: 0.5em;
+  color: $medium-blue;
+  font-weight: bold;
+  font-size: 15px;
+  @media (min-width: $media-tb) {
+    font-size: 20px;
+  }
+}
+
+// 案内文のタイトルの補足
+.mail-header-text {
+  margin-top: 1em;
+  font-size: 13px;
+}
+
+// 案内文の項目
+.mail-body-title {
+  font-weight: bold;
+  font-size: 15px;
+  margin-top: 1em;
+}
+
+// 案内文の内容
+.mail-body-text {
+  font-size: 13px;
+}
+
+

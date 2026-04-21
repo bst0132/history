@@ -1,0 +1,116 @@
+@import '../../../../mylib/mixin';
+
+.footer-button-area {
+  margin-top: 20px;
+  @include flex-style($justify: space-between);
+  button {
+    margin-left: 25px;
+  }
+}
+
+.league-info {
+  margin-top: 20px;
+}
+
+.league-table {
+  border-collapse: collapse;
+}
+
+.no-column {
+  width: 20px
+}
+
+.team-select {
+  min-width: 150px;
+}
+
+.header-row {
+  background-color: rgba($color: lightsteelblue, $alpha: 0.45);
+}
+
+.odd-row {
+  background-color: rgba($color: lightsteelblue, $alpha: 0.15);
+}
+
+.data-cell {
+  width: 7.5%;
+  min-width: 75px;
+  word-break: break-all;
+  white-space: pre-wrap;
+  text-align: center;
+  &.game-result {
+    &:hover {
+      cursor: pointer;
+      background-color: rgba($color: orange, $alpha: 0.4);
+      box-shadow: 1.5px 1.5px 3px gray;
+    }
+  }
+}
+
+.slash {
+  background-image: linear-gradient(15deg, transparent 49%, grey 49%, grey 51%, transparent 51%, transparent);
+}
+
+.point {
+  width: 20%;
+}
+
+.scroll-table {
+  display: block;
+  overflow-x: scroll;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  max-height: 750px;
+  width: 100%;
+}
+
+.mask {
+  @include position($position: fixed, $left: 0, $top: 0, $bottom: 0, $right: 0);
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+#modal {
+  @include size($width: 70%, $height: 50%);
+  @include position($position: fixed, $left: 0, $top: 20%, $right: 0);
+  background: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  margin: 0 auto;
+  z-index: 2;
+  overflow-y: scroll;
+}
+
+.close-button {
+  @include position($position: absolute, $top: 0, $right: 0);
+  @include text($fontSize: 1.4em, $textColor: black);
+  padding: 20px 20px;
+  cursor: pointer;
+}
+
+.form {
+  text-align: center;
+  position: relative;
+}
+
+.result-form {
+  @include flex-style($justify: space-around);
+}
+
+.flex-container {
+  @include flex-style($direction: column);
+  width: 30%;
+  mat-form-field {
+    width: 100%;
+    &:nth-child(n + 2) {
+      margin-bottom: 7.75px;
+    }
+    &:nth-child(6) {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.btn {
+  width: 10%;
+}

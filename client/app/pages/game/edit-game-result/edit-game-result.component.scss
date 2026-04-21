@@ -1,0 +1,56 @@
+.flex-container {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  .game-info {
+    width: 30%;
+  }
+}
+
+.footer-button-area {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  button:nth-of-type(1) {
+    margin-bottom: 5px;
+  }
+  button {
+    width: 30%;
+  }
+}
+
+mat-form-field {
+  margin: 0 5px;
+}
+
+.return-button {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.sports {
+  width: auto;
+}
+
+.organ {
+  width: auto;
+}
+
+.title {
+  width: 100%;
+  border-bottom: solid 1px black;
+  margin-bottom: 25px;
+}
+
+.team-info {
+  margin: 10px 0;
+}
+
+.flex-item {
+  width: 40%;
+}
+
+.ex-game {
+  margin-bottom: 10px;
+}

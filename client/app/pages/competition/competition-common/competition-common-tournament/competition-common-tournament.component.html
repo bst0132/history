@@ -1,0 +1,298 @@
+<mat-card-content>
+  <div class="card">
+    <!-- 入力フォーム -->
+    <mat-card class="contents-card radius">
+      <form [formGroup]="formGroup">
+        <!-- 試合グループ名入力フォーム -->
+        <div class="fixed">
+          <div class="control">
+            <mat-form-field appearance="outline" floatLabel="always" class="competition-name" [class.inert-form]="!canEdit" hideRequiredMarker>
+              <mat-label>試合グループ名<span *ngIf="canEdit" class="required">(必須)</span></mat-label>
+              <input placeholder="例) 予選トーナメントA" type="text" maxlength="20" matInput formControlName="gameGroupTitle" [readonly]="!canEdit" [tabIndex]="!canEdit ? -1 : 0">
+              <mat-error *ngIf="formGroup.get('gameGroupTitle').hasError('required')">{{msg.noenteredErr.replace('※1','試合グループ名')}}</mat-error>
+              <mat-hint *ngIf="canEdit">{{msg.wordMaxChkErr.replace('※1','20')}}</mat-hint>
+            </mat-form-field>
+            <ng-container *ngIf="!(newGameFlg || !canEdit) && !getGameStartedFlg">
+              <button class="del-button" mat-raised-button type="button" (click)="onClickDeleteGame()"><mat-icon>delete_outline</mat-icon>削除</button>
+            </ng-container>
+          </div>
+          <!-- チーム数選択フォーム -->
+          <div class="competition-select" >
+            <ng-container *ngIf="canEdit && newGameFlg; else onlyView">
+              <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                <mat-label>大会規模<span class="required">(必須)</span></mat-label>
+                <mat-select (selectionChange)="tournamentDetail()" formControlName="teamCount">
+                  <mat-option *ngFor="let testNumber of compScaleNumbers" [value]="testNumber.value">
+                    {{testNumber.value}}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formGroup.get('teamCount').hasError('required')">{{msg.unselectErr.replace('※1','大会規模')}}</mat-error>
+              </mat-form-field>
+            </ng-container>
+            <ng-template #onlyView>
+              <mat-form-field class="inert-element" appearance="outline" floatLabel="always" [class.inert-form]="!canEdit" hideRequiredMarker>
+                <mat-label>大会規模</mat-label>
+                <input matInput [formControl]="formGroup.get('teamCount')" readonly [tabIndex]="!canEdit ? -1 : 0">
+              </mat-form-field>
+            </ng-template>
+            <!-- <mat-form-field appearance="outline" floatLabel="always" [class.cdk-visually-hidden]="true">
+              <mat-label>参加チーム数</mat-label>
+              <input placeholder="例）４" type="text" matInput formControlName="competitionNumber">
+            </mat-form-field> --> <!-- 2023/10/30現在仕様上コメントアウト状態、今後使用する可能性あり -->
+          </div>
+            <!-- 試合開始ボタン -->
+          <div *ngIf="!newGameFlg && !getGameStartedFlg && canEdit" class="game-start">
+            <p *ngIf="!allTeamsSelectedFlg" class="disable-start-message">{{msg.disableStartGame}}</p>
+            <button mat-raised-button type="button"
+              (click)="onClickGameStart()" [disabled]="!allTeamsSelectedFlg" [class.active-button]="!getGameStartedFlg && allTeamsSelectedFlg">
+              <mat-icon>directions_run</mat-icon>トーナメント開始
+            </button>
+          </div>
+        </div>
+        <ng-container *ngIf="device === 'sp'">
+          <span><mat-icon>touch_app</mat-icon>チーム名を長押しで全表示</span>
+        </ng-container>
+        <!-- 試合区分選択フォーム -->
+        <!-- トーナメント表示 -->
+        <div formArrayName="gameGroupInf">
+          <div class="tournament-card">
+            <!-- 1回戦目 -->
+            <div class="first-round">
+              <ng-container *ngFor="let card of matchNumbers; even as isEven; odd as isOdd; let i = index">
+                <div class="first-round-column">
+                  <div class="first-area">
+                    <div [style.visibility]="getGameStartedFlg && formGroup.get('gameGroupInf').value[i].criteriaNoEntry ? 'hidden' : 'visible'">
+                      <mat-card *ngIf="!formGroup.get('gameGroupInf').value[i].criteriaNoEntry else noEntryTop" class="top-card" [ngStyle]="formGroup.get('gameGroupInf').value[i].criteriaWinFlg === true && {'color': 'red' }"
+                        (click)='onClickInputMatchTeam(i, true)' (keydown)="onKeyCheck($event)" [class.disable-card]="(getGameStartedFlg || !canEdit)" [attr.tabindex]="canEdit && !getGameStartedFlg ? 0 : -1">
+                        <p [matTooltip]="formGroup.get('gameGroupInf').value[i].criteriaTeamName" matTooltipPosition="above">{{formGroup.get('gameGroupInf').value[i].criteriaTeamName}}</p>
+                      </mat-card>
+                    </div>
+                    <div [style.visibility]="getGameStartedFlg && formGroup.get('gameGroupInf').value[i].opponentNoEntry ? 'hidden' : 'visible'">
+                      <mat-card *ngIf="!formGroup.get('gameGroupInf').value[i].opponentNoEntry else noEntryUnder" class="under-card" [ngStyle]="formGroup.get('gameGroupInf').value[i].criteriaWinFlg === false && {'color': 'red' }"
+                        (click)='onClickInputMatchTeam(i, false)' (keydown)="onKeyCheck($event)" [class.disable-card]="(getGameStartedFlg || !canEdit)" [attr.tabindex]="canEdit && !getGameStartedFlg ? 0 : -1">
+                        <p [matTooltip]="formGroup.get('gameGroupInf').value[i].opponentTeamName" matTooltipPosition="above">{{formGroup.get('gameGroupInf').value[i].opponentTeamName}}</p>
+                      </mat-card>
+                    </div>
+                    <ng-template #noEntryTop>
+                      <mat-card class="top-card" (click)='onClickInputMatchTeam(i, true)' (keydown)="onKeyCheck($event)"
+                      [class.disable-card]="(getGameStartedFlg || !canEdit)"  [attr.tabindex]="canEdit && !getGameStartedFlg ? 0 : -1"><p>不参加</p></mat-card>
+                    </ng-template>
+                    <ng-template #noEntryUnder>
+                      <mat-card class="under-card" (click)='onClickInputMatchTeam(i, false)' (keydown)="onKeyCheck($event)"
+                      [class.disable-card]="(getGameStartedFlg || !canEdit)"  [attr.tabindex]="canEdit && !getGameStartedFlg ? 0 : -1"><p>不参加</p></mat-card>
+                    </ng-template>
+                  </div>
+                  <div class="second-area">
+                    <div class="first-match-top-border" [ngClass]="{
+                      'red-border': formGroup.get('gameGroupInf').value[i].criteriaWinFlg === true,
+                      'hidden': getGameStartedFlg && formGroup.get('gameGroupInf').value[i].criteriaNoEntry
+                    }">
+                      <button mat-icon-button type="button" class="input-match-button" (click)="onClickInputMatch(i)" *ngIf="!(formGroup.get('gameGroupInf').value[i].criteriaNoEntry || formGroup.get('gameGroupInf').value[i].opponentNoEntry || !canEdit)"><mat-icon>create</mat-icon></button>
+                    </div>
+                    <div class="first-match-under-border"  [ngClass]="{
+                      'red-border': formGroup.get('gameGroupInf').value[i].criteriaWinFlg === false,
+                      'hidden': getGameStartedFlg && formGroup.get('gameGroupInf').value[i].opponentNoEntry
+                    }"></div>
+                    <div class="match-text">
+                      <p>{{formGroup.get('gameGroupInf').value[i].gameDate | date:'yyyy/MM/dd'}}&nbsp;{{formGroup.get('gameGroupInf').value[i].gameStartTime | timeNumberToString}}&nbsp;</p>
+                      <p class="game-place" [matTooltip]="formGroup.get('gameGroupInf').value[i].gamePlace" matTooltipPosition="above">{{formGroup.get('gameGroupInf').value[i].gamePlace}}</p>
+                      <p *ngIf="formGroup.get('gameGroupInf').value[i].gameProgressStatus === cns.duringGame">(試合中)</p>
+                    </div>
+                  </div>
+                  <div class="third-area">
+                    <div class="first-match-middle-border" [ngClass]="{
+                      'red-border': !(formGroup.get('gameGroupInf').value[i].criteriaWinFlg === null),
+                      'hidden': getGameStartedFlg && (formGroup.get('gameGroupInf').value[i].criteriaNoEntry && formGroup.get('gameGroupInf').value[i].opponentNoEntry)
+                    }"></div>
+                    <div>
+                      <p class="match-freetext" [ngClass]="{'even': isEven, 'odd': isOdd}" [matTooltip]="formGroup.get('gameGroupInf').value[i].freeText" matTooltipPosition="above">{{formGroup.get('gameGroupInf').value[i].freeText}}</p>
+                    </div>
+                    <div class="match-score">
+                      <p>{{formGroup.get('gameGroupInf').value[i].criteriaScore}}&nbsp;</p>
+                      <p>{{formGroup.get('gameGroupInf').value[i].opponentScore}}&nbsp;</p>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+            <!-- 2回戦目 -->
+            <div class="second-round">
+              <ng-container *ngFor="let card of matchNumbers; even as isEven; odd as isOdd; let i = index">
+                <ng-container *ngIf="i < matchNumbers.length/2 && 1 <= matchNumbers.length/2">
+                  <div class="second-round-column">
+                    <div class="second-match-top-border" [ngClass]="{
+                      'red-border': formGroup.get('gameGroupInf').value[i + secondMatchCount].criteriaWinFlg === true,
+                      'hidden': getGameStartedFlg && formGroup.get('gameGroupInf').value[i + secondMatchCount].criteriaNoEntry
+                    }">
+                      <button mat-icon-button type="button" class="input-match-button" (click)="onClickInputMatch(i + secondMatchCount)" *ngIf="!(formGroup.get('gameGroupInf').value[i + secondMatchCount].criteriaNoEntry || formGroup.get('gameGroupInf').value[i + secondMatchCount].opponentNoEntry || !canEdit)"><mat-icon>create</mat-icon></button>
+                    </div>
+                    <div class="second-match-under-border" [ngClass]="{
+                      'red-border': formGroup.get('gameGroupInf').value[i + secondMatchCount].criteriaWinFlg === false,
+                      'hidden': getGameStartedFlg && formGroup.get('gameGroupInf').value[i + secondMatchCount].opponentNoEntry
+                    }"></div>
+                    <div class="match-text">
+                      <p>{{formGroup.get('gameGroupInf').value[i + secondMatchCount].gameDate | date:'yyyy/MM/dd'}}&nbsp;{{formGroup.get('gameGroupInf').value[i + secondMatchCount].gameStartTime | timeNumberToString}}&nbsp;</p>
+                      <p  class="game-place" [matTooltip]="formGroup.get('gameGroupInf').value[i + secondMatchCount].gamePlace" matTooltipPosition="above">{{formGroup.get('gameGroupInf').value[i + secondMatchCount].gamePlace}}&nbsp;</p>
+                      <p *ngIf="formGroup.get('gameGroupInf').value[i + secondMatchCount].gameProgressStatus === cns.duringGame">(試合中)</p>
+                    </div>
+                    <div>
+                      <p class="match-freetext" [ngClass]="{'even': isEven, 'odd': isOdd}" [matTooltip]="formGroup.get('gameGroupInf').value[i + secondMatchCount].freeText" matTooltipPosition="above">{{formGroup.get('gameGroupInf').value[i + secondMatchCount].freeText}}</p>
+                    </div>
+                    <div class="match-score">
+                      <p>{{formGroup.get('gameGroupInf').value[i + secondMatchCount].criteriaScore}}&nbsp;</p>
+                      <p>{{formGroup.get('gameGroupInf').value[i + secondMatchCount].opponentScore}}&nbsp;</p>
+                    </div>
+                    <div class="second-match-middle-border" [ngClass]="{
+                      'red-border': !(formGroup.get('gameGroupInf').value[i + secondMatchCount].criteriaWinFlg === null),
+                      'hidden': getGameStartedFlg && (formGroup.get('gameGroupInf').value[i + secondMatchCount].criteriaNoEntry && formGroup.get('gameGroupInf').value[i + secondMatchCount].opponentNoEntry)
+                    }"></div>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+            <!-- 3回戦目 -->
+            <div class="third-round">
+              <ng-container *ngFor="let card of matchNumbers; even as isEven; odd as isOdd; let i = index">
+                <ng-container *ngIf="i < matchNumbers.length/4 && 1 <= matchNumbers.length/4">
+                  <div class="third-round-column">
+                    <div class="third-match-top-border" [ngClass]="{
+                      'red-border': formGroup.get('gameGroupInf').value[i + thirdMatchCount].criteriaWinFlg === true,
+                      'hidden': getGameStartedFlg && formGroup.get('gameGroupInf').value[i + thirdMatchCount].criteriaNoEntry
+                    }">
+                      <button mat-icon-button type="button" class="input-match-button" (click)="onClickInputMatch(i + thirdMatchCount)" *ngIf="!(formGroup.get('gameGroupInf').value[i + thirdMatchCount].criteriaNoEntry || formGroup.get('gameGroupInf').value[i + thirdMatchCount].opponentNoEntry || !canEdit)"><mat-icon>create</mat-icon></button>
+                    </div>
+                    <div class="third-match-under-border" [ngClass]="{
+                      'red-border': formGroup.get('gameGroupInf').value[i + thirdMatchCount].criteriaWinFlg === false,
+                      'hidden': getGameStartedFlg && formGroup.get('gameGroupInf').value[i + thirdMatchCount].opponentNoEntry
+                    }"></div>
+                    <div class="match-text">
+                      <p>{{formGroup.get('gameGroupInf').value[i + thirdMatchCount].gameDate | date:'yyyy/MM/dd'}}&nbsp;{{formGroup.get('gameGroupInf').value[i + thirdMatchCount].gameStartTime | timeNumberToString}}&nbsp;</p>
+                      <p  class="game-place" [matTooltip]="formGroup.get('gameGroupInf').value[i + thirdMatchCount].gamePlace" matTooltipPosition="above">{{formGroup.get('gameGroupInf').value[i + thirdMatchCount].gamePlace}}&nbsp;</p>
+                      <p *ngIf="formGroup.get('gameGroupInf').value[i + thirdMatchCount].gameProgressStatus === cns.duringGame">(試合中)</p>
+                    </div>
+                    <div>
+                      <p class="match-freetext" [ngClass]="{'even': isEven, 'odd': isOdd}" [matTooltip]="formGroup.get('gameGroupInf').value[i + thirdMatchCount].freeText" matTooltipPosition="above">{{formGroup.get('gameGroupInf').value[i + thirdMatchCount].freeText}}</p>
+                    </div>
+                    <div class="match-score">
+                      <p>{{formGroup.get('gameGroupInf').value[i + thirdMatchCount].criteriaScore}}&nbsp;</p>
+                      <p>{{formGroup.get('gameGroupInf').value[i + thirdMatchCount].opponentScore}}&nbsp;</p>
+                    </div>
+                    <div class="third-match-middle-border" [ngClass]="{
+                      'red-border': !(formGroup.get('gameGroupInf').value[i + thirdMatchCount].criteriaWinFlg === null),
+                      'hidden': getGameStartedFlg && (formGroup.get('gameGroupInf').value[i + thirdMatchCount].criteriaNoEntry && formGroup.get('gameGroupInf').value[i + thirdMatchCount].opponentNoEntry)
+                    }"></div>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+            <!-- 4回戦目 -->
+            <div class="fourth-round">
+              <ng-container *ngFor="let card of matchNumbers; even as isEven; odd as isOdd; let i = index">
+                <ng-container *ngIf="i < matchNumbers.length/8 && 1 <= matchNumbers.length/8">
+                  <div class="fourth-round-column">
+                    <div class="fourth-match-top-border" [ngClass]="{
+                      'red-border': formGroup.get('gameGroupInf').value[i + fourthMatchCount].criteriaWinFlg === true,
+                      'hidden': getGameStartedFlg && formGroup.get('gameGroupInf').value[i + fourthMatchCount].criteriaNoEntry
+                    }">
+                      <button mat-icon-button type="button" class="input-match-button" (click)="onClickInputMatch(i + fourthMatchCount)" *ngIf="!(formGroup.get('gameGroupInf').value[i + fourthMatchCount].criteriaNoEntry || formGroup.get('gameGroupInf').value[i + fourthMatchCount].opponentNoEntry || !canEdit)"><mat-icon>create</mat-icon></button>
+                    </div>
+                    <div class="fourth-match-under-border" [ngClass]="{
+                      'red-border': formGroup.get('gameGroupInf').value[i + fourthMatchCount].criteriaWinFlg === false,
+                      'hidden': getGameStartedFlg && formGroup.get('gameGroupInf').value[i + fourthMatchCount].opponentNoEntry
+                    }"></div>
+                    <div class="match-text">
+                      <p>{{formGroup.get('gameGroupInf').value[i + fourthMatchCount].gameDate | date:'yyyy/MM/dd'}}&nbsp;{{formGroup.get('gameGroupInf').value[i + fourthMatchCount].gameStartTime | timeNumberToString}}&nbsp;</p>
+                      <p  class="game-place" [matTooltip]="formGroup.get('gameGroupInf').value[i + fourthMatchCount].gamePlace" matTooltipPosition="above">{{formGroup.get('gameGroupInf').value[i + fourthMatchCount].gamePlace}}&nbsp;</p>
+                      <p *ngIf="formGroup.get('gameGroupInf').value[i + fourthMatchCount].gameProgressStatus === cns.duringGame">(試合中)</p>
+                    </div>
+                    <div>
+                      <p class="match-freetext" [ngClass]="{'even': isEven, 'odd': isOdd}" [matTooltip]="formGroup.get('gameGroupInf').value[i + fourthMatchCount].freeText" matTooltipPosition="above">{{formGroup.get('gameGroupInf').value[i + fourthMatchCount].freeText}}</p>
+                    </div>
+                    <div class="match-score">
+                      <p>{{formGroup.get('gameGroupInf').value[i + fourthMatchCount].criteriaScore}}&nbsp;</p>
+                      <p>{{formGroup.get('gameGroupInf').value[i + fourthMatchCount].opponentScore}}&nbsp;</p>
+                    </div>
+                    <div class="fourth-match-middle-border" [ngClass]="{
+                      'red-border': !(formGroup.get('gameGroupInf').value[i + fourthMatchCount].criteriaWinFlg === null),
+                      'hidden': getGameStartedFlg && (formGroup.get('gameGroupInf').value[i + fourthMatchCount].criteriaNoEntry && formGroup.get('gameGroupInf').value[i + fourthMatchCount].opponentNoEntry)
+                    }"></div>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+            <!-- 5回戦目 -->
+            <div class="fifth-round">
+              <ng-container *ngFor="let card of matchNumbers; even as isEven; odd as isOdd; let i = index">
+                <ng-container *ngIf="i < matchNumbers.length/16 && 1 <= matchNumbers.length/16">
+                  <div class="fifth-round-column">
+                    <div class="fifth-match-top-border" [ngClass]="{
+                      'red-border': formGroup.get('gameGroupInf').value[i + fifthMatchCount].criteriaWinFlg === true,
+                      'hidden': getGameStartedFlg && formGroup.get('gameGroupInf').value[i + fifthMatchCount].criteriaNoEntry
+                    }">
+                      <button mat-icon-button type="button" class="input-match-button" (click)="onClickInputMatch(i + fifthMatchCount)" *ngIf="!(formGroup.get('gameGroupInf').value[i + fifthMatchCount].criteriaNoEntry || formGroup.get('gameGroupInf').value[i + fifthMatchCount].opponentNoEntry || !canEdit)"><mat-icon>create</mat-icon></button>
+                    </div>
+                    <div class="fifth-match-under-border" [ngClass]="{
+                      'red-border': formGroup.get('gameGroupInf').value[i + fifthMatchCount].criteriaWinFlg === false,
+                      'hidden': getGameStartedFlg && formGroup.get('gameGroupInf').value[i + fifthMatchCount].opponentNoEntry
+                    }"></div>
+                    <div class="match-text">
+                      <p>{{formGroup.get('gameGroupInf').value[i + fifthMatchCount].gameDate | date:'yyyy/MM/dd'}}&nbsp;{{formGroup.get('gameGroupInf').value[i + fifthMatchCount].gameStartTime | timeNumberToString}}&nbsp;</p>
+                      <p  class="game-place" [matTooltip]="formGroup.get('gameGroupInf').value[i + fifthMatchCount].gamePlace" matTooltipPosition="above">{{formGroup.get('gameGroupInf').value[i + fifthMatchCount].gamePlace}}&nbsp;</p>
+                      <p *ngIf="formGroup.get('gameGroupInf').value[i + fifthMatchCount].gameProgressStatus === cns.duringGame">(試合中)</p>
+                    </div>
+                    <div>
+                      <p class="match-freetext" [ngClass]="{'even': isEven, 'odd': isOdd}" [matTooltip]="formGroup.get('gameGroupInf').value[i + fifthMatchCount].freeText" matTooltipPosition="above">{{formGroup.get('gameGroupInf').value[i + fifthMatchCount].freeText}}</p>
+                    </div>
+                    <div class="match-score">
+                      <p>{{formGroup.get('gameGroupInf').value[i + fifthMatchCount].criteriaScore}}&nbsp;</p>
+                      <p>{{formGroup.get('gameGroupInf').value[i + fifthMatchCount].opponentScore}}&nbsp;</p>
+                    </div>
+                    <div class="fifth-match-middle-border" [ngClass]="{
+                      'red-border': !(formGroup.get('gameGroupInf').value[i + fifthMatchCount].criteriaWinFlg === null),
+                      'hidden': getGameStartedFlg && (formGroup.get('gameGroupInf').value[i + fifthMatchCount].criteriaNoEntry && formGroup.get('gameGroupInf').value[i + fifthMatchCount].opponentNoEntry)
+                    }"></div>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+            <!-- 6回戦目 -->
+            <div class="sixth-round">
+              <ng-container *ngFor="let card of matchNumbers; even as isEven; odd as isOdd; let i = index">
+                <ng-container *ngIf="i < matchNumbers.length/32 && 1 <= matchNumbers.length/32">
+                  <div class="sixth-round-column">
+                    <div class="sixth-match-top-border" [ngClass]="{
+                      'red-border': formGroup.get('gameGroupInf').value[i + sixthMatchCount].criteriaWinFlg === true,
+                      'hidden': getGameStartedFlg && formGroup.get('gameGroupInf').value[i + sixthMatchCount].criteriaNoEntry
+                    }">
+                      <button mat-icon-button type="button" class="input-match-button" (click)="onClickInputMatch(i + sixthMatchCount)" *ngIf="!(formGroup.get('gameGroupInf').value[i + sixthMatchCount].criteriaNoEntry || formGroup.get('gameGroupInf').value[i + sixthMatchCount].opponentNoEntry || !canEdit)"><mat-icon>create</mat-icon></button>
+                    </div>
+                    <div class="sixth-match-under-border" [ngClass]="{
+                      'red-border': formGroup.get('gameGroupInf').value[i + sixthMatchCount].criteriaWinFlg === false,
+                      'hidden': getGameStartedFlg && formGroup.get('gameGroupInf').value[i + sixthMatchCount].opponentNoEntry
+                    }"></div>
+                    <div class="match-text">
+                      <p>{{formGroup.get('gameGroupInf').value[i + sixthMatchCount].gameDate | date:'yyyy/MM/dd'}}&nbsp;{{formGroup.get('gameGroupInf').value[i + sixthMatchCount].gameStartTime | timeNumberToString}}&nbsp;</p>
+                      <p  class="game-place" [matTooltip]="formGroup.get('gameGroupInf').value[i + sixthMatchCount].gamePlace" matTooltipPosition="above">{{formGroup.get('gameGroupInf').value[i + sixthMatchCount].gamePlace}}&nbsp;</p>
+                      <p *ngIf="formGroup.get('gameGroupInf').value[i + sixthMatchCount].gameProgressStatus === cns.duringGame">(試合中)</p>
+                    </div>
+                    <div>
+                      <p class="match-freetext" [ngClass]="{'even': isEven, 'odd': isOdd}" [matTooltip]="formGroup.get('gameGroupInf').value[i + sixthMatchCount].freeText" matTooltipPosition="above">{{formGroup.get('gameGroupInf').value[i + sixthMatchCount].freeText}}</p>
+                    </div>
+                    <div class="match-score">
+                      <p>{{formGroup.get('gameGroupInf').value[i + sixthMatchCount].criteriaScore}}&nbsp;</p>
+                      <p>{{formGroup.get('gameGroupInf').value[i + sixthMatchCount].opponentScore}}&nbsp;</p>
+                    </div>
+                    <div class="sixth-match-middle-border" [ngClass]="{
+                      'red-border': !(formGroup.get('gameGroupInf').value[i + sixthMatchCount].criteriaWinFlg === null),
+                      'hidden': getGameStartedFlg && (formGroup.get('gameGroupInf').value[i + sixthMatchCount].criteriaNoEntry && formGroup.get('gameGroupInf').value[i + sixthMatchCount].opponentNoEntry)
+                    }"></div>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </form>
+    </mat-card>
+  </div>
+</mat-card-content>

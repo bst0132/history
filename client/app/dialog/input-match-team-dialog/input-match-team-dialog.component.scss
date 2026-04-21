@@ -1,0 +1,47 @@
+@import '../../../mylib/var';
+@import '../../../mylib/mixin';
+
+// タイトル
+p {
+  font-size: 20px;
+  @media (max-width: $media-sp) {
+    font-size: 14px;
+  }
+}
+
+// ダイアログの内容欄
+mat-dialog-content {
+  white-space: pre-wrap;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin-bottom: 15px;
+  width: 400px;
+  @media (max-width: $media-tb) {
+    width: 65vw;
+  }
+}
+
+// 入力フォーム
+mat-form-field {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+// ダイアログ閉じるボタン
+.cancel {
+  display: flex;
+  justify-content: flex-end;
+  mat-icon {
+    size: 1px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    @include focus-visible-outline-clear;
+  }
+}
+
+.nonparticipation {
+  button {
+    @include focus-visible-button;
+    @include button-effect;
+  }
+}

@@ -1,0 +1,59 @@
+<div class="content">
+  <mat-card>
+    <mat-card-content>
+      <form [formGroup]="formGroup">
+
+        <!-- 大会名 -->
+        <mat-form-field >
+          <mat-label>大会名</mat-label>
+          <input matInput formControlName="compName" required>
+          <mat-error *ngIf="formGroup.get('compName').hasError('required')">{{msg.noenteredErr.replace('※1','大会名')}}</mat-error>
+        </mat-form-field>
+
+        <!-- 大会開催日 -->
+        <mat-form-field class="date">
+          <mat-label>大会開催日</mat-label>
+          <input matInput placeholder="2020/01/01" [matDatepicker]="picker1" formControlName="heldDate" required tabindex="-1">
+          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+          <mat-error *ngIf="formGroup.get('heldDate').hasError('required')">{{msg.noenteredErr.replace('※1','大会開催日')}}</mat-error>
+        </mat-form-field>
+
+        <div class="organSport">
+          <!-- 主催団体名 -->
+          <mat-form-field >
+            <mat-label>主催団体名</mat-label>
+            <mat-select formControlName="organ" required>
+              <mat-option  *ngFor="let organ of organList" [value]="organ">
+                {{organ.organName}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="formGroup.get('organ').hasError('required')">{{msg.unselectErr.replace('※1','主催団体名')}}</mat-error>
+          </mat-form-field>
+
+          <!-- 競技 -->
+          <mat-form-field >
+            <mat-label>競技 主催団体指定後自動入力されます</mat-label>
+            <input matInput placeholder="競技" [value]="formGroup.get('sports').value | getSportValue" readonly required tabindex="-1">
+            <input type="hidden" formControlName="sports" [value]="getSports()">
+          </mat-form-field>
+        </div>
+
+        <!-- 大会ロゴ -->
+        <app-image-select [mode]="'edit'" [imageInfo]="imageInfo" (imageChange)="onChangeDataUrl($event)">大会ロゴを選択</app-image-select>
+
+        <!-- 大会紹介 -->
+        <mat-form-field >
+          <mat-label>大会紹介</mat-label>
+          <textarea matInput cdkTextareaAutosize  cdkAutosizeMaxRows="10" formControlName="compIntro"></textarea>
+        </mat-form-field>
+
+        <!-- 各種ボタン -->
+        <div class="footerButtonArea">
+          <button class="button-left" mat-raised-button color="primary" type="button" (click)="onSubmit()" [disabled]="formGroup.invalid">登録</button>
+        </div>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

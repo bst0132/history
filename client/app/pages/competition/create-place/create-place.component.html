@@ -1,0 +1,34 @@
+<div class="content">
+  <mat-card>
+    <mat-card-content>
+      <form [formGroup]="formGroup">
+
+        <!-- 開催場所名 -->
+        <mat-form-field >
+          <mat-label>開催場所名</mat-label>
+          <input matInput placeholder="横浜小学校 校庭" formControlName="placeName" required>
+          <mat-error *ngIf="formGroup.get('placeName').hasError('required')">{{msg.noenteredErr.replace('※1','開催場所名')}}</mat-error>
+        </mat-form-field>
+
+        <!-- 住所 -->
+        <mat-form-field >
+          <mat-label>住所</mat-label>
+          <input matInput placeholder="神奈川県横浜市西区" formControlName="placeAdd">
+        </mat-form-field>
+
+        <!-- 電話番号 -->
+        <mat-form-field >
+          <mat-label>電話番号</mat-label>
+          <input matInput placeholder="9999-99-9999" formControlName="placeTel">
+        </mat-form-field>
+
+        <!-- 各種ボタン -->
+        <div class="footerButtonArea">
+          <button class="button-left" mat-raised-button color="primary" type="button" (click)="onSubmit()" [disabled]="formGroup.invalid">登録</button>
+          <button class="button-right" mat-raised-button color="primary" type="button" (click)="returnManageCompetition()">戻る</button>
+        </div>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

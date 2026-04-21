@@ -1,0 +1,57 @@
+// 各コンポーネントで使いまわしたいカラーコード等を変数宣言しておく
+
+// フッター用カラーコード
+$bst-blue: rgb(74, 168, 224);
+
+// 条数用カラーコード
+$bst-black: rgb(0, 0, 0);
+
+// 明るい無彩色のカラーコード
+$quill-gray: #d3d3d3;
+
+// 鮮やかな明るい青色のカラーコード
+$blue: #0519ee;
+
+// 白色のカラーコード
+$white: #ffffff;
+
+// パーツ用カラーコード
+$parts-yellow: #ffbe00;
+
+// PC背景色カラーコード
+$back-color: #eeeeee;
+
+// ベースカードのカラーコード
+$basecard-color: #dddddd;
+
+// タイトル用ツールバーのカラーコード
+$titlebar-color: #01061d;
+
+// 項目用ツールバーのカラーコード
+$contentsbar-color: #151c24;
+
+// 登録・変更ボタンなどのカラーコード
+$submit-color: #195481;
+
+// タイトル用カラーコード
+$medium-blue: #0000CD;
+
+// 削除要素用カラーコード
+$remove-color: #FA2323;
+
+// 必須項目文字装飾用カラーコード(AngularMaterialに合わせた色)
+$required-color: #f44336;
+
+// 登録済みの団体やチーム追加の際のカラーコード
+$select-color: rgb(14, 119, 114);
+
+// 未登録の団体やチーム入力の際のカラーコード
+$input-color: rgb(218, 95, 57);
+
+// タブ選択でフォーカスした際のカラーコード
+$focus-color: #ff8c00;
+
+// ブレイクポイント
+$media-sp: 414px;
+$media-tb: 560px;
+$media-pc: 1025px;

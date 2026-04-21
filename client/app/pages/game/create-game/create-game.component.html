@@ -1,0 +1,69 @@
+<div class="content">
+  <mat-card>
+    <mat-card-content>
+      <form [formGroup]="formGroup">
+
+        <!-- 競技 -->
+        <!-- TODO 競技はメニューから情報を引き継ぐようにする　-->
+        <mat-form-field >
+          <mat-label>競技</mat-label>
+          <input type="text" matInput [value]="compInfo?.sports | getSportValue" readonly>
+        </mat-form-field>
+
+        <!-- 大会名 -->
+        <mat-form-field >
+          <mat-label>大会名</mat-label>
+          <input type="text" matInput value={{compInfo?.compName}} readonly>
+        </mat-form-field>
+
+        <!-- 大会ロゴ -->
+        <div class="compInfo-img">
+          <app-image-select [mode]="'show'" [imageInfo]="compInfo.compLogo"></app-image-select>
+        </div>
+
+        <!-- 試合形式 -->
+        <mat-form-field>
+          <mat-label>試合形式</mat-label>
+          <mat-select formControlName="gameSystemInf" required>
+            <mat-option value="singleGame">単独試合</mat-option>
+            <mat-option value="tournament">トーナメント</mat-option>
+            <mat-option value="league">リーグ</mat-option>
+          </mat-select>
+          <mat-error *ngIf="formGroup.get('gameSystemInf').hasError('required')">{{msg.unselectErr.replace('※1','試合形式')}}</mat-error>
+        </mat-form-field>
+
+        <!-- 試合グループ名 -->
+        <mat-form-field >
+          <mat-label>試合グループ名</mat-label>
+          <input matInput placeholder="予選リーグA" formControlName="gameGroupName" required>
+          <mat-error *ngIf="formGroup.get('gameGroupName').hasError('required')">{{msg.noenteredErr.replace('※1','試合グループ名')}}</mat-error>
+        </mat-form-field>
+
+        <!-- グループ参加チーム数 -->
+        <ng-container *ngIf="formGroup.get('gameSystemInf').value == 'tournament'; else league">
+          <mat-form-field >
+            <mat-label>グループ参加チーム数</mat-label>
+            <mat-select formControlName="groupPartTeamCnt" required>
+              <mat-option *ngFor="let teamCnt of teamCntList | keyvalue: returnZero" [value]="teamCnt.value">{{teamCnt.key}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="formGroup.get('groupPartTeamCnt').hasError('required')">{{msg.unselectErr.replace('※1','グループ参加チーム数')}}</mat-error>
+          </mat-form-field>
+        </ng-container>
+        <ng-template #league>
+          <mat-form-field>
+            <mat-label>グループ参加チーム数</mat-label>
+            <input type="number" matInput placeholder="2" formControlName="groupPartTeamCnt" required>
+            <mat-error *ngIf="formGroup.get('groupPartTeamCnt').hasError('required')">{{msg.noenteredErr.replace('※1','グループ参加チーム数')}}</mat-error>
+            <mat-error *ngIf="formGroup.get('groupPartTeamCnt').hasError('pattern')">{{msg.numMinChkErr.replace('※1','2')}}</mat-error>
+          </mat-form-field>
+        </ng-template>
+      </form>
+
+      <!-- 各種ボタン -->
+      <div class="footerButtonArea">
+        <button class="button-left" mat-raised-button color="primary" type="button" (click)="transitionNextPage()" [disabled]="formGroup.invalid">次へ</button>
+        <button class="button-right" mat-raised-button color="primary" type="button" (click)="returnToManageCompetition()">戻る</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

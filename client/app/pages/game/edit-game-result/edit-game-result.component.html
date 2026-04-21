@@ -1,0 +1,128 @@
+<div class="content">
+  <mat-card>
+    <mat-card-content>
+      <form [formGroup]="formGroup">
+
+        <!-- 大会名 -->
+        <mat-form-field>
+          <mat-label>大会名</mat-label>
+          <input type="text" matInput value={{competition?.compName}} readonly>
+        </mat-form-field>
+        <!-- 試合名 -->
+        <mat-form-field class="game-info">
+          <mat-label>試合名</mat-label>
+          <input type="text" matInput value={{game?.gameInfCom.gameName}} readonly>
+        </mat-form-field>
+
+        <!-- チーム情報 -->
+        <div class="team-info">
+          <div>
+            <mat-label>チーム情報</mat-label>
+          </div>
+          <mat-form-field>
+            <input type="text" matInput value={{getTeamName(teamID)}} readonly>
+          </mat-form-field>
+        </div>
+
+        <!-- タイトル部分 -->
+        <div class="title">
+          <mat-label>得点</mat-label>
+        </div>
+
+        <div class="flex-container">
+          <!-- 前半 -->
+          <mat-form-field class="flex-item">
+            <mat-label>前半</mat-label>
+            <input matInput placeholder="5" formControlName="score1stHalf" (change)="onChangeScoreResult()">
+            <mat-error *ngIf="formGroup.get('score1stHalf').hasError('pattern')">半角数字で入力してください</mat-error>
+          </mat-form-field>
+          <!-- 後半 -->
+          <mat-form-field class="flex-item">
+            <mat-label>後半</mat-label>
+            <input matInput placeholder="5" formControlName="score2ndHalf" (change)="onChangeScoreResult()">
+            <mat-error *ngIf="formGroup.get('score2ndHalf').hasError('pattern')">半角数字で入力してください</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="ex-game">
+          <mat-label>延長戦</mat-label>
+        </div>
+        <div class="flex-container">
+          <!-- 前半(延長戦) -->
+          <mat-form-field class="flex-item">
+            <mat-label>前半</mat-label>
+            <input matInput placeholder="5" formControlName="scoreEX1stHalf" (change)="onChangeScoreResult()">
+            <mat-error *ngIf="formGroup.get('scoreEX1stHalf').hasError('pattern')">半角数字で入力してください</mat-error>
+          </mat-form-field>
+          <!-- 後半(延長戦) -->
+          <mat-form-field class="flex-item">
+            <mat-label>後半</mat-label>
+            <input matInput placeholder="5" formControlName="scoreEX2ndHalf" (change)="onChangeScoreResult()">
+            <mat-error *ngIf="formGroup.get('scoreEX2ndHalf').hasError('pattern')">半角数字で入力してください</mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- 試合合計 -->
+        <mat-form-field>
+          <mat-label>試合合計</mat-label>
+          <input matInput formControlName="scoreResult" [value]="calcScore()">
+          <mat-error *ngIf="formGroup.get('scoreResult').hasError('pattern')">半角数字で入力してください</mat-error>
+        </mat-form-field>
+
+        <div class="flex-container">
+          <!-- PK -->
+          <mat-form-field class="flex-item">
+            <mat-label>PK</mat-label>
+            <input matInput placeholder="1" formControlName="scorePK">
+            <mat-error *ngIf="formGroup.get('scorePK').hasError('pattern')">半角数字で入力してください</mat-error>
+          </mat-form-field>
+          <!-- シュート数 -->
+          <mat-form-field class="flex-item">
+            <mat-label>シュート数</mat-label>
+            <input matInput placeholder="25" formControlName="cntShoot">
+            <mat-error *ngIf="formGroup.get('cntShoot').hasError('pattern')">半角数字で入力してください</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="flex-container">
+          <!-- 直接FK数 -->
+          <mat-form-field class="flex-item">
+            <mat-label>直接FK数</mat-label>
+            <input matInput placeholder="1" formControlName="cntDiredtFK">
+            <mat-error *ngIf="formGroup.get('cntDiredtFK').hasError('pattern')">半角数字で入力してください</mat-error>
+          </mat-form-field>
+          <!-- 間接FK数 -->
+          <mat-form-field class="flex-item">
+            <mat-label>間接FK数</mat-label>
+            <input matInput placeholder="1" formControlName="cntIndiredtFK">
+            <mat-error *ngIf="formGroup.get('cntIndiredtFK').hasError('pattern')">半角数字で入力してください</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="flex-container">
+          <!-- コーナーキック数 -->
+          <mat-form-field class="flex-item">
+            <mat-label>コーナーキック数</mat-label>
+            <input matInput placeholder="1" formControlName="cntCornerKick">
+            <mat-error *ngIf="formGroup.get('cntCornerKick').hasError('pattern')">半角数字で入力してください</mat-error>
+          </mat-form-field>
+          <!-- オフサイド数 -->
+          <mat-form-field class="flex-item">
+            <mat-label>オフサイド数</mat-label>
+            <input matInput placeholder="2" formControlName="cntOffside">
+            <mat-error *ngIf="formGroup.get('cntOffside').hasError('pattern')">半角数字で入力してください</mat-error>
+          </mat-form-field>
+        </div>
+
+      </form>
+
+      <!-- 各種ボタン -->
+      <div class="footer-button-area">
+        <button class="button" mat-raised-button color="primary" type="button" [disabled]="formGroup.invalid" (click)="modGameResult()">更新</button>
+      </div>
+      <div class="return-button">
+        <button class="button" mat-raised-button color="primary" type="button" (click)="pageBack()">戻る</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

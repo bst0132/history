@@ -1,0 +1,25 @@
+<!-- 画面名表示 -->
+<mat-toolbar class="title-toolbar">
+  <span>大会</span>
+</mat-toolbar>
+<mat-card class="base-card">
+  <div class="card">
+    <mat-tab-group mat-stretch-tabs animationDuration="0ms" [selectedIndex]="selectedTab">
+      <!-- 大会要綱タブ -->
+      <mat-tab label="大会要綱">
+        <app-competition-tab-common [compInfo]="compInfo" [canEdit]="canEdit"></app-competition-tab-common>
+      </mat-tab>
+      <!-- 参加チームタブ -->
+      <mat-tab label="参加チーム">
+        <!-- *ngIf="teamInfo"は本来の用途ではなく、親コンポーネントのconstructorとngOnInitの後に子コンポーネントのconstructorとngOnInitの処理がされるよう順番を担保する為に記載 -->
+        <app-participating-teams-tab-common *ngIf="teamInfo" [teamInfo]="teamInfo" [canEdit]="canEdit"></app-participating-teams-tab-common>
+      </mat-tab>
+      <!-- スケジュールタブ -->
+      <mat-tab label="スケジュール">
+        <app-schedule-tab-common
+          [compInfo]="compInfo" [leagueList]="leagueList" [tournamentList]="tournamentList" [canEdit]="canEdit" (eventOnClickToGameDetail)="onClickToGameDetail($event)">
+        </app-schedule-tab-common>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</mat-card>

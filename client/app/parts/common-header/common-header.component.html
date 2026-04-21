@@ -1,0 +1,36 @@
+
+<ng-container *ngIf="commonService.router.url != '/login'">
+  <div class="header-area">
+    <!-- ユーザー情報表示エリア -->
+    <div class="user-area">
+      <div class="image-area">
+        <div class="no-image" [matMenuTriggerFor]="personal" *ngIf="!userImage?.dataUrl" tabindex="0" (keyup)="onKeyCheck($event)">
+          <img [src]="'assets/images/no_image.png'">
+        </div>
+        <div class="image" [matMenuTriggerFor]="personal" *ngIf="userImage?.dataUrl" tabindex="0" (keyup)="onKeyCheck($event)">
+          <img [src]="userImage?.dataUrl" [style.transform]="userImage?.transform">
+        </div>
+      </div>
+      <div class="name-area" [matMenuTriggerFor]="personal" tabindex="0" (keyup)="onKeyCheck($event)">
+        <span *ngIf="device == 'pc'" class="user-name">{{nickname}}</span>
+      </div>
+      <mat-menu #personal="matMenu">
+        <button type="button" mat-menu-item class="mat-menu-item" (click)="onClickNavigate(cns.pathToProfileDetail)" (keyup)="onKeyCheck($event)" (keydown)="onKeydown($event)" [disabled]="!commonService.isLogined">個人情報</button>
+        <button type="button" mat-menu-item class="mat-menu-item" (click)="onClickNavigate(cns.pathToEditEmail)" (keyup)="onKeyCheck($event)" (keydown)="onKeydown($event)" [disabled]="!commonService.isLogined">メールアドレス変更</button>
+        <button type="button" mat-menu-item class="mat-menu-item" (click)="onClickNavigate(cns.pathToEditPassword)" (keyup)="onKeyCheck($event)" (keydown)="onKeydown($event)" [disabled]="!commonService.isLogined">パスワード変更</button>
+        <button type="button" mat-menu-item class="mat-menu-item" (click)="onClickLogout()" (keyup)="onKeyCheck($event)" (keydown)="onKeydown($event)" [disabled]="!commonService.isLogined">ログアウト</button>
+      </mat-menu>
+    </div>
+    <!-- ロゴ表示エリア -->
+    <div class="logo-area">
+      <!-- <img class="img-logo" src="assets/images/history_logo.png" (click)="onClickNavigate('')"> -->
+      <div class="logo-title"  tabindex="0" (click)="onClickNavigate('')" (keyup)="onKeyCheck($event)">Personal Sports History</div>
+    </div>
+    <!-- メニューアイコンエリア -->
+    <div class="menu-icon-area" *ngIf="commonService.isLogined">
+      <mat-icon class="menu-icon" data-test="menu" tabindex="0" (click)="onClickMenuIcon()" (keyup)="onKeyCheck($event)">
+        menu
+      </mat-icon>
+    </div>
+  </div>
+</ng-container>

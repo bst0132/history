@@ -1,0 +1,325 @@
+<!-- 画面名表示 -->
+<mat-toolbar class="title-toolbar">
+  <span>大会要綱</span>
+</mat-toolbar>
+<mat-card class="base-card">
+  <div class="card">
+    <mat-tab-group mat-stretch-tabs animationDuration="0ms" selectedIndex="0">
+      <!-- 基本情報タブ -->
+      <mat-tab label="基本情報">
+        <mat-card class="contents-card">
+          <form [formGroup]="formGroup">
+            <div class="flex-image">
+              <div class="flex-image-item">
+                <app-image-select [mode]="'edit'" [imageInfo]="imageInfo" (imageChange)="onChangeImage($event)">
+                  <a>大会ロゴを選択</a>
+                </app-image-select>
+              </div>
+              <mat-form-field appearance="outline" floatLabel="always" class="flex-image-item" hideRequiredMarker>
+                <mat-label>大会名<span class="required">(必須)</span></mat-label>
+                <input matInput placeholder="〇〇大会" formControlName="compName" maxLength='50' required>
+                <mat-error *ngIf="formGroup.get('compName').hasError('required')">{{msg.noenteredErr.replace('※1','大会名')}}</mat-error>
+                <mat-hint>{{msg.wordMaxChkErr.replace('※1','50')}}</mat-hint>
+              </mat-form-field>
+            </div>
+            <div class="form-box">
+              <span class="form-label">期間<span class="required">(必須)</span></span>
+              <div class="flex-form {{device}}">
+                <mat-form-field class="flex-form-side form-height" hideRequiredMarker>
+                  <mat-label>開会年月日</mat-label>
+                  <input matInput placeholder="2023/01/01" [matDatepicker]="picker1" formControlName="openingDate" readonly required (dateChange)="setClosingTouchedFlag()" tabindex="-1" (click)="picker1.open()">
+                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                  <mat-datepicker #picker1></mat-datepicker>
+                  <mat-error *ngIf="formGroup.get('openingDate').hasError('required')">{{msg.unselectErr.replace('※1','日付')}}</mat-error>
+                  <mat-hint>{{msg.dateIntegrityErr.replace('※1', '閉会年月日').replace('※2', '過去')}}</mat-hint>
+                </mat-form-field>
+                <p class="mid-mark">～</p>
+                <mat-form-field class="flex-form-side form-height" hideRequiredMarker>
+                  <mat-label>閉会年月日</mat-label>
+                  <input matInput placeholder="2023/01/05" [matDatepicker]="picker2" formControlName="closingDate"
+                    [min]="formGroup.get('openingDate').value" readonly required tabindex="-1" (click)="picker2.open()">
+                  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                  <mat-datepicker #picker2></mat-datepicker>
+                  <mat-error *ngIf="formGroup.get('closingDate').hasError('required')">{{msg.unselectErr.replace('※1','日付')}}</mat-error>
+                  <mat-error *ngIf="formGroup.hasError('wrongPeriod')">{{msg.dateIntegrityErr.replace('※1', '開会年月日').replace('※2', '未来')}}</mat-error>
+                  <mat-hint>{{msg.dateIntegrityErr.replace('※1', '開会年月日').replace('※2', '未来')}}</mat-hint>
+                </mat-form-field>
+              </div>
+            </div>
+            <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+              <mat-label>開会時間</mat-label>
+              <input matInput placeholder="09:00" formControlName="openingTime" maxLength='10'>
+              <mat-hint>{{msg.wordMaxChkErr.replace('※1','10')}}</mat-hint>
+            </mat-form-field>
+            <div formArrayName="compPlace" class="form-box">
+              <span class="form-label">開催地</span>
+              <ng-container *ngFor="let compPlaces of getCompPlaces?.controls; let i = index">
+                <mat-form-field appearance="fill" class="form-color" hideRequiredMarker>
+                  <input matInput [formControlName]="i" placeholder="〇〇競技場" maxLength='20' required>
+                  <mat-icon matSuffix class="delete-btn" (click)="onDelPlace(i)" (keyup)="onKeyCheck($event)" tabindex="0">delete_outline</mat-icon>
+                  <mat-error *ngIf="compPlaces.hasError('required')">{{msg.noenteredErr.replace('※1','開催地')}}</mat-error>
+                  <mat-hint>{{msg.wordMaxChkErr.replace('※1','20')}}</mat-hint>
+                </mat-form-field>
+              </ng-container>
+              <div class="button-area">
+                <span class="add-button" (click)="onAddPlace()">
+                  <a class="add-context" *ngIf="!getCompPlaces?.length">開催地を入力する</a>
+                  <button mat-icon-button type="button"><mat-icon>add</mat-icon></button>
+                </span>
+              </div>
+            </div>
+            <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+              <mat-label>趣旨</mat-label>
+              <textarea matInput placeholder="スポーツへの技術・理解を向上させる" formControlName="purpose" maxLength='100'></textarea>
+              <mat-hint>{{msg.wordMaxChkErr.replace('※1','100')}}</mat-hint>
+            </mat-form-field>
+            <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+              <mat-label>参加資格</mat-label>
+              <textarea matInput placeholder="5歳から16歳の方" formControlName="entryQual" maxLength='100'></textarea>
+              <mat-hint>{{msg.wordMaxChkErr.replace('※1','100')}}</mat-hint>
+            </mat-form-field>
+            <div formGroupName="compSystemInf">
+              <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker [ngStyle]="{'margin-bottom.em' : controlMessage ? device == 'sp' ? 2.25 : 2 : 1}">
+                <mat-label>大会方式</mat-label>
+                <input matInput readonly tabindex="-1">
+                <mat-radio-group color="primary" formControlName="compSystem" (change)="onCompSystemChange($event.value)">
+                  <div class="radio-buttons">
+                    <ng-container *ngFor="let compSystem of compSystems; first as first">
+                      <mat-radio-button class="radio-btn" [value]="compSystem.key" [disabled]="compSystem.controlFlg">
+                        {{compSystem.key | getCompSystemValue}}<span *ngIf="!first">のみ</span>
+                      </mat-radio-button>
+                    </ng-container>
+                  </div>
+                </mat-radio-group>
+                <mat-hint *ngIf="controlMessage" class="control-message {{device}}">
+                  {{controlMessage}}
+                </mat-hint>
+              </mat-form-field>
+              <ng-container *ngIf="formGroup.get('compSystemInf.compSystem').value === cns.league
+                || formGroup.get('compSystemInf.compSystem').value === cns.leagueTournament">
+                <div formGroupName="winningPointInf" class="form-box">
+                  <span class="form-label">勝ち点<span class="required">(必須)</span></span>
+                  <div class="flex-form {{device}}">
+                    <mat-form-field class="flex-form-three form-height" hideRequiredMarker>
+                      <mat-label>勝ち</mat-label>
+                      <input type="number" matInput placeholder="3" formControlName="winPoint" min="0" max="100" step="1" required
+                        (keydown)="onPointCheck($event)">
+                      <mat-error *ngIf="formGroup.get('compSystemInf.winningPointInf.winPoint').hasError('required')">
+                        {{msg.noenteredErr.replace('※1','点数')}}
+                      </mat-error>
+                      <mat-error *ngIf="formGroup.get('compSystemInf.winningPointInf.winPoint').hasError('max')">
+                        {{msg.formatChkErr.replace('※1','0～100の半角数字')}}
+                      </mat-error>
+                      <mat-hint>{{msg.formatChkErr.replace('※1','0～100の半角数字')}}</mat-hint>
+                    </mat-form-field>
+                    <mat-form-field class="flex-form-three form-height" hideRequiredMarker>
+                      <mat-label>負け</mat-label>
+                      <input type="number" matInput placeholder="0" formControlName="losePoint" min="0" max="100" step="1" required
+                        (keydown)="onPointCheck($event)">
+                      <mat-error *ngIf="formGroup.get('compSystemInf.winningPointInf.losePoint').hasError('required')">
+                        {{msg.noenteredErr.replace('※1','点数')}}
+                      </mat-error>
+                      <mat-error *ngIf="formGroup.get('compSystemInf.winningPointInf.losePoint').hasError('max')">
+                        {{msg.formatChkErr.replace('※1','0～100の半角数字')}}
+                      </mat-error>
+                      <mat-hint>{{msg.formatChkErr.replace('※1','0～100の半角数字')}}</mat-hint>
+                    </mat-form-field>
+                    <mat-form-field class="flex-form-three form-height" hideRequiredMarker>
+                      <mat-label>引き分け</mat-label>
+                      <input type="number" matInput placeholder="1" formControlName="drawPoint" min="0" max="100" step="1" required
+                        (keydown)="onPointCheck($event)">
+                      <mat-error *ngIf="formGroup.get('compSystemInf.winningPointInf.drawPoint').hasError('required')">
+                        {{msg.noenteredErr.replace('※1','点数')}}
+                      </mat-error>
+                      <mat-error *ngIf="formGroup.get('compSystemInf.winningPointInf.drawPoint').hasError('max')">
+                        {{msg.formatChkErr.replace('※1','0～100の半角数字')}}
+                      </mat-error>
+                      <mat-hint>{{msg.formatChkErr.replace('※1','0～100の半角数字')}}</mat-hint>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+            <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+              <mat-label>表彰</mat-label>
+              <textarea matInput placeholder="優勝・準優勝・第3位のチームを表彰する" formControlName="awards" maxLength='100'></textarea>
+              <mat-hint>{{msg.wordMaxChkErr.replace('※1','100')}}</mat-hint>
+            </mat-form-field>
+            <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+              <mat-label>参加費用</mat-label>
+              <textarea matInput placeholder="無料" formControlName="entryFee" maxLength='100'></textarea>
+              <mat-hint>{{msg.wordMaxChkErr.replace('※1','100')}}</mat-hint>
+            </mat-form-field>
+          </form>
+        </mat-card>
+      </mat-tab>
+      <!-- 運営情報タブ -->
+      <mat-tab label="運営情報">
+        <mat-card class="contents-card">
+          <form [formGroup]="formGroup">
+            <div class="form-box">
+              <span class="form-label">主催</span>
+              <ng-container *ngFor="let organizer of getOrganizers.controls; let i = index">
+                <mat-form-field appearance="fill" class="form-color">
+                  <div class="flex-container">
+                    <input matInput [value]="organizer.get('orgName')?.value" readonly>
+                    <div class="toggle-container">
+                      <mat-slide-toggle (change)="onEditFlagChange(i)" [checked]="organizer.get('orgEditFlag')?.value">
+                        {{ organizer.get('orgEditFlag')?.value ? '編集権限あり' : '編集権限なし' }}
+                      </mat-slide-toggle>
+                    </div>
+                    <mat-icon matSuffix class="delete-btn" (click)="onDelOrgs(i)" (keyup)="onKeyCheck($event)" tabindex="0">delete_outline</mat-icon>
+                  </div>
+                </mat-form-field>
+              </ng-container>
+              <ng-container *ngFor="let organizers of getOtherOrgs?.controls; let i = index" formArrayName="otherOrgs">
+                <mat-form-field appearance="fill" class="form-color" hideRequiredMarker>
+                  <input matInput [formControlName]="i" placeholder="〇〇団体" maxLength='50' required>
+                  <mat-icon matSuffix class="delete-btn" (click)="onDelOtherOrgs(i)" (keyup)="onKeyCheck($event)" tabindex="0">delete_outline</mat-icon>
+                  <mat-error *ngIf="organizers?.hasError('required')">{{msg.noenteredErr.replace('※1','主催')}}</mat-error>
+                  <mat-hint>{{msg.wordMaxChkErr.replace('※1','50')}}</mat-hint>
+                </mat-form-field>
+              </ng-container>
+              <div class="button-area">
+                <span class="add-button select-button" (click)="onAddManageOrgs()">
+                  <a>管理団体/チームを追加する</a>
+                  <button mat-icon-button type="button"><mat-icon>add</mat-icon></button>
+                </span>
+                <span class="add-button select-button" (click)="onAddOrgs('1')">
+                  <a>団体を追加する</a>
+                  <button mat-icon-button type="button"><mat-icon>add</mat-icon></button>
+                </span>
+                <span class="add-button select-button" (click)="onAddOrgs('2')">
+                  <a>チームを追加する</a>
+                  <button mat-icon-button type="button"><mat-icon>add</mat-icon></button>
+                </span>
+                <span class="add-button input-button" (click)="onAddOtherOrgs()">
+                  <a>その他主催を入力する</a>
+                  <button mat-icon-button type="button"><mat-icon>add</mat-icon></button>
+                </span>
+              </div>
+            </div>
+            <div formArrayName="supervisor" class="form-box">
+              <span class="form-label">主管</span>
+              <ng-container *ngFor="let supervisors of getSupervisors?.controls; let i = index">
+                <mat-form-field appearance="fill" class="form-color" hideRequiredMarker>
+                  <input matInput [formControlName]="i" placeholder="〇〇協会" maxLength='50' required>
+                  <mat-icon matSuffix class="delete-btn" (click)="onDelSupervisor(i)" (keyup)="onKeyCheck($event)" tabindex="0">delete_outline</mat-icon>
+                  <mat-error *ngIf="supervisors.hasError('required')">{{msg.noenteredErr.replace('※1','主管')}}</mat-error>
+                  <mat-hint>{{msg.wordMaxChkErr.replace('※1','50')}}</mat-hint>
+                </mat-form-field>
+              </ng-container>
+              <div class="button-area">
+                <span class="add-button input-button" (click)="onAddSupervisor()">
+                  <a *ngIf="!getSupervisors?.length">主管を入力する</a>
+                  <button mat-icon-button type="button"><mat-icon>add</mat-icon></button>
+                </span>
+              </div>
+            </div>
+            <div formArrayName="cosponsor" class="form-box">
+              <span class="form-label">協賛</span>
+              <ng-container *ngFor="let cosponsors of getCosponsors?.controls; let i = index">
+                <mat-form-field appearance="fill" class="form-color" hideRequiredMarker>
+                  <input matInput [formControlName]="i" placeholder="株式会社ベスタッフ" maxLength='50' required>
+                  <mat-icon matSuffix class="delete-btn" (click)="onDelCosponsor(i)" (keyup)="onKeyCheck($event)" tabindex="0">delete_outline</mat-icon>
+                  <mat-error *ngIf="cosponsors.hasError('required')">{{msg.noenteredErr.replace('※1','協賛')}}</mat-error>
+                  <mat-hint>{{msg.wordMaxChkErr.replace('※1','50')}}</mat-hint>
+                </mat-form-field>
+              </ng-container>
+              <div class="button-area">
+                <span class="add-button input-button" (click)="onAddCosponsor()">
+                  <a *ngIf="!getCosponsors?.length">協賛を入力する</a>
+                  <button mat-icon-button type="button"><mat-icon>add</mat-icon></button>
+                </span>
+              </div>
+            </div>
+          </form>
+        </mat-card>
+      </mat-tab>
+      <!-- その他タブ -->
+      <mat-tab label="その他">
+        <mat-card class="contents-card">
+          <form [formGroup]="formGroup">
+            <div formArrayName="gameRules" class="form-box">
+              <span class="form-label">競技規則</span>
+              <ng-container *ngFor="let gameRules of getRules?.controls; let i = index">
+                <mat-form-field appearance="fill" class="form-color" hideRequiredMarker>
+                  <input matInput [formControlName]="i" placeholder="試合は、11人以下の競技者からなる2つのチームによって行われる" maxLength='100' required>
+                  <mat-icon matSuffix class="delete-btn" (click)="onDelRules(i)" (keyup)="onKeyCheck($event)" tabindex="0">delete_outline</mat-icon>
+                  <mat-error *ngIf="gameRules.hasError('required')">{{msg.noenteredErr.replace('※1','競技規則')}}</mat-error>
+                  <mat-hint>{{msg.wordMaxChkErr.replace('※1','100')}}</mat-hint>
+                </mat-form-field>
+              </ng-container>
+              <div class="button-area">
+                <span class="add-button" (click)="onAddRules()">
+                  <a class="add-context" *ngIf="!getRules?.length">競技規則を入力する</a>
+                  <button mat-icon-button type="button"><mat-icon>add</mat-icon></button>
+                </span>
+              </div>
+            </div>
+            <div formArrayName="notes" class="form-box">
+              <span class="form-label">注意事項</span>
+              <ng-container *ngFor="let notes of getNotes?.controls; let i = index">
+                <mat-form-field appearance="fill" class="form-color" hideRequiredMarker>
+                  <input matInput [formControlName]="i" placeholder="会場へは公共交通機関をご利用ください" maxLength='100' required>
+                  <mat-icon matSuffix class="delete-btn" (click)="onDelNotes(i)" (keyup)="onKeyCheck($event)" tabindex="0">delete_outline</mat-icon>
+                  <mat-error *ngIf="notes.hasError('required')">{{msg.noenteredErr.replace('※1','注意事項')}}</mat-error>
+                  <mat-hint>{{msg.wordMaxChkErr.replace('※1','100')}}</mat-hint>
+                </mat-form-field>
+              </ng-container>
+              <div class="button-area">
+                <span class="add-button" (click)="onAddNotes()">
+                  <a class="add-context" *ngIf="!getNotes?.length">注意事項を入力する</a>
+                  <button mat-icon-button type="button"><mat-icon>add</mat-icon></button>
+                </span>
+              </div>
+            </div>
+            <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+              <mat-label>その他</mat-label>
+              <textarea matInput formControlName="remarks" maxLength='200'></textarea>
+              <mat-hint>{{msg.wordMaxChkErr.replace('※1','200')}}</mat-hint>
+            </mat-form-field>
+            <div formGroupName="contact" class="form-box">
+              <span class="form-label">連絡先</span>
+              <div class="flex-form {{device}}">
+                <mat-form-field class="flex-form-side form-height" hideRequiredMarker>
+                  <mat-label>名前</mat-label>
+                  <input matInput placeholder="辺須田 太郎" formControlName="name" maxLength='20'>
+                  <mat-hint>{{msg.wordMaxChkErr.replace('※1','20')}}</mat-hint>
+                </mat-form-field>
+                <p class="mid-mark colon">：</p>
+                <mat-form-field class="flex-form-side form-height" hideRequiredMarker>
+                  <mat-label>電話番号</mat-label>
+                  <input matInput placeholder="080-0000-000" formControlName="phoneNumber" maxLength='20'>
+                  <mat-hint>{{msg.wordMaxChkErr.replace('※1','20')}}</mat-hint>
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </mat-card>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+  <!-- 登録ボタン -->
+  <ng-container *ngIf="newCompFlg">
+    <div class="reg-btn">
+      <button mat-raised-button type="button" (click)="onClickReg()" [disabled]="formGroup.invalid || canDeactive()"
+      [class.active-button]="!formGroup.invalid && !canDeactive()">
+        <mat-icon>done</mat-icon>登録
+      </button>
+    </div>
+  </ng-container>
+  <!-- 更新ボタン -->
+  <ng-container *ngIf="!newCompFlg">
+    <div class="update-btn">
+      <button mat-raised-button type="button" (click)="onClickUpdate()" [disabled]="formGroup.invalid || canDeactive()"
+      [class.active-button]="!formGroup.invalid && !canDeactive()">
+        <mat-icon>done</mat-icon>更新
+      </button>
+    </div>
+  </ng-container>
+  <!-- 戻るボタン -->
+  <div class="back-button">
+    <button mat-raised-button color="basic" type="button" (click)="onClickBack()">戻る</button>
+  </div>
+</mat-card>

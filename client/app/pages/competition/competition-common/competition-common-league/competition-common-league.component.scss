@@ -1,0 +1,188 @@
+@import '../../../../../mylib/var';
+@import '../../../../../mylib/mixin';
+
+// カードのまとまり部分のスタイル
+.card {
+  @include card;
+}
+
+// カードのスタイル
+.contents-card {
+  @include contents-card;
+  overflow: auto;
+
+  // メインの白いカードのスタイル
+  &.radius {
+    border-radius: 5px;
+  }
+
+  // 不活性要素のスタイル
+  .inert-element {
+    pointer-events: none;
+  }
+}
+
+// mat-form-fieldのスタイリング
+mat-form-field {
+  width: 100%;
+  margin-bottom: 10px;
+  .required {
+    color: $required-color;
+  }
+  // リーグ情報のスタイル
+  &.league-info {
+    width: 50%;
+  }
+}
+
+.flexible-area {
+  @include flex-style($display: flex, $justify: space-between);
+  &.sp {
+    @include flex-style($display: flex, $direction: column);
+  }
+  .table-info {
+    margin-bottom: 5px;
+  }
+}
+
+// テーブルのスタイル
+.scroll-table {
+  display: block;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  max-height: 250px;
+  @media (min-width: 380px) {
+    max-height: 350px;
+  }
+  .cell-check {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: none;
+    th {
+      padding: 10px;
+      border: solid 1px #ffffff;
+      background: #c7c7c7;
+      color: #000000;
+      table-layout: fixed;
+      &.point-details {
+        min-width: 42px;
+      }
+    }
+    td {
+      padding: 10px;
+      border: solid 1px #c7c7c7;
+      &.detail-numbers {
+        text-align: center;
+        &.rank:hover {
+          cursor: pointer;
+          border: solid;
+        }
+      }
+    }
+    // リーグ表内スクロール時の機能用スタイル
+    .table-row th {
+      position: sticky;
+      position: -webkit-sticky;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      &.upper-left {
+        z-index: 2;
+      }
+    }
+    .data-cell {
+      min-width: 110px;
+      word-break: break-all;
+      white-space: pre-wrap;
+      text-align: center;
+      input {
+        cursor: default;
+      }
+      &.game-result {
+        height: 40px;
+        @include focus-visible-outline($offset: -7px);
+        &:hover {
+          cursor: pointer;
+          border: solid;
+        }
+        &.selected-cell {
+          border: solid;
+          border-width: medium;
+          border-color: red;
+        }
+      }
+      // 表内の試合情報のないセル
+      &.slash {
+        background-image: linear-gradient(to top right, transparent 49%, grey 49%, grey 51%, transparent 51%, transparent);
+      }
+      // 読み取り専用のチームタイトル欄
+      .readonly-team {
+        text-overflow: ellipsis;
+        &:hover {
+          cursor: default;
+        }
+      }
+    }
+    .data-cell.game-result.select-team-cell {
+      &:hover {
+        cursor: default;
+        border: 1px solid #ffffff;
+        background: #c7c7c7;
+      }
+    }
+  }
+}
+
+// チーム選択の矢印
+:host ::ng-deep .mat-select-arrow {
+  color: black;
+}
+
+// 得点の横並びスタイル
+.flex-score {
+  @include flex-style($display: flex, $justify: space-between);
+  .mat-form-field {
+    width: 48%;
+  }
+  input,span {
+    cursor: pointer !important;
+  }
+}
+
+// 点数表示部分のカーソル
+.score-area:hover {
+  cursor: pointer;
+}
+
+// 表のセルを押下後に表示される試合情報のまとまり
+.input-form {
+  margin-top: 40px;
+  // 試合情報の横並びフォームスタイル
+  .flex-game-info {
+    @media (min-width: $media-sp) {
+      @include flex-style($display: flex, $justify: space-between);
+      mat-form-field {
+        width: 48%;
+      }
+    }
+  }
+}
+
+.control {
+  @include flex-style($justify: space-between);
+}
+
+// ヘルプボタンのスタイリング
+::ng-deep .help-button {
+  @include focus-visible-outline;
+  .mat-button-focus-overlay {
+    background-color: transparent;
+  }
+}
+
+// タブフォーカス時の枠線のスタイリング
+::ng-deep .mat-datepicker-toggle button:focus-visible {
+  @include focus-visible-outline;
+}

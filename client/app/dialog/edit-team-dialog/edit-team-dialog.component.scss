@@ -1,0 +1,58 @@
+@import '../../../mylib/var';
+@import '../../../mylib/mixin';
+
+// タイトル
+.mat-dialog-title {
+  font-size: 20px;
+  cursor: default;
+  @media (max-width: $media-sp) {
+    font-size: 14px;
+  }
+}
+
+// ダイアログの内容欄
+mat-dialog-content {
+  white-space: pre-wrap;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin-bottom: 5px;
+  width: 400px;
+  @media (max-width: $media-tb) {
+    width: 280px;
+  }
+  @media (max-width: $media-sp) {
+    width: 205px;
+  }
+
+  // 入力フォーム
+  mat-form-field {
+    width: 100%;
+    margin-top: 1px;
+    // mat-error, mat-hintのカーソル表示
+    mat-error, mat-hint {
+      cursor: default;
+    }
+  }
+}
+
+// ボタンの横並びスタイル
+.flex-button {
+  @include flex-style($justify: space-between, $align: center);
+
+  // キャンセルボタン
+  .back-button {
+    @include button-effect;
+    width: 48%;
+    button {
+      width: 100%;
+    }
+  }
+  // 更新ボタン
+  .update-button {
+    @include update-button;
+    width: 48%;
+    button {
+      width: 100%;
+    }
+  }
+}

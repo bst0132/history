@@ -1,0 +1,21 @@
+@import '../../../../../client/mylib/var';
+
+.footer-button-area {
+  margin-top: 20px;
+}
+
+@media (min-width: $media-pc) {
+  .organ-List {
+    text-align: center;
+    overflow-y: scroll;
+    max-height: 550px;
+  }
+}
+
+@media (max-width: $media-tb) {
+  .organ-List {
+    text-align: center;
+    overflow-y: scroll;
+    max-height: 450px;
+  }
+}

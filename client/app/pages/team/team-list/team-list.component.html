@@ -1,0 +1,101 @@
+<div class="content">
+  <!-- 画面タイトル部分 -->
+  <mat-toolbar class="title-toolbar">
+    <span class='toolbar-text'>チーム検索</span>
+  </mat-toolbar>
+
+  <!-- 画面内容 -->
+  <mat-card class="base-card">
+    <mat-card-content>
+      <div class="card">
+        <mat-card class="contents-card radius">
+          <!-- 検索フォーム -->
+          <form [formGroup]="formGroup">
+            <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+              <mat-label>競技<span class="required">(必須)</span></mat-label>
+              <mat-select formControlName="sports" required>
+                <mat-option *ngFor="let s of sports" value="{{s.key}}">
+                  {{s.value}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+              <mat-label>都道府県<span class="required">(必須)</span></mat-label>
+              <mat-select placeholder="都道府県を選択してください" formControlName="teamPrefecture" required>
+                <mat-option *ngFor="let prefecture of prefectures" value="{{prefecture}}">
+                  {{prefecture}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="formGroup.get('teamPrefecture').hasError('required')">{{msg.unselectErr.replace('※1','都道府県')}}</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" floatLabel="always">
+              <mat-label>チーム名(任意)</mat-label>
+              <input placeholder="チーム名を入力できます" type="text" matInput formControlName="teamName" maxLength='50'>
+              <mat-hint>{{msg.wordMaxChkErr.replace('※1','50')}}</mat-hint>
+            </mat-form-field>
+          </form>
+          <div class="search-button">
+            <button mat-raised-button type="button" (click)="onSearch()" [disabled]="formGroup.invalid" [class.active-button]="!formGroup.invalid">
+              <mat-icon>search</mat-icon>検索
+            </button>
+          </div>
+          <!-- 検索結果 -->
+          <ng-container *ngIf="searchFlg">
+            <mat-toolbar class="contents-toolbar">
+              <span *ngIf="teamsCnt <= 0">検索結果</span>
+              <span *ngIf="teamsCnt > 0 && teamsCnt <= 100">検索結果：{{teamsCnt}}件</span>
+              <span *ngIf="teamsCnt > 100">検索結果：{{teamsCnt}}件 ※100件以上は表示されません</span>
+            </mat-toolbar>
+            <mat-card class="contents-card result">
+              <span *ngIf="teamsCnt <= 0">検索結果がありませんでした。</span>
+              <!-- PC版表示 -->
+              <div class="list-card-container pc">
+                <ng-container *ngFor="let team of teamList;">
+                  <mat-card (click)="teamDetail(team)" (keyup)="onKeyCheck($event)" class="list-card" tabindex="0">
+                    <div class="list-card-contents">
+                      <div class="avatar-area">
+                        <div class="no-image" *ngIf="!team.teamLogo.dataUrl">
+                          <img [src]="'assets/images/no_image.png'">
+                        </div>
+                        <div class="image" *ngIf="team.teamLogo.dataUrl">
+                          <img [src]="team.teamLogo.dataUrl" [style.transform]="team.teamLogo.transform">
+                        </div>
+                      </div>
+                      <div class="text-container">
+                        <div>{{team.teamName | omitLongSentence: 20:'...'}}</div>
+                        <div>{{team.teamAddInf.teamPrefecture}}{{team.teamAddInf.teamCity | omitLongSentence: 20:'...'}}</div>
+                      </div>
+                    </div>
+                  </mat-card>
+                </ng-container>
+              </div>
+              <!-- SP版表示 -->
+              <div class="list-container sp">
+                <mat-card *ngIf="teamsCnt > 0">
+                  <mat-action-list>
+                    <mat-list-item *ngFor="let team of teamList" (click)="teamDetail(team)" (keyup)="onKeyCheck($event)" tabindex="0">
+                      <div matListAvatar class="avatar-area">
+                        <div class="no-image" *ngIf="!team.teamLogo.dataUrl">
+                          <img [src]="'assets/images/no_image.png'">
+                        </div>
+                        <div matListAvatar class="image" *ngIf="team.teamLogo.dataUrl">
+                          <img [src]="team.teamLogo.dataUrl" [style.transform]="!team.teamLogo.transform">
+                        </div>
+                      </div>
+                      <div mat-line>
+                        <div class="media-small">{{team.teamName | omitLongSentence: 10:'...'}}</div>
+                        <div class="place media-small">{{team.teamAddInf.teamPrefecture}}{{team.teamAddInf.teamCity | omitLongSentence: 10:'...'}}</div>
+                      </div>
+                      <mat-icon>navigate_next</mat-icon>
+                      <mat-divider></mat-divider>
+                    </mat-list-item>
+                  </mat-action-list>
+                </mat-card>
+              </div>
+            </mat-card>
+          </ng-container>
+        </mat-card>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

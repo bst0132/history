@@ -1,0 +1,10 @@
+<div class="not-receive-mail">
+  <div class="mail-header-title">{{notReceiveMail.header.title}}</div>
+  <div class="mail-header-text">{{notReceiveMail.header.text}}</div>
+  <ng-container *ngFor="let body of notReceiveMail.body">
+    <div class="mail-body-title">{{body.title}}</div>
+    <ng-container *ngFor="let contents of body.contents">
+      <div class="mail-body-text">{{contents.text}}</div>
+    </ng-container>
+  </ng-container>
+</div>

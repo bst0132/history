@@ -1,0 +1,44 @@
+@import '../../../mylib/var';
+@import '../../../mylib/mixin';
+
+// 真ん中に配置されたベースのカードのスタイル
+.base-card {
+  @include base-card;
+}
+
+// タイトル用ツールバー
+.title-toolbar {
+  @include title-toolbar;
+  @include flex-style($justify: flex-end);
+  span {
+    margin-right: auto;
+  }
+}
+
+// ベースカードの上の白いカードのスタイリング
+.card {
+  @include card;
+}
+
+.contents-card {
+  @include one-content-card;
+}
+
+.image {
+  text-align: center;
+}
+
+// 説明のテキスト部分のスタイリング
+.text {
+  margin: 20px 10px !important;
+}
+
+// 登録ボタンのスタイリング
+.update-button {
+  @include update-button;
+  @include button-effect;
+  button {
+    background-color: #195481;
+    color: white;
+  }
+}

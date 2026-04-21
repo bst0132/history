@@ -1,0 +1,78 @@
+<div class="content">
+  <!-- 画面タイトル部分 -->
+  <mat-toolbar class="title-toolbar">
+    <span>団体情報</span>
+    <div *ngIf="isOrganAdmin" (click)="editOrganInf()">
+      <a >編集する</a>
+      <button mat-icon-button type="button"><mat-icon>create</mat-icon></button>
+    </div>
+  </mat-toolbar>
+  <mat-card class="base-card">
+    <mat-card-content>
+      <!-- 基本情報 -->
+      <div class="card">
+        <mat-toolbar class="contents-toolbar">
+          <span>団体のプロフィール</span>
+        </mat-toolbar>
+        <mat-card class="contents-card">
+          <div class="information">
+            <div class="image-area">
+              <app-image-select [mode]="'show'" [imageInfo]="organInfo.organLogo"></app-image-select>
+            </div>
+            <div class="text-area">
+              <h2 class="organ-name">{{organInfo.organName}}</h2>
+              <div class="item-list">
+                <ul class="item">
+                  <li class="item-name">競技</li>
+                  <li class="item-contents">{{organInfo.sports | getSportValue}}</li>
+                </ul>
+                <ul class="item">
+                  <li class="item-name">所在地</li>
+                  <li class="item-contents">{{getOrganAddress}}</li>
+                </ul>
+                <ul *ngIf="organInfo?.organIntro" class="item">
+                  <li class="item-name">団体紹介</li>
+                  <li class="item-contents">{{organInfo?.organIntro}}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+      <!-- 大会一覧 -->
+      <div class="card">
+        <mat-toolbar class="contents-toolbar">
+          <span>大会一覧</span>
+        </mat-toolbar>
+        <mat-card class="contents-card">
+          <mat-card-content>
+            <div *ngIf="compList?.length === 0">主催している大会はありません</div>
+            <mat-table *ngIf="compList?.length > 0" [dataSource]="compList">
+              <ng-container matColumnDef="compName">
+                <mat-header-cell *matHeaderCellDef>大会名</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{row.compName | omitLongSentence: (device === 'pc' ? 20 : 10):'...'}}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="openingDate">
+                <mat-header-cell *matHeaderCellDef>開催日</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{row.openingDate | date: 'yyyy/MM/dd'}}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="compSystem">
+                <mat-header-cell *matHeaderCellDef>大会方式</mat-header-cell>
+                <mat-cell class="line-break" *matCellDef="let row">
+                  {{compSystemList[row.compSystemInf?.compSystem] ?? (this.device === 'pc' ? '選択されていません' : '選択されて\nいません')}}
+                </mat-cell>
+              </ng-container>
+              <!-- テーブル設定 -->
+              <mat-header-row *matHeaderRowDef="['compName', 'openingDate', 'compSystem']"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: ['compName', 'openingDate', 'compSystem']"></mat-row>
+            </mat-table>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <!-- 戻るボタン -->
+      <div class="footer-button-area">
+        <button mat-raised-button color="basic" type="button" (click)="returnToList()">戻る</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

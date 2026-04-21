@@ -1,0 +1,68 @@
+<div class="content">
+  <mat-card>
+    <mat-card-content>
+
+      <!-- リーグ情報 -->
+      <ng-container *ngIf="gameList">
+        <div class="league-info">
+          <mat-form-field>
+            <mat-label>グループ名称</mat-label>
+            <input matInput [value]="gameList[0]?.gameInfCom?.gameSystemInf?.gameSystemName" readonly>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>参加チーム数</mat-label>
+            <input matInput [value]="gameList[0]?.gameInfCom?.gameSystemInf?.gameTeamCnt" readonly>
+          </mat-form-field>
+        </div>
+      </ng-container>
+
+      <!-- リーグ表 -->
+      <ng-container *ngIf="gameList">
+        <div class="scroll-table">
+          <table class="league-table" border="1">
+            <thead>
+              <tr class="header-row">
+                <th class="no-column">NO</th>
+                <td class="team-select">チーム名</td>
+                <ng-container *ngFor="let index of arrayNumberLength(gameList[0]?.gameInfCom?.gameSystemInf?.gameTeamCnt); index as headerNo">
+                  <td class="data-cell">{{getTeamName(teamIdList[headerNo])}}</td>
+                </ng-container>
+                <td class="data-cell">勝ち点</td>
+                <td class="data-cell">得失点</td>
+                <td class="data-cell">順位</td>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let index of arrayNumberLength(gameList[0]?.gameInfCom?.gameSystemInf?.gameTeamCnt); index as rowNo; odd as isOdd;">
+                <tr class="table-row" [ngClass]="{'odd-row': isOdd}">
+                  <th class="no-column">{{rowNo + 1}}</th>
+                  <td class="team-select">{{getTeamName(teamIdList[rowNo])}}</td>
+                  <ng-container *ngFor="let index of arrayNumberLength(gameList[0]?.gameInfCom?.gameSystemInf?.gameTeamCnt); index as dataNo">
+                    <ng-container *ngIf="rowNo < dataNo">
+                      <td class="game-result data-cell">
+                        {{getLeagueInfo(rowNo, dataNo, true)}}
+                      </td>
+                    </ng-container>
+                    <ng-container *ngIf="rowNo == dataNo">
+                      <td class="slash data-cell"></td>
+                    </ng-container>
+                    <ng-container *ngIf="rowNo > dataNo">
+                      <td class="data-cell">{{getLeagueInfo(rowNo, dataNo, false)}}</td>
+                    </ng-container>
+                  </ng-container>
+                  <td class="data-cell">{{pointList[rowNo]}}</td>
+                  <td class="data-cell">{{diffPointList[rowNo]}}</td>
+                  <td class="data-cell">{{rankList[rowNo]}}</td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+      </ng-container>
+
+    </mat-card-content>
+    <div class="footer-button-area">
+      <button mat-raised-button color="primary" type="button" (click)="pageBack()">戻る</button>
+    </div>
+  </mat-card>
+</div>

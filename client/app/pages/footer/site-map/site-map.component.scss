@@ -1,0 +1,108 @@
+@import '../../../../mylib/var';
+@import '../../../../mylib/mixin';
+
+// ページタイトルのスタイル
+h1 {
+  font-size: 20px;
+  padding-top: 2%;
+  width: 95%;
+  margin: 0 auto 5% auto;
+  border-bottom: solid 1px;
+  border-bottom-color:  rgba(0, 0, 0, 0.30);
+}
+
+// リンクのカテゴリごとのスタイル
+ul {
+  list-style: none;
+  vertical-align: top;
+  margin: 0 0 8% 8%;
+  padding: 0;
+}
+
+// リンクのカテゴリ名のスタイル
+h3 {
+  margin-bottom: 0%;
+}
+
+// リンク部分のスタイル
+.link {
+  @include focus-visible-outline;
+  display: table;
+  padding: 0 1em;
+  color: $bst-blue;
+  margin: 3% 0 0 0;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.5;
+    text-decoration: underline;
+  }
+}
+
+// リンク非活性時のスタイル
+.link-disable {
+  color: rgba(0, 0, 0, 0.40);
+  pointer-events: none;
+}
+
+// 詳細説明のスタイル
+.detail,
+.sub-detail {
+  color: rgba(0, 0, 0, 0.60);
+  cursor: default;
+}
+
+.detail {
+  text-indent: 2em;
+}
+
+.sub-detail {
+  text-indent: 3em;
+}
+
+// タブレット用のスタイル
+@media (min-width: $media-tb) {
+  // メイン部分のスタイル
+  nav {
+    margin-left: 8%;
+  }
+  // リンクのカテゴリごとのスタイル
+  ul {
+    display: inline-block;
+    margin: 0 0 4% 0;
+    width: 50%;
+  }
+  // リンク部分のスタイル
+  .link {
+    margin: 6% 0 0 0;
+  }
+  // 詳細説明のスタイル
+  .detail,
+  .sub-detail {
+  margin-top: 2%;
+  }
+}
+
+// pc用のスタイル
+@media (min-width: $media-pc) {
+  // メイン部分のスタイル
+  nav {
+    margin-left: 12%;
+  }
+  // リンクのカテゴリごとのスタイル
+  ul {
+    margin: 0 0 4% 0;
+    width: 33%;
+  }
+  #about-site {
+    display: block;
+  }
+  // リンク部分のスタイル
+  .link {
+    margin: 4% 0 2% 0;
+  }
+  // 詳細説明のスタイル
+  .detail,
+  .sub-detail {
+    margin: 0 0 2% 0;
+  }
+}

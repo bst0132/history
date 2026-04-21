@@ -1,0 +1,189 @@
+<div class="content">
+  <!-- 画面名表示 -->
+  <mat-toolbar class="title-toolbar">
+    <span class='toolbar-text'>チーム編集</span>
+  </mat-toolbar>
+  <mat-card class="base-card">
+    <div class="card">
+      <mat-tab-group mat-stretch-tabs animationDuration="0ms" selectedIndex="0">
+
+        <!-- チーム基本情報編集タブ -->
+        <mat-tab label="基本情報">
+          <mat-card class="contents-card">
+            <div>
+              <form [formGroup]="formGroup" class="container">
+                <div class="image-area">
+                  <app-image-select class="team-image" [mode]="'edit'" [imageInfo]="imageInfo" (imageChange)="onChangeDataUrl($event)">チームロゴを選択</app-image-select>
+                </div>
+                <div class="text-area">
+                  <mat-form-field appearance="fill" class="disable">
+                    <mat-label>競技</mat-label>
+                    <input type="text" matInput [value]="formGroup.get('sports').value | getSportValue" readonly tabindex="-1">
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                    <mat-label>チーム名<span class="required">(必須)</span></mat-label>
+                    <input matInput placeholder="チーム名を入力してください" formControlName="teamName" maxLength='50' required>
+                    <mat-error *ngIf="formGroup.get('teamName').hasError('required')">{{msg.noenteredErr.replace('※1','チーム名')}}</mat-error>
+                    <mat-hint>{{msg.wordMaxChkErr.replace('※1','50')}}</mat-hint>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                    <mat-label>設立日<span class="required">(必須)</span></mat-label>
+                    <input class="calendar" matInput readonly placeholder="2020/01/01" [matDatepicker]="picker1" formControlName="teamEstDate" required tabindex="-1" (click)="picker1.open()">
+                    <mat-error *ngIf="formGroup.get('teamEstDate').hasError('required')">{{msg.noenteredErr.replace('※1','設立日')}}</mat-error>
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                  </mat-form-field>
+                  <div formGroupName="teamAddInf">
+                    <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                      <mat-label>都道府県<span class="required">(必須)</span></mat-label>
+                      <mat-select formControlName="teamPrefecture" required>
+                        <mat-option *ngFor="let prefecture of prefectures" [value]="prefecture">{{prefecture}}</mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="formGroup.get('teamAddInf').get('teamPrefecture').hasError('required')">{{msg.unselectErr.replace('※1','都道府県')}}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                      <mat-label>市区町村<span class="required">(必須)</span></mat-label>
+                      <input matInput placeholder="横浜市西区" formControlName="teamCity" maxLength='100' required>
+                      <mat-error *ngIf="formGroup.get('teamAddInf').get('teamCity').hasError('required')">{{msg.noenteredErr.replace('※1','市区町村')}}</mat-error>
+                      <mat-hint>{{msg.wordMaxChkErr.replace('※1','100')}}</mat-hint>
+                    </mat-form-field>
+                  </div>
+                  <mat-form-field appearance="outline" floatLabel="always">
+                    <mat-label>電話番号(任意)</mat-label>
+                    <input type="tel" matInput placeholder="9999-99-9999" formControlName="teamTel" maxLength='20'>
+                    <mat-hint>{{msg.wordMaxChkErr.replace('※1','20')}}</mat-hint>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" floatLabel="always">
+                    <mat-label>チーム紹介(任意)</mat-label>
+                    <textarea placeholder="チームのプロフィールを入力できます" cdkTextareaAutosize cdkAutosizeMaxRows="10" matInput formControlName="teamIntro" maxLength='1000'></textarea>
+                    <mat-hint>{{msg.wordMaxChkErr.replace('※1','1000')}}</mat-hint>
+                  </mat-form-field>
+                </div>
+              </form>
+              <div class="update-button">
+                <button mat-raised-button type="button" (click)="onSubmit()" [disabled]="!formGroup.dirty || formGroup.invalid" [class.active-button]="formGroup.dirty && !formGroup.invalid">
+                  <mat-icon>cached</mat-icon>変更
+                </button>
+              </div>
+            </div>
+          </mat-card>
+        </mat-tab>
+
+        <!-- 所属選手編集タブ -->
+        <mat-tab label="所属選手">
+          <mat-card class="contents-card">
+            <mat-divider></mat-divider>
+            <mat-card-content [formGroup]="tableForm">
+              <ng-container formArrayName="playerList">
+                <ng-container *ngFor="let player of getPlayerList; let i = index">
+                  <mat-expansion-panel [formGroupName]="i">
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>{{player.get('playerName').value}}</mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <div class="flex-form">
+                      <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                        <mat-label>背番号<span class="required">(必須)</span></mat-label>
+                        <input matInput placeholder="1" formControlName="uniNum" maxLength='3' required>
+                        <mat-error *ngIf="player.get('uniNum').hasError('required')">{{msg.noenteredErr.replace('※1','背番号')}}</mat-error>
+                        <mat-hint>{{msg.wordMaxChkErr.replace('※1','3')}}</mat-hint>
+                      </mat-form-field>
+                      <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                        <mat-label>ポジション<span class="required">(必須)</span></mat-label>
+                        <input matInput placeholder="GK" formControlName="gamePosition" maxLength='25' required>
+                        <mat-error *ngIf="player.get('gamePosition').hasError('required')">{{msg.noenteredErr.replace('※1','ポジション')}}</mat-error>
+                        <mat-hint>{{msg.wordMaxChkErr.replace('※1','25')}}</mat-hint>
+                      </mat-form-field>
+                    </div>
+                    <div class="flex-form">
+                      <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+                        <mat-label>所属開始年月<span class="required">(必須)</span></mat-label>
+                        <input class="calendar" matInput [matDatepicker]="picker1" readonly placeholder="2020/01/01" formControlName="teamStartDate" (dateInput)="onChangeTeamStartDate(player)" required tabindex="-1" (click)="picker1.open()">
+                        <mat-error *ngIf="player.get('teamStartDate').hasError('required')">{{msg.noenteredErr.replace('※1','所属開始年月')}}</mat-error>
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                      </mat-form-field>
+                      <p class="invisible">~</p>
+                      <mat-form-field appearance="outline" floatLabel="always">
+                        <mat-label>所属終了年月</mat-label>
+                        <input class="calendar" matInput [matDatepicker]="picker2" readonly placeholder="2020/01/01" formControlName="teamEndDate" tabindex="-1" (click)="picker2.open()">
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                    <div class="update-button">
+                      <button mat-raised-button type="button" (click)="onEditPlayer(player)" [disabled]="!player.dirty || player.invalid" [class.active-button]="player.dirty && !player.invalid">
+                        <mat-icon>cached</mat-icon>変更
+                      </button>
+                    </div>
+                  </mat-expansion-panel>
+                  <mat-divider></mat-divider>
+                </ng-container>
+              </ng-container>
+              <mat-list>
+                <mat-list-item>
+                  <div class="invite title">招待中の選手</div>
+                  <div class="invite player" (click)="invitePlayer()">所属選手を招待する</div>
+                  <div class="button-area">
+                    <button mat-icon-button type="button" class="add-button player" (click)="invitePlayer()"><mat-icon>person_add_alt_1</mat-icon></button>
+                  </div>
+                </mat-list-item>
+              </mat-list>
+              <mat-list class="invite-list">
+                <ng-container *ngFor="let player of invitationPlayer">
+                  <mat-divider></mat-divider>
+                  <mat-list-item>
+                    <div class="name">{{player}}</div>
+                  </mat-list-item>
+                </ng-container>
+              </mat-list>
+              <mat-divider></mat-divider>
+            </mat-card-content>
+          </mat-card>
+        </mat-tab>
+
+        <!-- 所属スタッフ編集タブ -->
+        <mat-tab label="所属スタッフ">
+          <mat-card class="contents-card">
+            <mat-card-content>
+              <mat-list class="staff-list">
+                <ng-container *ngFor="let staff of admins">
+                  <mat-divider></mat-divider>
+                  <mat-list-item class="staff-row">
+                    <div class="name">{{staff.name}}</div>
+                    <div *ngIf="admins.length >= 2" class="button-area btn">
+                        <button class="remove-button" mat-icon-button type="button" (click)="removeAdminInfo(staff._id, staff.name)"><mat-icon>person_remove</mat-icon></button>
+                    </div>
+                  </mat-list-item>
+                </ng-container>
+              </mat-list>
+              <mat-divider></mat-divider>
+              <mat-list>
+                <mat-list-item>
+                  <div class="invite title">招待中のスタッフ</div>
+                  <div class="invite staff" (click)="toInviteStaff()">所属スタッフを招待する</div>
+                  <div class="button-area">
+                    <button mat-icon-button type="button" class="add-button player" (click)="toInviteStaff()"><mat-icon>person_add_alt_1</mat-icon></button>
+                  </div>
+                </mat-list-item>
+              </mat-list>
+              <mat-list class="invite-list">
+                <ng-container *ngFor="let invStaff of invitationStaff">
+                  <mat-divider></mat-divider>
+                  <mat-list-item>
+                    <div class="name">{{invStaff}}</div>
+                  </mat-list-item>
+                </ng-container>
+              </mat-list>
+              <mat-divider></mat-divider>
+            </mat-card-content>
+          </mat-card>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+
+    <!-- 戻るボタン -->
+    <div class="footer-button-area">
+      <button mat-raised-button type="button" (click)="onClickReturnToDetail()">戻る</button>
+    </div>
+  </mat-card>
+</div>

@@ -1,0 +1,86 @@
+@import '../../../mylib/mixin';
+
+mat-dialog-content {
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 205px;
+}
+
+// ダイアログ閉じるボタン
+.cancel {
+  display: flex;
+  justify-content: flex-end;
+  mat-icon {
+    size: 1px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    @include focus-visible-outline-clear;
+  }
+}
+
+mat-form-field {
+  width: 100%;
+  input[readonly] {
+    cursor: pointer;
+  }
+  &:has(mat-hint) {
+    padding-bottom: 6%;
+  }
+  mat-hint {
+    cursor: default;
+  }
+}
+
+// 設定ボタン
+.set-button {
+  justify-content: center;
+  button {
+    @include focus-visible-button;
+    @include button-effect;
+  }
+}
+
+// 開始予定時間の横並びスタイル
+.flex {
+  height: 60px;
+  margin-bottom: 1em;
+  @include flex-style($display: flex, $justify: space-between);
+  .mat-form-field {
+    width: 45%;
+  }
+  .semicolon {
+    margin: 25px 5px;
+    cursor: default;
+  }
+}
+
+// 勝利チーム選択ラジオボタン
+.radio-btn {
+  width: 100%;
+  vertical-align: 1em;
+  margin: auto 0em;
+}
+
+// 試合経過ボタン
+.game-progress {
+  mat-radio-group {
+    display: flex;
+    .radio-btn{
+      flex-flow: column;
+    }
+  }
+}
+
+// 得点入力フォーム、編集不可の際のスタイル
+.disable-input {
+  pointer-events: none;
+  :not(mat-hint) {
+    opacity: 0.5;
+  }
+}
+
+// タブフォーカス時の枠線のスタイリング
+::ng-deep .mat-datepicker-toggle button:focus-visible {
+  @include focus-visible-outline;
+}

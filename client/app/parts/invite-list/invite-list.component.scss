@@ -1,0 +1,54 @@
+@import '../../../mylib/var';
+@import '../../../mylib/mixin';
+
+// 項目ごとのカードのまとまり部分のスタイル
+.contents.sp {
+  @include card;
+}
+
+.contents-toolbar {
+  @include contents-toolbar;
+  margin-top: 10px;
+  @media (min-width: $media-tb) {
+    margin-top: 0;
+  }
+  &.notice-yellow-sp {
+    background-color: $parts-yellow;
+  }
+  .notice-yellow-pc {
+    color: $parts-yellow;
+    span {
+      color: white;
+    }
+  }
+}
+
+// 項目ごとのカードの白い部分のスタイル
+.contents-card {
+  @include contents-card;
+  &.pc {
+    @media (min-width: $media-tb) {
+      min-height: 400px;
+      max-height: 400px;
+      overflow: auto;
+    }
+  }
+  button {
+    @include focus-visible-button;
+  }
+}
+
+.pc {
+  .notice-yellow {
+    color: $parts-yellow;
+    span {
+      color: white;
+    }
+  }
+}
+
+.sp {
+  &.notice-yellow {
+    background-color: $parts-yellow;
+  }
+}

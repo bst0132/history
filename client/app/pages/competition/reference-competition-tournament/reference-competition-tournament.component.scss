@@ -1,0 +1,29 @@
+@import "../../../../mylib/var";
+@import "../../../../mylib/mixin";
+
+// ページタイトル用ツールバー
+.title-toolbar {
+  @include title-toolbar;
+  @include flex-style($justify: flex-end);
+  span {
+    margin-right: auto;
+  }
+}
+
+// 真ん中に配置されたベースのカードのスタイル
+.base-card {
+  @include base-card;
+
+  // 戻る・登録・更新ボタンの共通スタイル
+  .both-button {
+    @include flex-style($justify: space-between);
+    position: sticky;
+    bottom: 20px;
+
+    // 戻るボタンのスタイル
+    .back-button {
+      @include back-button;
+      @include button-effect;
+    }
+  }
+}

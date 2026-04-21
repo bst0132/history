@@ -1,0 +1,432 @@
+@import '../../../mylib/var';
+@import '../../../mylib/mixin';
+
+// スタイリング位置調整
+.content {
+  @include position($position: absolute, $left: 0, $top: 0);
+  width: 100%;
+}
+
+// メイン部分
+.top-screen {
+  position: relative;
+}
+
+// トップイメージ画像
+.top-screen picture img {
+  width: 100%;
+  vertical-align: bottom;
+}
+
+// タイトル・サブタイトルの調整(SP)
+.top-title {
+  @include position($position: absolute, $left: 51%, $top: 17%);
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 100%;
+  text-shadow: black 1px 1px 10px, black -1px 1px 10px;
+    cursor: default;
+  // メインタイトル
+  h1 {
+    @include text($fontSize: calc(1.875rem + ((1vw - 3px) * 5)), $textColor: cornsilk);
+    font-family: 'Franklin Gothic Medium', 'Microsoft Sans Serif', 'Arial', sans-serif;
+    letter-spacing: 0.1em;
+    margin-bottom: 0;
+  }
+  // サブタイトル
+  p {
+    @include text($fontSize: calc(0.75rem + ((1vw - 2.5px) * 2.2654)), $textColor: cornsilk);
+    font-family: YuGothic, 'Yu Gothic', 'ヒラギノ角ゴシック', 'Hiragino Sans', sans-serif;
+    font-weight: bold;
+    margin: 0;
+    margin-top: 7px;
+  }
+}
+
+// タイトル・サブタイトルの調整(タブレット)
+@media (min-width: $media-tb) {
+  .top-title {
+    top: 17%;
+    // メインタイトル
+    h1 {
+      font-size: calc(4.0625rem + ((1vw - 5.6px) * 3.2328));
+    }
+    // サブタイトル
+    p {
+      font-size: calc(1.5625rem + ((1vw - 5.6px) * 2.1552));
+      margin-top: 30px;
+    }
+  }
+}
+
+// タイトル・サブタイトルの調整(PC)
+@media (min-width: $media-pc) {
+  .top-title {
+    top: 15%;
+    left: 50%;
+    // メインタイトル
+    h1 {
+      font-size: calc(3.75rem + ((1vw - 10.25px) * 5.4545));
+    }
+    // サブタイトル
+    p {
+      font-size: calc(1.5rem + ((1vw - 10.25px) * 1.0909));
+      margin-top: 37px;
+    }
+  }
+}
+
+// 改行位置の切り替え
+@media (min-width: $media-pc) {
+  .title-pc {
+    display: block;
+  }
+  .title-sp {
+    display: none;
+  }
+}
+
+@media (max-width: $media-pc) {
+  .title-pc {
+    display: none;
+  }
+  .title-sp {
+    display: block;
+    line-height: 1;
+  }
+}
+
+// ログイン・新規登録(マイページ・ログアウト)ボタンの調整
+.top-button {
+  @include position($position: absolute, $bottom: 0);
+  @include size($width: 100%, $height: 10%);
+  display: flex;
+  .button {
+    @include focus-visible-outline($offset: -5px);
+  }
+}
+
+.button {
+  @include text($fontSize: calc(1.25rem + ((1vw - 3px) * 1.1538)), $textColor: #ffffff);
+  width: 50%;
+  display: inline-block;
+  border-style: none;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.7);
+  transition: 0.3s;
+  letter-spacing: 0.1em;
+  outline: none;
+  &:hover {
+    background: black;
+  }
+}
+
+@media (min-width: $media-tb) {
+  .button {
+    font-size: calc(2.1875rem + ((1vw - 5.6px) * 3.2328));
+  }
+}
+
+@media (min-width: $media-pc) {
+  .button {
+    font-size: calc(1.6875rem + ((1vw - 10.24px) * 1.8116));
+  }
+}
+
+// 写真横並び部分
+.detail-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  a {
+    position: relative;
+    width: 100%;
+    cursor: pointer;
+    @include focus-visible-outline($offset: -5px);
+    img {
+      vertical-align: bottom;
+      width: 100%;
+    }
+  }
+}
+
+@media (min-width: $media-pc) {
+  .detail-list {
+    flex-direction: row;
+  }
+}
+
+// 横並びの写真の説明部分
+.detail-contents {
+  @include position($position: absolute, $left: 50%, $top: 50%);
+  transform: translate(-50%, -50%);
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  width: 100%;
+  text-shadow: black 1px 1px 10px, black -1px 1px 10px;
+  // テキスト部分
+  p {
+    @include text($fontSize: 24px, $textColor: cornsilk);
+    margin-bottom: 0;
+  }
+  // "詳しくはこちら"ボタン
+  .detail-button {
+    display: inline-block;
+    padding: 0.3em 1em;
+    border: solid 2px #333;
+    border-radius: 10px;
+    transition: 0.4s;
+    margin-top: 5%;
+    &:hover {
+      background: #333;
+      color: white;
+    }
+  }
+}
+
+@media (min-width: $media-tb) {
+  .detail-contents p {
+    font-size: calc(2.5rem + ((1vw - 5.6px) * 2.1552));
+  }
+}
+
+@media (min-width: $media-pc) {
+  .detail-contents p {
+    font-size: calc(1.375rem + ((1vw - 10.24px) * 1.8116));
+  }
+}
+
+// フッターのスタイリング(ログインページのみフッター作成)
+.footer {
+  @include size($width: 100%, $height: 30px);
+  @include flex-style($justify: center, $align: center);
+  background-color: #333;
+  color: white;
+}
+
+.footer p {
+  margin-bottom: 0;
+}
+
+.footer-link-area {
+  @include size($width: 100%, $height: 50px);
+  @include flex-style($justify: center, $align: center);
+  background-color: gray;
+  color: white;
+  li {
+    @include focus-visible-outline;
+    display: inline;
+    list-style: none;
+    margin: auto 20px;
+    cursor: pointer;
+    &:hover {
+      opacity: 0.5;
+    }
+    @media (max-width: $media-pc) {
+      font-size: 9px;
+      margin: auto;
+    }
+  }
+}
+
+// モーダルウインドウのスタイリング
+// 背景のグレーの部分
+.mask {
+  @include position($position: fixed, $left: 0, $top: 0, $bottom: 0, $right: 0);
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+// モーダルウインドウの位置・大きさなど
+#modal_login,
+#modal_player,
+#modal_fun,
+#modal_admin {
+  @include size($width: 70%, $height: 50%);
+  @include position($position: fixed, $left: 0, $top: 20%, $right: 0);
+  background: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  margin: 0 auto;
+  z-index: 2;
+  overflow: scroll;
+}
+
+@media (min-width: $media-tb) {
+  #modal_login {
+    top: 25%;
+    height: 45%;
+  }
+}
+
+@media (min-width: $media-pc) {
+  #modal_login {
+    top: 20%;
+    height: 50%;
+  }
+}
+
+#modal_player,
+#modal_fun,
+#modal_admin {
+  top: 15%;
+  height: 65%;
+}
+
+@media (min-width: $media-tb) {
+  #modal_player,
+  #modal_fun,
+  #modal_admin {
+    @include size($width: 60%, $height: 45%);
+    top: 30%;
+  }
+}
+
+@media (min-width: $media-pc) {
+  #modal_player,
+  #modal_fun,
+  #modal_admin {
+    @include size($width: 60%, $height: 60%);
+    top: 15%;
+  }
+}
+
+// 閉じるボタン
+.close-button {
+  @include focus-visible-outline($offset: -17px);
+  @include position($position: absolute, $top: 0, $right: 0);
+  @include text($fontSize: 1.4em, $textColor: black);
+  padding: 20px 20px;
+  cursor: pointer;
+}
+
+// 入力フォームモーダルのスタイリング
+.form {
+  text-align: center;
+  position: relative;
+}
+
+.login-form {
+  @include position($position: absolute, $left: 0, $top: 15%, $right: 0);
+}
+
+.form-field {
+  line-height: 2;
+  width: 80%;
+  button {
+    @include focus-visible-outline;
+  }
+}
+
+@media (min-width: $media-tb) {
+  .form-field {
+    width: 60%;
+  }
+}
+
+// ログインボタン
+.login-button {
+  width: 100%;
+  margin-top: 4vh;
+  button {
+    @include focus-visible-button;
+    @include position($left: 0, $right: 0);
+    text-align: center;
+    width: 80%;
+  }
+}
+
+@media (min-width: $media-tb) {
+  .login-button button {
+    width: 60%;
+  }
+}
+
+@media (max-width: $media-tb) {
+  .login-button {
+    margin-top: 60px;
+  }
+}
+
+// ログイン押下時のエラーメッセージ
+.err-messeage {
+  margin-top: 10px;
+  font-size: 10px;
+}
+
+@media (min-width: $media-tb) {
+  .err-messeage {
+    font-size: 15px;
+  }
+}
+
+// パスワード忘れた人向けメッセージ
+.forget-pass {
+  padding-top: 2vh;
+  a {
+    @include focus-visible-outline;
+  }
+}
+
+@media (min-width: $media-tb) {
+  .forget-pass {
+    font-size: 15px;
+  }
+}
+
+// パスワード可視化アイコンの大きさ
+.pass-icon {
+  font-size: 21px !important;
+}
+
+// 詳細表示モーダルのスタイリング
+// タイトル部分
+.detail-title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 25px;
+  padding: 10px;
+  margin-top: 5%;
+}
+
+@media (min-width: $media-pc) {
+  .detail-title {
+    margin-top: 2%;
+  }
+}
+
+// テキスト内容
+.detail-text {
+  margin-top: 30px;
+  word-break: normal;
+  font-size: 15px;
+  padding: 10px;
+}
+
+@media (min-width: $media-tb) {
+  .detail-text {
+    line-height: 1.6;
+    font-size: 16px;
+  }
+}
+
+@media (min-width: $media-pc) {
+  .detail-text {
+    font-size: 17px;
+    margin-bottom: 0;
+  }
+}
+
+// 画像
+#modal_player div,
+#modal_fun div,
+#modal_admin div {
+  text-align: center;
+}
+
+#modal_player img,
+#modal_fun img,
+#modal_admin img {
+  height: 200px;
+}

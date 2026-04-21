@@ -1,0 +1,112 @@
+@import '../../../../mylib/var';
+
+.date {
+  width: 30%;
+  display: block;
+}
+
+.button-area {
+  margin-top: 20px;
+  button {
+    margin-right: 5px;
+  }
+}
+
+.compIntro {
+  margin-top: 15px;
+}
+
+.footer-button-area {
+  margin-top: 20px;
+}
+
+// パネルの設定
+.info-panel {
+  max-height: 450px;
+  text-align: center;
+  overflow-y: scroll;
+}
+
+// 大会管理者の所属団体表示設定
+.org-list {
+  height: 15px;
+  font-size: 5px;
+}
+
+// 大会管理者の所属団体表示範囲設定
+.org-area {
+  height: 50px;
+  overflow: hidden;
+}
+
+// テーブルの設定
+.scroll-table {
+  max-height: 450px;
+  overflow-y: scroll;
+}
+
+// テーブルの項目名をスクロールさせない設定
+.table-label {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+// パネル下部、解除・削除ボタンの設定
+.del-button {
+  color: red;
+  // パネル下部中央に配置
+  position: absolute;
+  bottom: 0%;
+  left: 50%;
+  transform: translateX(-50%);
+  -webkit-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  // カーソルを合わせた時
+  &:hover {
+    opacity: 0.5;
+    text-decoration: underline;
+  }
+}
+
+// テーブルのボタンの設定
+.table-button {
+  padding: 0px 15px 0px 15px;
+  width: 58px!important;
+  min-width: unset!important;
+}
+
+// テーブルの削除ボタンの設定
+.delete-button {
+  // 配置を右寄せ
+  margin: 0% 10px 0% auto;
+}
+
+.games {
+  margin-top: 10px;
+}
+
+.gameInfoList {
+  width: 30%;
+  display: block;
+}
+
+// 戻るボタンの設定
+.back-button {
+  margin-bottom: 10px;
+}
+
+.navigate-icon {
+  mat-icon {
+    &:hover {
+      background-color: rgba($color: $bst-blue, $alpha: 0.10);
+      cursor: pointer;
+      box-shadow: 1.5px 1.5px 3px $bst-blue;
+    }
+  }
+}
+
+.team {
+  text-align: center;
+}

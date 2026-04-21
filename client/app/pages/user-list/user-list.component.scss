@@ -1,0 +1,28 @@
+@import '../../../mylib/mixin';
+
+.user {
+  text-align: center;
+}
+
+.nickName {
+  margin-top: 10px;
+}
+
+.inviteButton {
+  // パネル下部中央に配置
+  position: absolute;
+  transform: translateX(-50%) translateY(25%);
+  -webkit-transform: translateX(-50%) translateY(25%);
+}
+
+#search-button {
+  margin-top: 30px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.focus-button {
+  @include focus-visible-button;
+}

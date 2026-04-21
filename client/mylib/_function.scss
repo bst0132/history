@@ -1,0 +1,6 @@
+// 各コンポーネントで使いまわしたい関数を定義しておく
+
+// 画像表示部分のscaleの値を計算する関数
+@function scaleCalc($logoSize) {
+  @return calc($logoSize / 200);
+}

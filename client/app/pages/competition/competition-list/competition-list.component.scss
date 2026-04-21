@@ -1,0 +1,19 @@
+@import '../../../../mylib/var';
+@import '../../../../mylib/mixin';
+
+.date {
+  width: 30%;
+}
+
+.swangDash {
+  margin: 5px, auto;
+}
+
+// タブフォーカス時の枠線のスタイリング
+::ng-deep .mat-datepicker-toggle button:focus-visible {
+  @include focus-visible-outline;
+}
+
+.competition-list{
+  text-align: center;
+}

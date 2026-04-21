@@ -1,0 +1,37 @@
+@import '../../../../mylib/var';
+
+.title {
+  border-bottom: solid 1px black;
+  margin-top: 15px;
+}
+
+.sports {
+  width: 25%;
+}
+
+mat-card-subtitle {
+  color: $bst-blue;
+  text-align: center;
+}
+
+.flex-container {
+  display: flex;
+  mat-label {
+    width: 25%;
+    margin-right: 5px;
+  }
+  .flex-item {
+    width: 25%;
+    margin: 10px 10px 10px 0;
+    border-bottom: solid 1px lightgray;
+    word-break: break-all;
+  }
+}
+
+.header {
+  border-bottom: solid 1px black;
+}
+
+.date {
+  min-width: 75px;
+}

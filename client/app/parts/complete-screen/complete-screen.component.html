@@ -1,0 +1,47 @@
+<ng-container>
+  <mat-horizontal-stepper labelPosition="bottom" [selectedIndex]="index" appDisableStepperFocus>
+    <!-- 1番目のステッパー -->
+    <mat-step>
+      <ng-template matStepLabel >{{(url=='createUser') ? 'アカウント作成':'パスワード再設定'}}<br>メール送信</ng-template>
+    </mat-step>
+    <!-- 2番目のステッパー（index = 1 の場合内容が表示される） -->
+    <mat-step>
+      <ng-template matStepLabel>メール送信<br>完了</ng-template>
+      <ng-container *ngIf="mode=='mail'">
+        <div class="image">
+          <img [src]="'assets/images/mail_icon.png'">
+          <div class="text">
+            {{(url=='createUser') ? 'アカウント登録':'パスワード再設定'}}用メールを送信しました。<br>
+            メール本文内のURLをクリックし、<br class={{device}}>
+            {{(url=='createUser') ? 'アカウント登録':'パスワードの変更'}}を完了させてください。
+          </div>
+        </div>
+        <div class="update-button">
+          <button mat-raised-button type="button" (click)="onClickNavigate('')">トップページへ</button>
+        </div>
+        <app-not-receive-mail></app-not-receive-mail>
+      </ng-container>
+    </mat-step>
+    <!-- 3番目のステッパー -->
+    <mat-step>
+      <ng-template matStepLabel>{{(url=='createUser') ? 'アカウント情報':'パスワード'}}<br>{{(url=='createUser') ? '入力':'再設定'}}</ng-template>
+    </mat-step>
+    <!-- 4番目のステッパー（index = 3 の場合内容が表示される） -->
+    <mat-step>
+      <ng-template matStepLabel>完了</ng-template>
+      <ng-container *ngIf="mode=='done'">
+        <div class="image">
+          <img [src]="'assets/images/check_icon.png'">
+          <div class="text">
+            {{(url=='createUser') ? 'アカウント登録':'パスワード再設定'}}が完了しました。<br>
+            トップページよりメールアドレスと、<br class={{device}}>
+            パスワードを入力してログインしてください。
+          </div>
+        </div>
+        <div class="update-button">
+          <button mat-raised-button type="button" (click)="onClickNavigate('')">トップページへ</button>
+        </div>
+      </ng-container>
+    </mat-step>
+  </mat-horizontal-stepper>
+</ng-container>

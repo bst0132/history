@@ -1,0 +1,319 @@
+<!-- 画面タイトル部分 -->
+<mat-toolbar class="title-toolbar">
+  <span>{{canEdit? newGameFlg ? 'リーグ新規登録' : 'リーグ編集' : 'リーグ詳細'}}</span>
+</mat-toolbar>
+<!-- 画面内容 -->
+<mat-card class="base-card">
+  <ng-container *ngIf="canEdit === true; else onlyView">
+    <mat-card-content>
+      <div class="card">
+        <mat-card class="contents-card radius">
+          <form [formGroup]="formGroup">
+            <!-- リーグ情報 -->
+            <div class="control">
+              <mat-form-field hideRequiredMarker class="league-info">
+                <mat-label>試合グループ名<span class="required">(必須)</span></mat-label>
+                <input matInput formControlName="gameGroupTitle" placeholder="例）予選リーグA" maxLength='20'>
+                <mat-error *ngIf="formGroup.get('gameGroupTitle').hasError('required')">{{msg.noenteredErr.replace('※1','試合グループ名')}}</mat-error>
+                <mat-hint>{{msg.wordMaxChkErr.replace('※1','20')}}</mat-hint>
+              </mat-form-field>
+              <ng-container *ngIf="!newGameFlg && !getGameStartedFlg">
+                <button class="del-button" mat-raised-button type="button" (click)="onClickDeleteGame()"><mat-icon>delete_outline</mat-icon>削除</button>
+              </ng-container>
+            </div>
+            <div class="flexible-area {{device}}">
+              <mat-form-field hideRequiredMarker class="league-info" [ngClass]="{ 'inert-element': !newGameFlg }">
+                <mat-label>チーム数<span class="required">(必須)</span></mat-label>
+                <ng-container *ngIf="newGameFlg">
+                  <mat-select formControlName="teamCount" (selectionChange)="onChangeGetControl($event.value)" required>
+                    <mat-option *ngFor="let team of teamNumber" [value]="team + 3">{{team + 3}}</mat-option>
+                  </mat-select>
+                </ng-container>
+                <ng-container *ngIf="!newGameFlg">
+                  <input matInput [value]="formGroup.get('teamCount').value" readonly>
+                </ng-container>
+                <mat-error *ngIf="formGroup.get('teamCount').hasError('required')">{{msg.unselectErr.replace('※1','チーム数')}}</mat-error>
+              </mat-form-field>
+              <div class="table-info {{device}}">
+                <ng-container *ngIf="device === 'sp'">
+                  <span><mat-icon>touch_app</mat-icon>チーム名を長押しで全表示</span>
+                </ng-container>
+                <div *ngIf="!newGameFlg && !getGameStartedFlg" class="game-start">
+                  <p *ngIf="!allTeamsSelectedFlg" class="disable-start-message">{{msg.disableStartGame}}</p>
+                  <!-- 試合開始ボタン -->
+                  <button mat-raised-button type="button" class="game-start-button {{device}}"
+                    (click)="onClickGameStart()" [disabled]="!allTeamsSelectedFlg" [class.active-button]="!getGameStartedFlg && allTeamsSelectedFlg">
+                    <mat-icon>directions_run</mat-icon> リーグ開始
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- リーグ表 -->
+            <ng-container *ngIf="formGroup.get('teamCount').value">
+              <ng-container *ngIf="getgameGroupInf.length > 0">
+                <div class="scroll-table">
+                  <table class="cell-check" border="1">
+                    <!-- チーム表示セル -->
+                    <thead>
+                      <tr class="table-row">
+                        <th class="upper-left"></th>
+                        <ng-container *ngFor="let columnArray of leagueArray; index as headNo">
+                          <th class="data-cell">
+                            <ng-container *ngIf="headNo > 0; else headNoZero">
+                              <input matInput class="readonly-team" placeholder="- -"
+                                [value]="this.formGroup.get(['gameGroupInf', headNo - 1, 'criteriaTeamName']).value" readonly
+                                [matTooltip]="this.formGroup.get(['gameGroupInf', headNo - 1, 'criteriaTeamName']).value" matTooltipPosition="above" tabindex="-1">
+                            </ng-container>
+                            <ng-template #headNoZero>
+                              <input matInput class="readonly-team" placeholder="- -"
+                                [value]="this.formGroup.get(['gameGroupInf', headNo, 'opponentTeamName']).value" readonly
+                                [matTooltip]="this.formGroup.get(['gameGroupInf', headNo, 'opponentTeamName']).value" matTooltipPosition="above" tabindex="-1">
+                            </ng-template>
+                          </th>
+                        </ng-container>
+                        <th class="point-details">順位</th>
+                        <th class="point-details">勝点</th>
+                        <th class="point-details">勝</th>
+                        <th class="point-details">負</th>
+                        <th class="point-details">分</th>
+                        <th class="point-details">得</th>
+                        <th class="point-details">失</th>
+                        <th class="point-details">得失点</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container *ngFor="let columnArray of leagueArray; index as rowNo">
+                        <tr class="table-row">
+                          <!-- チーム選択セル -->
+                          <th formArrayName="selectedTeam" class="game-result data-cell" [ngClass]="{'select-team-cell': getGameStartedFlg}" (click)="teamSelect.open()"
+                          [matTooltip]="entryTeamList?.length ? selectedTeamName[rowNo] : '参加チームタブからチームを登録してください'" matTooltipPosition="above" matTooltipClass="custom-tooltip">
+                            <mat-select #teamSelect [formControlName]="rowNo" placeholder="チームを選択"
+                            (selectionChange)="onChangeSetValue(rowNo, $event.value); formGroup.markAsDirty()">
+                              <mat-option *ngFor="let entryTeam of entryTeamList" [value]="entryTeam.recordId">{{entryTeam.teamName}}</mat-option>
+                            </mat-select>
+                          </th>
+                          <!-- 各試合情報セル -->
+                          <ng-container *ngFor="let gameNo of columnArray; index as columnNo">
+                            <ng-container *ngIf="rowNo < columnNo">
+                              <td class="game-result data-cell" align="center" (click)="onClickCell(rowNo, columnNo, formGroup.get('teamCount').value)" (keyup)="onKeyCheck($event)" [class.selected-cell]="rowNo == rowControl && columnNo == columnControl" tabindex="0">
+                                <div class="flex">
+                                  <input matInput readonly class="score-area"
+                                    [value]="formGroup.get(['gameGroupInf', gameNo, 'opponentScore']).value" tabindex="-1">
+                                  <span>-</span>
+                                  <input matInput readonly class="score-area"
+                                    [value]="formGroup.get(['gameGroupInf', gameNo, 'criteriaScore']).value" tabindex="-1">
+                                </div>
+                                <div *ngIf="formGroup.get(['gameGroupInf', gameNo, 'gameProgressStatus']).value === cns.duringGame">
+                                  <span>(試合中)</span>
+                                </div>
+                                <div *ngIf="formGroup.get(['gameGroupInf', gameNo, 'opponentScore']).value !== null && formGroup.get(['gameGroupInf', gameNo, 'criteriaScore']).value !== null && formGroup.get(['gameGroupInf', gameNo, 'gameProgressStatus']).value === cns.afterGame">
+                                  <div *ngIf="formGroup.get(['gameGroupInf', gameNo, 'opponentScore']).value > formGroup.get(['gameGroupInf', gameNo, 'criteriaScore']).value">
+                                    <span>◯</span>
+                                  </div>
+                                  <div *ngIf="formGroup.get(['gameGroupInf', gameNo, 'opponentScore']).value === formGroup.get(['gameGroupInf', gameNo, 'criteriaScore']).value">
+                                    <span>△</span>
+                                  </div>
+                                  <div *ngIf="formGroup.get(['gameGroupInf', gameNo, 'opponentScore']).value < formGroup.get(['gameGroupInf', gameNo, 'criteriaScore']).value">
+                                    <span>✕</span>
+                                  </div>
+                                </div>
+                                <div *ngIf="formGroup.get(['gameGroupInf', gameNo, 'opponentScore']).value === null || formGroup.get(['gameGroupInf', gameNo, 'criteriaScore']).value === null">
+                                  <span></span>
+                                </div>
+                              </td>
+                            </ng-container>
+                            <ng-container *ngIf="rowNo == columnNo">
+                              <td class="slash data-cell"></td>
+                            </ng-container>
+                            <ng-container *ngIf="rowNo > columnNo">
+                              <td class="game-result data-cell" align="center" (click)="onClickCell(rowNo, columnNo, formGroup.get('teamCount').value)" (keyup)="onKeyCheck($event)" [class.selected-cell]="rowNo == rowControl && columnNo == columnControl" tabindex="0">
+                                <div class="flex">
+                                  <input matInput readonly class="score-area"
+                                    [value]="formGroup.get(['gameGroupInf', gameNo, 'criteriaScore']).value" tabindex="-1">
+                                  <span>-</span>
+                                  <input matInput readonly class="score-area"
+                                    [value]="formGroup.get(['gameGroupInf', gameNo, 'opponentScore']).value" tabindex="-1">
+                                </div>
+                                <div *ngIf="formGroup.get(['gameGroupInf', gameNo, 'gameProgressStatus']).value === cns.duringGame">
+                                  <span>(試合中)</span>
+                                </div>
+                                <div *ngIf="formGroup.get(['gameGroupInf', gameNo, 'opponentScore']).value !== null && formGroup.get(['gameGroupInf', gameNo, 'criteriaScore']).value !== null && formGroup.get(['gameGroupInf', gameNo, 'gameProgressStatus']).value === cns.afterGame">
+                                  <div *ngIf="formGroup.get(['gameGroupInf', gameNo, 'criteriaScore']).value > formGroup.get(['gameGroupInf', gameNo, 'opponentScore']).value">
+                                    <span>◯</span>
+                                  </div>
+                                  <div *ngIf="formGroup.get(['gameGroupInf', gameNo, 'criteriaScore']).value === formGroup.get(['gameGroupInf', gameNo, 'opponentScore']).value">
+                                    <span>△</span>
+                                  </div>
+                                  <div *ngIf="formGroup.get(['gameGroupInf', gameNo, 'criteriaScore']).value < formGroup.get(['gameGroupInf', gameNo, 'opponentScore']).value">
+                                    <span>✕</span>
+                                  </div>
+                                </div>
+                                <div *ngIf="formGroup.get(['gameGroupInf', gameNo, 'criteriaScore']).value === null || formGroup.get(['gameGroupInf', gameNo, 'opponentScore']).value === null">
+                                  <span></span>
+                                </div>
+                              </td>
+                            </ng-container>
+                          </ng-container>
+                          <td class="detail-numbers rank" formArrayName="rank" (click)="runking.open()">
+                            <mat-select #runking [formControlName]="rowNo">
+                              <mat-option *ngFor="let option of rankOptions" [value]="option">{{ option }}</mat-option>
+                            </mat-select>
+                          </td>
+                          <td class="detail-numbers">{{teamStats.length ? teamStats[rowNo]?.winningPoints : ''}}</td>
+                          <td class="detail-numbers">{{teamStats.length ? teamStats[rowNo]?.totalWin : ''}}</td>
+                          <td class="detail-numbers">{{teamStats.length ? teamStats[rowNo]?.totalLost : ''}}</td>
+                          <td class="detail-numbers">{{teamStats.length ? teamStats[rowNo]?.totalDrew : ''}}</td>
+                          <td class="detail-numbers">{{teamStats.length ? teamStats[rowNo]?.totalScore : ''}}</td>
+                          <td class="detail-numbers">{{teamStats.length ? teamStats[rowNo]?.totalLoss : ''}}</td>
+                          <td class="detail-numbers">{{teamStats.length ? teamStats[rowNo]?.totalScore - teamStats[rowNo]?.totalLoss : ''}}</td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </div>
+                <!-- 各試合情報フォーム -->
+                <div class="input-form">
+                  <ng-container formArrayName="gameGroupInf" *ngIf="canShow">
+                    <ng-container *ngFor="let team of getgameGroupInf.controls; let i = index">
+                      <ng-container *ngIf="i == arrayNumber" [formGroupName]="arrayNumber">
+                        <ng-container *ngIf="viewFlg === 'top'; else left">
+                          <div class="game-progress" *ngIf="getGameStartedFlg">
+                            <mat-form-field appearance="outline" floatLabel="always">
+                              <mat-label>試合経過</mat-label>
+                              <input matInput hidden>
+                              <mat-radio-group formControlName="gameProgressStatus">
+                                <div class="radio-button">
+                                  <ng-container *ngFor="let gameProgressStatus of gameProgressStatuses">
+                                    <mat-radio-button class="radio-btn {{device}}" value="{{gameProgressStatus.key}}">{{gameProgressStatus.value}}</mat-radio-button>
+                                  </ng-container>
+                                </div>
+                              </mat-radio-group>
+                            </mat-form-field>
+                          </div>
+                          <div class="flex-team-info">
+                            <mat-form-field class="game-team" appearance="outline" floatLabel="always">
+                              <mat-label>チーム名（左側）</mat-label>
+                              <input matInput placeholder="チームを表から選択" formControlName="opponentTeamName" readonly tabindex="-1">
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" floatLabel="always" [class.disable-input]="formGroup.get(['gameGroupInf', i, 'gameProgressStatus']).value === cns.beforeGame">
+                              <mat-label>得点（左側）</mat-label>
+                              <input type="number" matInput placeholder="1～200の半角数字を入力" formControlName="opponentScore" min="0" max="200" step="1" (keydown)="onScoreCheck($event)"
+                                [readonly]="formGroup.get(['gameGroupInf', i, 'gameProgressStatus']).value === cns.beforeGame" [tabindex]="formGroup.get(['gameGroupInf', i, 'gameProgressStatus']).value === cns.beforeGame ? -1 : 0">
+                              <mat-hint *ngIf="formGroup.get(['gameGroupInf', i, 'gameProgressStatus']).value === cns.beforeGame">{{msg.disableScore}}</mat-hint>
+                            </mat-form-field>
+                          </div>
+                          <div class="flex-team-info">
+                            <mat-form-field class="game-team" appearance="outline" floatLabel="always">
+                              <mat-label>チーム名（上側）</mat-label>
+                              <input matInput placeholder="チームを表から選択" formControlName="criteriaTeamName" readonly tabindex="-1">
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" floatLabel="always" [class.disable-input]="formGroup.get(['gameGroupInf', i, 'gameProgressStatus']).value === cns.beforeGame">
+                              <mat-label>得点（上側）</mat-label>
+                              <input type="number" matInput placeholder="1～200の半角数字を入力" formControlName="criteriaScore" min="0" max="200" step="1" (keydown)="onScoreCheck($event)"
+                                [readonly]="formGroup.get(['gameGroupInf', i, 'gameProgressStatus']).value === cns.beforeGame" [tabindex]="formGroup.get(['gameGroupInf', i, 'gameProgressStatus']).value === cns.beforeGame ? -1 : 0">
+                              <mat-hint *ngIf="formGroup.get(['gameGroupInf', i, 'gameProgressStatus']).value === cns.beforeGame">{{msg.disableScore}}</mat-hint>
+                            </mat-form-field>
+                          </div>
+                        </ng-container>
+                        <ng-template #left>
+                          <div class="game-progress" *ngIf="getGameStartedFlg">
+                            <mat-form-field appearance="outline" floatLabel="always">
+                              <mat-label>試合経過</mat-label>
+                              <input matInput hidden>
+                              <mat-radio-group formControlName="gameProgressStatus">
+                                <div class="radio-button">
+                                  <ng-container *ngFor="let gameProgressStatus of gameProgressStatuses">
+                                    <mat-radio-button class="radio-btn {{device}}" value="{{gameProgressStatus.key}}">{{gameProgressStatus.value}}</mat-radio-button>
+                                  </ng-container>
+                                </div>
+                              </mat-radio-group>
+                            </mat-form-field>
+                          </div>
+                          <div class="flex-team-info">
+                            <mat-form-field class="game-team" appearance="outline" floatLabel="always">
+                              <mat-label>チーム名（左側）</mat-label>
+                              <input matInput placeholder="チームを表から選択" formControlName="criteriaTeamName" readonly tabindex="-1">
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" floatLabel="always" [class.disable-input]="formGroup.get(['gameGroupInf', i, 'gameProgressStatus']).value === cns.beforeGame">
+                              <mat-label>得点（左側）</mat-label>
+                              <input type="number" matInput placeholder="1～200の半角数字を入力" formControlName="criteriaScore" min="0" max="200" step="1" (keydown)="onScoreCheck($event)"
+                                [readonly]="formGroup.get(['gameGroupInf', i, 'gameProgressStatus']).value === cns.beforeGame" [tabindex]="formGroup.get(['gameGroupInf', i, 'gameProgressStatus']).value === cns.beforeGame ? -1 : 0">
+                              <mat-hint *ngIf="formGroup.get(['gameGroupInf', i, 'gameProgressStatus']).value === cns.beforeGame">{{msg.disableScore}}</mat-hint>
+                            </mat-form-field>
+                          </div>
+                          <div class="flex-team-info">
+                            <mat-form-field class="game-team" appearance="outline" floatLabel="always">
+                              <mat-label>チーム名（上側）</mat-label>
+                              <input matInput placeholder="チームを表から選択" formControlName="opponentTeamName" readonly tabindex="-1">
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" floatLabel="always" [class.disable-input]="formGroup.get(['gameGroupInf', i, 'gameProgressStatus']).value === cns.beforeGame">
+                              <mat-label>得点（上側）</mat-label>
+                              <input type="number" matInput placeholder="1～200の半角数字を入力" formControlName="opponentScore" min="0" max="200" step="1" (keydown)="onScoreCheck($event)"
+                                [readonly]="formGroup.get(['gameGroupInf', i, 'gameProgressStatus']).value === cns.beforeGame" [tabindex]="formGroup.get(['gameGroupInf', i, 'gameProgressStatus']).value === cns.beforeGame ? -1 : 0">
+                              <mat-hint *ngIf="formGroup.get(['gameGroupInf', i, 'gameProgressStatus']).value === cns.beforeGame">{{msg.disableScore}}</mat-hint>
+                            </mat-form-field>
+                          </div>
+                        </ng-template>
+                        <mat-form-field appearance="outline" floatLabel="always">
+                          <mat-label>場所</mat-label>
+                          <input matInput formControlName="gamePlace" placeholder="例）横浜会場Aコート" maxLength='50'>
+                          <mat-hint>{{msg.wordMaxChkErr.replace('※1','50')}}</mat-hint>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" floatLabel="always">
+                          <mat-label>試合開始日時</mat-label>
+                          <mat-form-field>
+                            <mat-label>年月日</mat-label>
+                            <input class="game-start-date" matInput placeholder="YYYY/MM/DD" [matDatepicker]="picker1" formControlName="gameDate" readonly tabindex="-1" (click)="picker1.open()">
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>
+                          </mat-form-field>
+                          <div class="flex">
+                            <mat-form-field>
+                              <mat-label>時</mat-label>
+                              <mat-select formControlName="startTimeHour" (selectionChange)="setTimeTouchedFlg(i)">
+                                <mat-option *ngFor="let hour of timeHour | keyvalue" [value]="hour.value">{{hour.key}}</mat-option>
+                              </mat-select>
+                              <mat-error *ngIf="getgameGroupInf.at(i).get('startTimeHour').hasError('hourMissing')">{{msg.unselectGeneralErr}}</mat-error>
+                            </mat-form-field>
+                            <span class="semicolon"> : </span>
+                            <mat-form-field>
+                              <mat-label>分</mat-label>
+                              <mat-select formControlName="startTimeMinute" (selectionChange)="setTimeTouchedFlg(i)">
+                                <mat-option *ngFor="let minute of timeMinute | keyvalue" [value]="minute.value">{{minute.key}}</mat-option>
+                              </mat-select>
+                              <mat-error *ngIf="getgameGroupInf.at(i).get('startTimeMinute').hasError('minuteMissing')">{{msg.unselectGeneralErr}}</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </mat-form-field>
+                      </ng-container>
+                    </ng-container>
+                  </ng-container>
+                </div>
+              </ng-container>
+            </ng-container>
+          </form>
+        </mat-card>
+      </div>
+      <!-- 戻る／登録・更新ボタン -->
+      <ng-container>
+        <div class="both-button">
+          <button class="back-button" mat-raised-button color="basic" type="button" (click)="onClickBack()">戻る</button>
+          <button class="reg-and-update" mat-raised-button type="button" (click)="newGameFlg ? onClickReg() : onClickUpdate()"
+            [disabled]="formGroup.invalid || canDeactive()" [class.active-button]="!formGroup.invalid && !canDeactive()">
+            <mat-icon>done</mat-icon>{{newGameFlg ? '登録' : '更新'}}
+          </button>
+        </div>
+      </ng-container>
+    </mat-card-content>
+  </ng-container>
+  <ng-template #onlyView>
+    <!-- *ngIf="leagueData"は本来の用途ではなく、親コンポーネントのconstructorとngOnInitの後に子コンポーネントのngOnInitの処理がされるよう順番を担保する為に記載 -->
+    <app-competition-common-league *ngIf="leagueData" [leagueData]="leagueData">
+    </app-competition-common-league>
+    <div class="both-button">
+      <ng-container>
+        <button class="back-button" mat-raised-button color="basic" type="button" (click)="onClickBack()">戻る</button>
+      </ng-container>
+    </div>
+  </ng-template>
+</mat-card>

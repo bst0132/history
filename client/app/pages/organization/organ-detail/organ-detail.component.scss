@@ -1,0 +1,172 @@
+@import '../../../../mylib/var';
+@import '../../../../mylib/mixin';
+@import '../../../../mylib/function';
+
+// 真ん中に配置されたベースのカードのスタイル
+.base-card {
+  @include base-card;
+}
+
+// タイトル用ツールバー
+.title-toolbar {
+  @include title-toolbar;
+  @include flex-style($justify: flex-end);
+  pointer-events: none;
+  a, button {
+    pointer-events: auto;
+  }
+  span {
+    margin-right: auto;
+  }
+  a {
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-right: 5px;
+    transition: 0.1s;
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+  button {
+    @include edit-button;
+  }
+}
+
+// 項目ごとのカードのまとまり部分のスタイル
+.card {
+  @include card;
+}
+
+// 項目タイトル用ツールバー
+.contents-toolbar {
+  @include contents-toolbar;
+}
+
+// 項目ごとのカードの白い部分のスタイル
+.contents-card {
+  @include contents-card;
+}
+
+// 団体のプロフィールの部分のスタイル
+.information {
+  @include flex-style($direction: column, $justify: space-evenly, $align: center);
+  @media (min-width: $media-tb) {
+    flex-direction: row;
+  }
+}
+
+// 団体のプロフィールテキスト部分のスタイル
+.text-area {
+  text-align: center;
+  padding: 20px;
+  @media (min-width: $media-tb) {
+    margin-top: 0;
+    width: 50%;
+    text-align: left;
+  }
+}
+
+.item {
+  text-align: left;
+  list-style-type: none;
+  padding-inline-start: 10px;
+  @media (min-width: $media-tb) {
+    display: table-row;
+  }
+}
+
+// 団体名のスタイル
+.organ-name {
+  border-bottom: solid 2px $parts-yellow;
+  font-weight: bold;
+}
+
+.item-list {
+  width: 280px;
+  display: inline-block;
+  overflow-wrap: break-word;
+  @media (min-width: $media-tb) {
+    width: auto;
+  }
+}
+
+// 項目名のスタイリング
+.item-name {
+  font-weight: bold;
+  &:before {
+    content: '';
+    @include size($width: 0, $height: 0);
+    display: inline-block;
+    border: 6px solid transparent;
+    border-left-color: #000;
+  }
+  @media (min-width: $media-tb) {
+    display: table-cell;
+    min-width: 100px;
+  }
+}
+
+// 団体のプロフィールの詳細部分スタイル
+@media (min-width: $media-tb) {
+  .item-contents {
+    display: table-cell;
+    text-align: left;
+    padding-left: 10px;
+  }
+}
+
+// スマホ版大会カードリストのスタイル
+.list-card {
+  padding: 10px 15px;
+  margin: 10px;
+  background-color: $back-color;
+  height: 80px;
+}
+
+.list-card-contents {
+  @include flex-style($align: center);
+  height: 100%;
+}
+
+// 大会カードリストの画像エリアのスタイル
+.avatar-area {
+  @include size($width: 80px, $height: 80px);
+  cursor: pointer;
+  .image {
+    @include size($width: 200px, $height: 200px);
+    border-radius: 5px;
+    overflow: hidden;
+    transform: scale(scaleCalc(80)) translate(-150px, -150px);
+  }
+  .no-image {
+    @include size($width: 80px, $height: 80px);
+    img {
+      width: 100%;
+      border-radius: 5px;
+    }
+  }
+}
+
+// 大会カードリストの内容のスタイリング
+.comp-name {
+  width: 100%;
+  margin-left: 5px;
+  .name {
+    font-weight: bold;
+  }
+  .intro {
+    @media (max-width: 350px) {
+      display: none;
+    }
+  }
+}
+
+// 大会一覧大会方式のスタイリング
+.line-break {
+  white-space: pre-line;
+}
+
+// 戻るボタンのスタイル
+.footer-button-area {
+  @include back-button;
+}

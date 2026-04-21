@@ -1,0 +1,105 @@
+<div class="content">
+  <mat-toolbar class="title-toolbar">
+    <span >メールアドレス変更</span>
+  </mat-toolbar>
+  <mat-card class="base-card">
+    <mat-card-content>
+      <div class="card">
+        <mat-card class="contents-card">
+          <mat-card-content>
+            <mat-horizontal-stepper labelPosition="bottom" #stepper appDisableStepperFocus>
+              <!-- メールアドレス入力画面 -->
+              <mat-step [completed]="false">
+                <ng-template matStepLabel>メールアドレス<br>入力</ng-template>
+                <p class="text">登録する新しいメールアドレスをご入力のうえ、『次へ』ボタンを押してください。<br>
+                認証コードが記載されたメールが送信されます。</p>
+                <p class="mail-config">※ 「no-reply&#64;sportshist.com」からのメールを受け取れるように設定してください。</p>
+                <form [formGroup]="mailFormGroup">
+                  <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker required>
+                    <mat-label>メールアドレス<span class="required">(必須)</span></mat-label>
+                    <input matInput type="text" formControlName="email" placeholder="xxxxx@xxx.com" maxLength='100' required>
+                    <mat-error *ngIf="mailFormGroup.get('email').hasError('required')">{{msg.noenteredErr.replace('※1','メールアドレス')}}</mat-error>
+                    <mat-error *ngIf="mailFormGroup.get('email').hasError('pattern')">{{msg.formatChkErr.replace('※1','メールアドレス形式')}}</mat-error>
+                    <mat-hint>{{msg.wordMaxChkErr.replace('※1','100')}}</mat-hint>
+                  </mat-form-field>
+                  <br>
+                  <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker required>
+                    <mat-label>メールアドレス※確認用<span class="required">(必須)</span></mat-label>
+                    <input matInput type="text" formControlName="confirmEmail" placeholder="xxxxx@xxx.com" maxLength='100' required>
+                    <mat-error *ngIf="mailFormGroup.get('confirmEmail').hasError('required')">{{msg.noenteredErr.replace('※1','メールアドレス※確認用')}}</mat-error>
+                    <mat-error *ngIf="mailFormGroup.get('confirmEmail').hasError('pattern')">{{msg.formatChkErr.replace('※1','メールアドレス形式')}}</mat-error>
+                    <mat-hint>{{msg.wordMaxChkErr.replace('※1','100')}}</mat-hint>
+                  </mat-form-field>
+                  <mat-error *ngIf="mailFormGroup.hasError('email-unmatch')">{{msg.mismatchErr.replace('※1','メールアドレス')}}</mat-error>
+                  <div class="submit-button">
+                    <button mat-raised-button class="focus" type="button" (click)="onClickSendAuthCode(stepper)" [disabled]="mailFormGroup.invalid" [class.active-button]="!mailFormGroup.invalid">
+                      次へ</button>
+                  </div>
+                </form>
+              </mat-step>
+              <!-- 認証コード入力画面 -->
+              <mat-step [completed]="false">
+                <ng-template matStepLabel>認証コード<br>入力</ng-template>
+                <p class="text">新しいメールアドレス宛に認証コードが記載されたメールを送信しました。<br>
+                  メール本文内の認証コードを以下のフォームにご入力のうえ、『次へ』ボタンを押してください。<br>
+                  ※認証コードの有効期限は{{ cns.expirationMinutes }}分です。</p>
+                <form [formGroup]="authCodeFormGroup">
+                  <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker required>
+                    <mat-label>認証コード<span class="required">(必須)</span></mat-label>
+                    <input matInput type="text" formControlName="authCode" placeholder="6桁の認証コードを入力してください" maxLength='6' required>
+                    <mat-error *ngIf="authCodeFormGroup.get('authCode').hasError('required')">{{msg.noenteredErr.replace('※1','認証コード')}}</mat-error>
+                    <mat-error *ngIf="authCodeFormGroup.get('authCode').hasError('pattern')">{{msg.formatChkErr.replace('※1','認証コード形式')}}</mat-error>
+                  </mat-form-field>
+                  <div class="submit-button">
+                    <button mat-raised-button class="focus" type="button" (click)="onClickCheckAuthCode(stepper)" [disabled]="authCodeFormGroup.invalid" [class.active-button]="!authCodeFormGroup.invalid">
+                      次へ
+                    </button>
+                  </div>
+                  <div class="cancel-button">
+                    <button mat-raised-button type="button" (click)="navigateProfileDetail()">キャンセル</button>
+                  </div>
+                  <app-not-receive-mail></app-not-receive-mail>
+                </form>
+              </mat-step>
+              <!-- メールアドレス変更確認画面 -->
+              <mat-step [completed]="false">
+                <ng-template matStepLabel>メールアドレス<br>変更確認</ng-template>
+                <p class="text">メールアドレスを変更します。<br>
+                  下記の内容が正しければ『変更』ボタンを押してください。</p>
+                <div class="compare-mail-add text">
+                  <div>
+                    <p>●変更前のメールアドレス</p>
+                    <p class="mailadd">{{oldEmailAdd}}</p>
+                  </div>
+                  <div>
+                    <p>●変更後のメールアドレス</p>
+                    <p class="mailadd">{{newEmailAdd}}</p>
+                  </div>
+                </div>
+                <div class="submit-button">
+                  <button class="active-button focus" mat-raised-button type="button" (click)="onClickEditEmail(stepper)">
+                    <mat-icon>cached</mat-icon>変更
+                  </button>
+                </div>
+                <div class="cancel-button">
+                  <button mat-raised-button type="button" (click)="navigateProfileDetail()">キャンセル</button>
+                </div>
+              </mat-step>
+              <!-- 完了画面 -->
+              <mat-step>
+                <ng-template matStepLabel>完了</ng-template>
+                <div class="image">
+                  <img [src]="'assets/images/check_icon.png'">
+                  <p>メールアドレスの変更が完了しました。</p>
+                </div>
+                <div class="submit-button">
+                  <button class="active-button focus" mat-raised-button type="button" (click)="navigateProfileDetail()">マイページへ</button>
+                </div>
+              </mat-step>
+            </mat-horizontal-stepper>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

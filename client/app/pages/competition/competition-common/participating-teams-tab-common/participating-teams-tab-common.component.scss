@@ -1,0 +1,160 @@
+@import '../../../../../mylib/var';
+@import '../../../../../mylib/mixin';
+
+// タブ毎のカードスタイル
+.contents-card {
+  @include contents-card;
+  // 参加チームタブ チーム追加ボタン
+  .flex-button {
+    display: flex;
+    &.sp {
+      display: block;
+    }
+    // 追加ボタン共通スタイル
+    .add-team-button {
+      font-size: 18px;
+      font-weight: bold;
+      @media (max-width: $media-sp) {
+        font-size: 14px;
+      }
+      display: block;
+      width: 98%;
+      text-align: center;
+      margin: 1em auto;
+      pointer-events: none;
+      a, button {
+        pointer-events: auto;
+      }
+      a {
+        cursor: pointer;
+        margin-right: 5px;
+        transition: 0.1s;
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+      button {
+        @include button-effect;
+        @include focus-visible-button($brightness: 1.5);
+        color: white;
+        @media (max-width: $media-sp) {
+          transform: scale(0.8);
+        }
+      }
+    }
+    // 登録済みチーム追加ボタン
+    .select-button {
+      a {
+        color: $select-color;
+      }
+      button {
+        background-color: $select-color;
+      }
+    }
+    // 未登録チーム追加ボタン
+    .input-button {
+      a {
+        color: $input-color;
+      }
+      button {
+        background-color: $input-color;
+      }
+    }
+  }
+  // 参加チームタブ チーム一覧
+  .team-card {
+    background-color: $basecard-color;
+    // パネル内カードスタイル
+    .team-name-container {
+      @media (min-width: 768px) {
+        @include flex-style($display: grid, $justify: space-evenly);
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0 20px;
+        grid-template-rows: auto;
+      }
+      // チーム名入力ヒント
+      mat-hint {
+        color: $bst-black;
+      }
+    }
+    mat-form-field {
+      width: 100%;
+    }
+    .flex-form {
+      @include flex-style($justify: space-between, $align: center);
+      width: 100%;
+      // input共通スタイル
+      input {
+        width: 92%;
+        font-weight: 500;
+        cursor: default;
+      }
+      // DB登録済みチーム色
+      .select-font {
+        color: rgb(14, 119, 114);
+      }
+      // 未登録チーム色
+      .input-font {
+        color: rgb(218, 95, 57);
+      }
+      button {
+        display: flex;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        &:focus-visible {
+          outline: none;
+          mat-icon {
+            outline: double thick $focus-color;
+            outline-offset: 1px;
+          }
+        }
+      }
+    }
+    .custom-form-field {
+      height: 60px;
+      margin: 15px 0px;
+      border-radius: 5px;
+      overflow: hidden;
+      background-color: $white;
+      @media (max-width: 767px) {
+        margin: 20px 0px;
+      }
+      input {
+        margin-left: 25px;
+        border: none;
+        outline: none;
+        color: $bst-black;
+      }
+    }
+    // 試合選択済みチームアイコン
+    .icon-selected {
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+    }
+    // 削除不可 注記
+    .delete-note {
+      justify-content: flex-end;
+      display: flex;
+      align-items: center;
+      .icon-selected {
+        font-size: 22px;
+        width: 22px;
+      }
+      &.sp {
+        font-size: 12px;
+        .icon-selected {
+          font-size: 17px;
+          width: 17px;
+        }
+      }
+    }
+  }
+}
+
+// 参加チームタブ チーム名枠
+:host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+  background-color: $white;
+  border-radius: 5px;
+}

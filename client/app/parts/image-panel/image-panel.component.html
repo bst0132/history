@@ -1,0 +1,15 @@
+<mat-card class="{{device}}" [ngClass]="{'picture' : mode == 'picture'}">
+  <ng-container *ngIf="!imageInfo?.dataUrl">
+    <div class="no-image">
+        <img [src]="'assets/images/no_image.png'">
+    </div>
+  </ng-container>
+  <ng-container *ngIf="imageInfo?.dataUrl">
+    <div class="image-area">
+      <img  [src]="imageInfo?.dataUrl"[style.transform]="imageInfo?.transform">
+    </div>
+  </ng-container>
+  <div class="text-area">
+    <ng-content></ng-content>
+  </div>
+</mat-card>

@@ -1,0 +1,96 @@
+<div class="content">
+  <mat-card>
+    <mat-card-content>
+      <mat-card *ngIf="compInfo">
+        <mat-card-content>
+
+          <!-- 競技 -->
+          <mat-form-field>
+            <mat-label>競技</mat-label>
+            <input type="text" matInput [value]="compInfo.sports | getSportValue" readonly>
+          </mat-form-field>
+
+          <!-- 大会名 -->
+          <mat-form-field>
+            <mat-label>大会名</mat-label>
+            <input type="text" matInput value={{compInfo?.compName}} readonly>
+          </mat-form-field>
+
+          <!-- 大会ロゴ -->
+          <div class="compInfo-img">
+            <app-image-select [mode]="'show'" [imageInfo]="compInfo.compLogo"></app-image-select>
+          </div>
+
+        </mat-card-content>
+      </mat-card>
+      <form [formGroup]="formGroup">
+
+        <!-- リーグ情報 -->
+        <div class="league-info">
+          <mat-form-field>
+            <mat-label>グループ名称</mat-label>
+            <input matInput formControlName="gameGroupName" readonly>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>参加チーム数</mat-label>
+            <input matInput formControlName="groupPartTeamCnt" readonly>
+          </mat-form-field>
+        </div>
+
+        <!-- リーグ表 -->
+        <div class="scroll-table">
+          <table class="league-table" border="1">
+            <thead>
+              <tr class="table-row">
+                <th class="no-column">NO</th>
+                <td class="team-select">チーム名</td>
+                <ng-container formArrayName="teamList">
+                  <ng-container *ngFor="let index of getTeamList.controls; index as headerNo">
+                      <!-- チーム名のセレクトボックスとリンクするようにformGroupの値を参照 -->
+                      <td class="data-cell">{{getTeamName(formGroup.get('teamList').value[headerNo]) | omitLongSentence: 10: '...'}}</td>
+                  </ng-container>
+                </ng-container>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container formArrayName="teamList">
+                <ng-container *ngFor="let index of getTeamList.controls; index as rowNo">
+                  <tr class="table-row">
+                    <th class="no-column"> {{rowNo + 1}} </th>
+                    <td class="team-select">
+                      <select class="team-select-box" [formControlName]="rowNo">
+                        <option [value]=""></option>
+                        <option *ngFor="let team of teamList" [value]="team.teamID">{{team.teamName}}</option>
+                      </select>
+                      <input type="radio" name="color-button" class="color-button" (change)="changeRowColor($event)" (blur)="removeColor($event)">
+                    </td>
+                    <ng-container *ngFor="let index of arrayNumberLength(formGroup.get('groupPartTeamCnt').value); index as dataNo">
+                      <ng-container *ngIf="rowNo < dataNo">
+                        <td class="game-result data-cell" align="center">
+                          <input type="text" maxlength="2" class="point">
+                          <span> - </span>
+                          <input type="text" maxlength="2" class="point">
+                        </td>
+                      </ng-container>
+                      <ng-container *ngIf="rowNo == dataNo">
+                        <td class="slash data-cell"></td>
+                      </ng-container>
+                      <ng-container *ngIf="rowNo > dataNo">
+                        <td class="hyphen-cell data-cell">-</td>
+                      </ng-container>
+                    </ng-container>
+                  </tr>
+                </ng-container>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+
+      </form>
+    </mat-card-content>
+    <div class="footer-button-area">
+      <button mat-raised-button color="primary" type="button" (click)="onSubmit()">登録</button>
+      <button mat-raised-button color="primary" type="button" (click)="pageBack()">戻る</button>
+    </div>
+  </mat-card>
+</div>

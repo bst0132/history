@@ -1,0 +1,47 @@
+<mat-dialog-content>
+  <form [formGroup]="formGroup">
+    <div class="title-and-cancel">
+      <p>QRコード発行</p>
+      <mat-icon (click)="closeDialog()" (keyup)="onKeyCheck($event)" tabindex="0">clear</mat-icon>
+    </div>
+    <ng-container *ngIf="expiredFlg">
+      <p class="expired-message">前回発行したQRコードの有効期限が切れています。（{{expiredDate}}）<br>再発行してください。</p>
+    </ng-container>
+    <div class="form-and-button">
+      <div class="left">
+        <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker (click)="picker1.open()">
+          <mat-label>有効期限<span class="required">(必須)</span></mat-label>
+          <input matInput [min]="minDate" [max]="maxDate" readonly [matDatepicker]="picker1" formControlName="expirationDate" (ngModelChange)="onDateChange()" tabindex="-1">
+          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="right">
+        <div class="both-button">
+          <button class="create-qrcode" mat-raised-button type="button" (click)="onClickCreateQrcode()"
+            [disabled]="formGroup.invalid || !createPossible" [class.active-button]="!formGroup.invalid && createPossible">
+            <mat-icon>dashboard</mat-icon> {{ data.qrcodeParts ? 'QRコード再発行' : 'QRコード発行' }}
+          </button>
+        </div>
+      </div>
+    </div>
+    <ng-container *ngIf="!createPossible">
+      <div class="qrcode-field">
+        <qrcode (qrCodeURL)="onChangeUrl($event)" [qrdata]="url" [width]="250" [errorCorrectionLevel]="'M'"></qrcode>
+      </div>
+      <div class="url-field">
+        <input class="url" type="text" [value]="url" readonly tabindex="-1">
+        <button type="button" [cdkCopyToClipboard]="url" (cdkCopyToClipboardCopied)="copyMsgDisplay()">URLコピー</button>
+        <p *ngIf="copied" class="copy-message">コピーしました！</p>
+      </div>
+      <div class="both-button">
+        <!-- [download]=""に保存時のファイル名を指定することで、リンクを押すとダウンロードが可能になる -->
+        <a [href]="qrcodeDownloadLink" [download]="data.compName + '_有効期限' + data.qrcodeParts.expirationDate + '.png'" tabindex="-1">
+          <button class="download" mat-raised-button type="button" [class.active-button]="!createPossible">
+            <mat-icon>arrow_downward</mat-icon> ダウンロード
+          </button>
+        </a>
+      </div>
+    </ng-container>
+  </form>
+</mat-dialog-content>

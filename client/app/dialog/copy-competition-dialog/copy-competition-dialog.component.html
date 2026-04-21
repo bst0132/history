@@ -1,0 +1,20 @@
+<mat-dialog-content>
+  <form [formGroup]="formGroup">
+    <div class="title-and-cancel">
+      <p>複製オプションを選択してください</p>
+      <mat-icon [mat-dialog-close]="false" (keyup)="onKeyCheck($event)" tabindex="0">clear</mat-icon>
+    </div>
+    <div class="main-text">
+      <p>※試合の日時と結果、発行したQRコードは複製対象外です</p>
+      <mat-radio-group color="primary" formControlName="copyAll">
+        <mat-radio-button [value]="true" [disabled]="!existGame">試合情報も全て複製する</mat-radio-button>
+        <mat-radio-button [value]="false">試合情報は複製しない</mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <div class="copy-button">
+      <button mat-raised-button type="button" (click)="onClickCopyComp()">
+        <mat-icon>file_copy</mat-icon> 複製
+      </button>
+    </div>
+  </form>
+</mat-dialog-content>

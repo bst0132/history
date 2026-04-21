@@ -1,0 +1,76 @@
+<div class="content">
+
+  <!-- モーダルウインドウの部分 -->
+  <!-- 背景のグレーの部分 -->
+  <div class="mask" [hidden]="!showForm" (click)="closeModal()"></div>
+
+  <!-- ログインモーダルウインドウ -->
+  <section id="modal_edit" [hidden]="!showForm" cdkTrapFocus [cdkTrapFocusAutoCapture]="true" class="form">
+    <!-- 入力フォーム: 使用する入力フォーム設定を適用 -->
+    <form [formGroup]="formGroup" class="edit-form">
+
+      <p class="detail-title">所属開始日の修正</p>
+
+      <!-- 所属開始日 -->
+      <mat-form-field class="form-field" floatLabel="never" hideRequiredMarker>
+        <input matInput readonly placeholder="2020/01/01" [matDatepicker]="pic" formControlName="joinDay" (click)="pic.open()">
+        <mat-datepicker-toggle matSuffix [for]="pic"></mat-datepicker-toggle>
+        <mat-datepicker #pic></mat-datepicker>
+        <mat-error class="required-comment" *ngIf="formGroup.get('joinDay').hasError('required')">{{msg.unselectErr.replace('※1','日付')}}</mat-error>
+      </mat-form-field>
+      <div class="error-comment">
+        <mat-error *ngIf="formGroup.hasError('sameDay')">{{msg.sameErr.replace('※1','修正前の所属開始日')}}</mat-error>
+        <mat-error *ngIf="formGroup.hasError('illegalDay')">{{msg.futureDateConsistencyErr.replace('※1','所属終了日')}}</mat-error>
+      </div>
+
+      <!-- 修正ボタン -->
+      <div class="edit-button">
+        <button mat-raised-button color="primary" type="button" (click)="changeJoinDay()" [disabled]="formGroup.invalid">修正</button>
+      </div>
+
+    </form>
+
+    <!-- 閉じるボタン -->
+    <p (click)="closeModal()" (keyup)="onKeyCheck($event)" class="close-button" tabindex="0">✖</p>
+  </section>
+
+  <mat-card>
+    <mat-card-content>
+      <mat-table [dataSource]="teamHisList">
+        <!-- 競技 -->
+        <ng-container matColumnDef="sports">
+          <mat-header-cell *matHeaderCellDef>競技</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{(row.sports)}}</mat-cell>
+        </ng-container>
+
+        <!-- チーム名 -->
+        <ng-container matColumnDef="teamName">
+          <mat-header-cell *matHeaderCellDef>チーム名</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{(row.teamName)}}</mat-cell>
+        </ng-container>
+
+        <!-- 所属期間 -->
+        <ng-container matColumnDef="teamBelongsPeriod">
+          <mat-header-cell *matHeaderCellDef>
+            所属期間
+            <mat-icon (click)="onClickShowInfo()" (keyup)="onKeyCheck($event)" class="info-icon" tabindex="0">info</mat-icon>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let row" (click)="openForm(row)" (keyup)="onKeyCheck($event)" class="navigate-form" tabindex="0">
+            {{row.teamStartDate | date:'yyyy/MM/dd'}}&nbsp;～&nbsp;
+            {{row.teamEndDate | date:'yyyy/MM/dd'}}
+          </mat-cell>
+        </ng-container>
+
+        <!-- ページ遷移アイコン -->
+        <ng-container matColumnDef="navigateIcon">
+          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            <mat-icon>navigate_next</mat-icon>
+          </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="['sports', 'teamName', 'teamBelongsPeriod', 'navigateIcon']"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: ['sports', 'teamName', 'teamBelongsPeriod', 'navigateIcon']" (click)="navigateTeamDetail(row)" (keyup)="onKeyCheck($event)" class="navigate-form" tabindex="0"></mat-row>
+      </mat-table>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,10 @@
+環境別に設定を変えたい場合
+環境変数　NODE_ENV　を追加し、任意の値を入力する
+
+config/env/{NODE_ENV}.jsonとなるようファイルを作っておき、
+default.jsonから上書きした設定のみ追記する
+
+商用はNODE_ENVにproductionと設定するのがベストらしく
+内部的に処理を最適化することでパフォーマンスの上昇効果がある模様
+
+NODE_ENV productionならconfig/env/production.json

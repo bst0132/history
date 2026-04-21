@@ -1,0 +1,62 @@
+@import '../../../mylib/var';
+@import '../../../mylib/mixin';
+
+// ダイアログ内のスタイル
+mat-dialog-content {
+  white-space: pre-wrap;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 420px;
+  @media (max-width: $media-tb) {
+    width: 65vw;
+  }
+  form {
+    margin: 3px;
+    // タイトルと×ボタンのスタイル
+    .title-and-cancel {
+      justify-content: space-between;
+      display: flex;
+      // タイトル
+      p {
+        font-size: 20px;
+      }
+      // ダイアログ閉じるボタン
+      mat-icon {
+        @include focus-visible-outline-clear($outline-offset: -3px);
+        cursor: pointer;
+        margin-top: -4px;
+        margin-left: 10px;
+        flex-shrink: 0;
+      }
+    }
+    // メイン部分のスタイル
+    .main-text {
+      margin: 22px 1em 40px 1em;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      // ラジオボタンのスタイル
+      mat-radio-group {
+        display: block;
+        margin: 23px 0px;
+        mat-radio-button {
+          display: block;
+          margin: 18px 0px;
+        }
+      }
+    }
+    // 複製ボタンのスタイル
+    .copy-button {
+      display: flex;
+      justify-content: flex-end;
+      margin-right: 5px;
+      button {
+        @include active-button;
+        @include button-effect;
+      }
+    }
+  }
+}
+
+:host ::ng-deep .mat-radio-label-content {
+  margin-left: 5px;
+}

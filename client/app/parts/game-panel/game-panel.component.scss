@@ -1,0 +1,97 @@
+@import '../../../mylib/var';
+@import '../../../mylib/mixin';
+
+mat-card {
+  overflow: hidden;
+  padding: 10px;
+  height: fit-content;
+  transition: 0.3s;
+  position: relative;
+  border-radius: 10px;
+  @media (max-width: $media-tb) {
+    padding: 6px;
+  }
+}
+
+// 全体の配置・サイズ
+.card-contents {
+  height: 100%;
+  width: 100%
+}
+
+// 場所・時間
+.base-info {
+  margin-bottom: 8px;
+  height: 30%;
+  width: 100%;
+  p {
+    margin: 0 auto 0 10px;
+    @media (max-width: $media-sp) {
+      font-size: 10px;
+    }
+    // 場所
+    &.place {
+      text-indent: -3.3em;
+      padding-left: 3.3em;
+      margin-bottom: 4px;
+    }
+  }
+}
+
+// チーム情報欄
+.flex-container {
+  height: 64%;
+  width: 100%;
+  display: grid;
+  gap: 5px;
+  grid-template-columns: 2fr 5fr 1fr 2fr;
+  grid-template-rows: 1fr 1fr;
+  align-items: center;
+  @media (max-width: $media-sp) {
+    span {
+      font-size: 10px;
+    }
+  }
+}
+
+// 画像表示エリア
+.avatar-area {
+  justify-self: center;
+  @include size($width: 50px, $height: 50px);
+  img {
+    @include size($width: 50px, $height: 50px);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  @media (max-width: $media-tb) {
+    @include size($width: 36px, $height: 36px);
+    img {
+      @include size($width: 36px, $height: 36px);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+  }
+}
+
+// 縦線
+.line {
+  grid-column: 3;
+  grid-row: 1 / 3;
+  height: 100%;
+  justify-self: center;
+  mat-divider {
+    height: 80%;
+    transform: translateY(15%);
+  }
+}
+
+// 得点
+.score-area {
+  text-align: center;
+}
+
+// 未登録項目の文字色
+.non-reg {
+  color: rgb(175, 175, 175);
+}
+

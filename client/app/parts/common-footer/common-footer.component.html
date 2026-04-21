@@ -1,0 +1,11 @@
+<ng-container *ngIf="commonService.router.url != '/login'">
+  <div class="footer-link-area">
+    <li (click)="onClickNavigate('companyProfile')" (keyup)="onKeyCheck($event)" tabindex="0">運営会社情報</li>
+    <li (click)="onClickNavigate('privacyPolicy')" (keyup)="onKeyCheck($event)" tabindex="0">個人情報保護方針</li>
+    <li *ngIf="commonService.isLogined" (click)="onClickNavigate('siteMap')" (keyup)="onKeyCheck($event)" tabindex="0">サイトマップ</li>
+    <li (click)="onClickNavigate('termsUse')" (keyup)="onKeyCheck($event)" tabindex="0">利用規約</li>
+  </div>
+  <div class="copy-right">
+    <p>©Sports History Team</p>
+  </div>
+</ng-container>

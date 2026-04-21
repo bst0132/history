@@ -1,0 +1,91 @@
+<div class="content">
+  <mat-card>
+    <!-- ヘッダ -->
+    <mat-card-header>
+        <!-- ヘッダ不要かな？ -->
+    </mat-card-header>
+
+    <mat-card-content>
+        <!-- 検索条件 -->
+        <mat-card>
+            <mat-card-content>
+                <form [formGroup]="formGroup">
+                    <!-- 競技 -->
+                    <mat-form-field>
+                        <mat-label>競技</mat-label>
+                        <mat-select formControlName="sports" required>
+                            <mat-option *ngFor="let item of sportsList" value="{{item.key}}">{{item.value}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="formGroup.get('sports').hasError('required')">{{msg.unselectErr.replace('※1','競技')}}</mat-error>
+                    </mat-form-field>
+                    <!-- 大会名 -->
+                    <mat-form-field>
+                        <mat-label>大会名</mat-label>
+                        <input type="text" matInput formControlName="compName" required>
+                        <mat-error *ngIf="formGroup.get('compName').hasError('required')">{{msg.noenteredErr.replace('※1','大会名')}}</mat-error>
+                    </mat-form-field>
+                    <!-- チーム名 -->
+                    <mat-form-field>
+                        <mat-label>チーム名</mat-label>
+                        <input type="text" matInput formControlName="teamName" />
+                    </mat-form-field>
+                    <!-- 開催年月日 -->
+                    <div>
+                      <mat-form-field class="date">
+                        <mat-label>試合開催日(from)</mat-label>
+                        <input matInput placeholder="2020/01/01" [matDatepicker]="picker1" formControlName="gameDateFrom">
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                      </mat-form-field>
+                      <span class="swangDash"> ～ </span>
+                      <mat-form-field class="date">
+                        <mat-label>試合開催日(to)</mat-label>
+                        <input matInput placeholder="2020/01/01" [matDatepicker]="picker2" formControlName="gameDateTo" [disabled]="!formGroup.get('gameDateFrom').value">
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                      </mat-form-field>
+                      <mat-error *ngIf="formGroup.hasError('gameDateTo-past')">{{msg.dateConsistencyErr.replace('※1','試合開催日(to)').replace('※2','試合開催日(from)')}}</mat-error>
+                      <mat-error *ngIf="formGroup.hasError('gameDateTo-only')">試合開催日(to)のみの入力は出来ません。</mat-error>
+                    </div>
+                </form>
+                <button mat-raised-button color="primary" type="button" (click)="onClickSearch()" [disabled]="formGroup.invalid">検索</button>
+            </mat-card-content>
+        </mat-card>
+
+      <!-- 検索結果 -->
+      <mat-table [dataSource]="gameList">
+        <!-- テーブル設定 -->
+        <mat-header-row *matHeaderRowDef="['compName', 'gameDate', 'gameInf', 'navigateIcon']"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: ['compName', 'gameDate', 'gameInf', 'navigateIcon']" (click)="onClickGameDetail(row)"></mat-row>
+
+        <!-- 大会名 -->
+        <ng-container matColumnDef="compName">
+          <mat-header-cell *matHeaderCellDef>大会名</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.compName}} </mat-cell>
+        </ng-container>
+
+        <!-- 開催日 -->
+        <ng-container matColumnDef="gameDate">
+          <mat-header-cell *matHeaderCellDef>開催日</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.gameDate | date:'yyyy/MM/dd'}} </mat-cell>
+        </ng-container>
+
+        <!-- 試合情報 -->
+        <ng-container matColumnDef="gameInf">
+          <mat-header-cell *matHeaderCellDef>試合情報</mat-header-cell>
+          <mat-cell *matCellDef="let row" class="word-break"> {{row.gameInf}} </mat-cell>
+        </ng-container>
+
+        <!-- ページ遷移アイコン -->
+        <ng-container matColumnDef="navigateIcon">
+          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            <mat-icon>navigate_next</mat-icon>
+          </mat-cell>
+        </ng-container>
+
+      </mat-table>
+
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,317 @@
+@import '../../../../mylib/_var';
+@import '../../../../mylib/mixin';
+
+// カード内全体のスタイル設定
+mat-card {
+  font-weight: bold;
+  background-color: #f0f0f0;
+  padding: 0;
+}
+
+// 画面タイトル画像のスタイル
+.title {
+  position: relative;
+}
+
+.title-image {
+  @include size($width: 100%, $height: 150px);
+  object-fit: cover;
+}
+
+@media (min-width: $media-tb) {
+  .title-image {
+    min-height: 200px;
+    height: 18vh;
+  }
+}
+
+@media (min-width: $media-pc) {
+  .title-image {
+    height: 30vh;
+  }
+}
+
+// 画面タイトル文字のスタイル
+.title-name {
+  @include position($position: absolute, $left: 50%, $top: 50%);
+  transform: translate(-50%,-50%);
+  text-align: center;
+  color: aliceblue;
+}
+
+.eng-title {
+  font-size: calc(2.0rem + ((1vw - 0.3rem) * 1.1538));
+  font-family: 'Arial',sans-serif;
+  letter-spacing: 0.5rem;
+  margin-bottom: 15px;
+}
+
+.jp-title {
+  font-size: calc(1.3rem + ((1vw - 0.3rem) * 1.1538));
+  font-family: YuGothic,'Yu Gothic','ヒラギノ明朝 ProN','Hiragino Mincho ProN',sans-serif;
+  letter-spacing: 0.1em;
+}
+
+// 画面タイトル文字のスタイル(タブレット端末)
+@media (min-width: $media-tb) {
+  .eng-title {
+    font-size: calc(2.1875rem + ((1vw - 5.6px) * 3.2258));
+    letter-spacing: 0.6rem;
+    margin-bottom: 25px;
+  }
+  .jp-title {
+    font-size: calc(1.25rem + ((1vw - 5.6px) * 1.5054));
+  }
+}
+
+// 画面タイトル文字のスタイル(PC)
+@media (min-width: $media-pc) {
+  .eng-title {
+    font-size: 3.4rem;
+    margin-bottom: 30px;
+  }
+  .jp-title {
+    font-size: 1.7rem;
+  }
+}
+
+// 運営会社情報のスタイル
+.company {
+  text-align: center;
+  margin-top: 50px;
+  flex-direction: column;
+  // 会社ロゴのスタイル
+  img {
+    width: 50%;
+  }
+  // 会社名のスタイル
+  .company-name {
+    @include text($fontSize: calc(1.625rem + ((1vw - 3px) * 0.7692)), $textColor:rgb(31, 161, 236));
+    font-family: YuGothic,'Yu Gothic','ヒラギノ明朝 ProN','Hiragino Mincho ProN',sans-serif;
+    letter-spacing: 0.1rem;
+    margin-top: 30px;
+  }
+  // キャッチコピーのスタイル
+  .catch-copy {
+    font-size: calc(1.0625rem + ((1vw - 3px) * 0.3846));
+    font-family: YuGothic,'Yu Gothic','ヒラギノ明朝 ProN','Hiragino Mincho ProN',sans-serif;
+    line-height: 1.8rem;
+    margin-top: 20px;
+  }
+}
+
+// 運営会社情報のスタイル(タブレット端末)
+@media (min-width: $media-tb) {
+  .company {
+    margin-top: 60px;
+    .company-name {
+      font-size: calc(1.875rem + ((1vw - 5.6px) * 1.0753));
+      letter-spacing: 0.2rem;
+    }
+    .catch-copy {
+      font-size: calc(1.1875rem + ((1vw - 5.6px) * 1.0753));
+      line-height: 2.5rem;
+      margin-top: 30px;
+    }
+  }
+}
+
+// 運営会社情報のスタイル(PC)
+@media (min-width: $media-pc) {
+  .company {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    .logo {
+      width: 50%;
+      img {
+        width: 65%;
+      }
+    }
+    .detail-company {
+      width: 50%;
+      position: relative;
+      div {
+        @include position($position: absolute, $left: 42%, $top: 45%);
+        width: 100%;
+        transform: translate(-50%,-50%);
+        .company-name {
+          font-size: calc(2.8rem + ((1vw - 1.025rem) * 2.58064));
+        }
+        .catch-copy {
+          font-size: calc(1.45rem + ((1vw - 1.025rem) * 1.0666));
+          letter-spacing: 0.1em;
+          line-height: 1.8em;
+          margin-top: 25px;
+        }
+      }
+    }
+  }
+}
+
+// 所在地・お問合わせタイトルのスタイル
+.sub-title {
+  text-align: center;
+  margin-top: 60px;
+  margin-bottom: 30px;
+  // 英文タイトルのスタイル
+  .sub-eng-title {
+    font-size: calc(1.9rem + ((1vw - 0.3rem) * 0.7692));
+    font-family: 'Arial',sans-serif;
+    letter-spacing: 0.1em;
+    display: inline;
+    border-bottom: solid 7px #eb4da4;
+  }
+  // 日本語タイトルのスタイル
+  .sub-jp-title {
+    font-size: calc(1.0625rem + ((1vw - 5.6px) * 1.0753));
+    font-family: YuGothic,'Yu Gothic','ヒラギノ明朝 ProN','Hiragino Mincho ProN',sans-serif;
+    letter-spacing: 0.1em;
+    margin-top: 13px;
+  }
+}
+
+// 所在地・お問合わせタイトルのスタイル(タブレット端末)
+@media (min-width: $media-tb) {
+  .sub-title{
+    .sub-eng-title {
+      font-size: calc(1.875rem + ((1vw - 5.6px) * 1.0753));
+    }
+    .sub-jp-title {
+      margin-top: 20px;
+      font-size: calc(1.125rem + ((1vw - 5.6px) * 0.4301));
+    }
+  }
+}
+
+// 所在地・お問合わせタイトルのスタイル(PC)
+@media (min-width: $media-pc) {
+  .sub-title {
+    margin-top: 80px;
+    .sub-eng-title {
+      font-size: calc(2.6rem + ((1vw - 1.025rem) * 1.3333));
+      margin-bottom: 20px;
+    }
+    .sub-jp-title {
+      font-size: calc(1.6rem + ((1vw - 1.025rem) * 1.3333));
+    }
+  }
+}
+
+// 地図の画像と住所のスタイル
+.location {
+  @include size($width: 80%, $height: 80%);
+  text-align: center;
+  margin: 20px auto 0 auto;
+  // 地図画像のスタイル
+  img {
+    @include size($width: 100%, $height: 100%);
+    object-fit: contain;
+    box-shadow: 0px 0px 20px -5px rgba(0, 0, 0, 0.3);
+  }
+  // 住所のスタイル
+  p {
+    font-size: calc(0.6875rem + ((1vw - 3.2px) * 0.4167));
+    font-family: YuGothic,'Yu Gothic','ヒラギノ明朝 ProN','Hiragino Mincho ProN',sans-serif;
+    text-align: left;
+    margin-top: 15px;
+    display: inline-block;
+  }
+}
+
+// 地図の画像と住所のスタイル(タブレット端末)
+@media (min-width: $media-tb) {
+  .location {
+    @include size($width: 65%, $height: 65%);
+    p {
+      font-size: calc(0.6875rem + ((1vw - 5.6px) * 1.2903));
+    }
+  }
+}
+
+// 地図の画像と住所のスタイル(PC)
+@media (min-width: $media-pc) {
+  .location {
+    @include size($width: 55%, $height: 55%);
+    margin-top: 40px;
+    p {
+      font-size: 1.1em;
+      letter-spacing: 0.02em;
+    }
+  }
+}
+
+// お問い合わせのスタイル
+.contact {
+  font-family: 'Arial',sans-serif;
+  width: 67%;
+  margin: 0 auto;
+  display: table;
+  table-layout: fixed;
+  padding-bottom: 50px;
+}
+
+.item {
+  height: 1.8rem;
+  display: table-row;
+}
+
+.item-name {
+  font-size: 0.9rem;
+  width: 33%;
+  display: table-cell;
+  mat-icon {
+    vertical-align: bottom;
+  }
+}
+
+.item-contents {
+  font-size: 0.9rem;
+  width: 67%;
+  display: table-cell;
+  a {
+    @include focus-visible-outline($offset: 4px);
+  }
+}
+
+// お問い合わせのスタイル(タブレット端末)
+@media (min-width: $media-tb) {
+  .contact {
+    width: 60%;
+  }
+  .item {
+    height: 2.0rem;
+  }
+  .item-name {
+    font-size: calc(0.875rem + ((1vw - 5.6px) * 1.0753));
+  }
+  .item-contents {
+    font-size: calc(0.875rem + ((1vw - 5.6px) * 1.0753));
+  }
+}
+
+// お問い合わせのスタイル(PC)
+@media (min-width: $media-pc) {
+  .contact {
+    width: 40%;
+  }
+  .item {
+    height: 2.5rem;
+  }
+  .item-name {
+    font-size: calc(1.1875rem + ((1vw - 10.25px) * 0.2667));
+  }
+  .item-contents {
+    font-size: calc(1.1875rem + ((1vw - 10.25px) * 0.2667));
+    width: 60%;
+  }
+}
+
+// リンクのスタイル
+a {
+  text-decoration: none;
+  color:rgba(0,0,0,.87);
+  &:hover {
+    color: darkblue;
+  }
+}

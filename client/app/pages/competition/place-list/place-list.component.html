@@ -1,0 +1,65 @@
+<div class="content">
+  <mat-card>
+    <mat-card-content>
+
+      <mat-card>
+        <mat-card-content>
+          <form [formGroup]="formGroup">
+
+            <!-- 開催場所名 -->
+            <mat-form-field >
+              <mat-label>開催場所名</mat-label>
+              <input matInput placeholder="横浜小学校 校庭" formControlName="placeName">
+            </mat-form-field>
+
+            <!-- 住所 -->
+            <mat-form-field >
+              <mat-label>住所</mat-label>
+              <input matInput placeholder="神奈川県横浜市西区" formControlName="placeAdd">
+            </mat-form-field>
+
+            <!-- 電話番号 -->
+            <mat-form-field >
+              <mat-label>電話番号</mat-label>
+              <input matInput placeholder="9999-99-9999" formControlName="placeTel">
+            </mat-form-field>
+
+          </form>
+          <button mat-raised-button color="primary" type="button" (click)="onSearch()">検索</button>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-table [dataSource]="placeList">
+        <ng-container matColumnDef="add">
+          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            <ng-container *ngIf="isAdd(row)">
+              <button mat-raised-button color="primary" type="button" disabled>追加済み</button>
+            </ng-container>
+            <ng-container *ngIf="!isAdd(row)">
+              <button mat-raised-button color="primary" type="button" (click)="addPlace(row)">追加</button>
+            </ng-container>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="placeName">
+          <mat-header-cell *matHeaderCellDef>開催場所名</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.placeName}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="placeAdd">
+          <mat-header-cell *matHeaderCellDef>住所</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.placeAdd}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="placeTel">
+          <mat-header-cell *matHeaderCellDef>電話番号</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.placeTel}} </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="['add', 'placeName', 'placeAdd', 'placeTel']"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: ['add', 'placeName', 'placeAdd', 'placeTel']"></mat-row>
+      </mat-table>
+
+      <div class="footer-button-area">
+        <button mat-raised-button color="primary" type="button" (click)="returnManageCompetition()">戻る</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

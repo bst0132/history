@@ -1,0 +1,83 @@
+<!-- 入力フォーム -->
+<mat-dialog-content>
+  <div class="cancel">
+    <mat-icon [mat-dialog-close]="false" (keyup)="onKeyCheck($event)" tabindex="0">clear</mat-icon>
+  </div>
+  <form [formGroup]="formGroup">
+    <mat-form-field appearance="outline" floatLabel="always">
+      <mat-label>開催場所</mat-label>
+      <input matInput maxLength='50' placeholder="横浜" formControlName="gamePlace">
+      <mat-hint>{{msg.wordMaxChkErr.replace('※1', '50')}}</mat-hint>
+    </mat-form-field>
+    <mat-form-field appearance="outline" floatLabel="always">
+      <mat-label>試合開始日時</mat-label>
+      <mat-form-field>
+        <mat-label>年月日</mat-label>
+        <input matInput readonly placeholder="YYYY/MM/DD" [matDatepicker]="picker1" formControlName="gameDate" tabindex="-1" (click)="picker1.open()">
+        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+      </mat-form-field>
+      <div class="flex">
+        <mat-form-field>
+          <mat-label>時</mat-label>
+          <mat-select formControlName="startTimeHour" (selectionChange)="setTimeTouchedFlg()">
+            <mat-option *ngFor="let hour of timeHour | keyvalue" [value]="hour.value">{{hour.key}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="formGroup.get('startTimeHour').hasError('hourMissing')">{{msg.unselectGeneralErr}}</mat-error>
+        </mat-form-field>
+        <span class="semicolon"> : </span>
+        <mat-form-field>
+          <mat-label>分</mat-label>
+          <mat-select formControlName="startTimeMinute" (selectionChange)="setTimeTouchedFlg()">
+            <mat-option *ngFor="let minute of timeMinute | keyvalue" [value]="minute.value">{{minute.key}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="formGroup.get('startTimeMinute').hasError('minuteMissing')">{{msg.unselectGeneralErr}}</mat-error>
+        </mat-form-field>
+      </div>
+    </mat-form-field>
+    <div class="game-progress" *ngIf="gameStartedFlg">
+      <mat-form-field appearance="outline" floatLabel="always">
+        <mat-label>試合経過</mat-label>
+        <input matInput hidden>
+        <mat-radio-group formControlName="gameProgressStatus" (change)="onChangeProgress()">
+          <div class="radio-button">
+            <ng-container *ngFor="let gameProgressStatus of gameProgressStatuses">
+              <mat-radio-button class="radio-btn" [value]="gameProgressStatus.key">{{gameProgressStatus.value}}</mat-radio-button>
+            </ng-container>
+          </div>
+        </mat-radio-group>
+      </mat-form-field>
+    </div>
+    <mat-form-field appearance="outline" floatLabel="always" [class.disable-input]="beforeGameFlg">
+      <mat-label>上側チーム点数</mat-label>
+      <input matInput type="number" min="0" max="200" placeholder="1~200の半角数字を入力" formControlName="criteriaScore" (keydown)="onScoreCheck($event)" [readonly]="beforeGameFlg" [tabindex]="beforeGameFlg ? -1 : 0">
+    </mat-form-field>
+    <mat-form-field appearance="outline" floatLabel="always" [class.disable-input]="beforeGameFlg">
+      <mat-label>下側チーム点数</mat-label>
+      <input matInput type="number" min="0" max="200" placeholder="1~200の半角数字を入力" formControlName="opponentScore" (keydown)="onScoreCheck($event)" [readonly]="beforeGameFlg" [tabindex]="beforeGameFlg ? -1 : 0">
+      <mat-hint *ngIf="beforeGameFlg">{{msg.disableScore}}</mat-hint>
+    </mat-form-field>
+    <ng-container *ngIf="formGroup.get('criteriaScore').value === formGroup.get('opponentScore').value && !(formGroup.get('criteriaScore').value === null && formGroup.get('opponentScore').value === null) && formGroup.get('gameProgressStatus').value === cns.afterGame">
+      <mat-form-field appearance="outline" floatLabel="always">
+        <mat-label>勝利チーム設定</mat-label>
+        <input matInput readonly tabindex="-1">
+        <mat-radio-group color="primary" formControlName="criteriaWinFlg">
+          <div class="radio-buttons">
+            <mat-radio-button class="radio-btn" [value]="true">上側チーム</mat-radio-button>
+            <mat-radio-button class="radio-btn" [value]="false">下側チーム</mat-radio-button>
+          </div>
+        </mat-radio-group>
+      </mat-form-field>
+      <mat-form-field appearance="outline" floatLabel="always">
+        <mat-label>試合詳細</mat-label>
+        <textarea matInput maxLength='50' placeholder="延長戦同点でPK戦実施" formControlName="freeText"></textarea>
+        <mat-hint>{{msg.wordMaxChkErr.replace('※1', '50')}}</mat-hint>
+      </mat-form-field>
+    </ng-container>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions class="set-button">
+  <button mat-raised-button color="primary" type="button" (click)="editGameData()" [disabled]="formGroup.invalid">
+    設定
+  </button>
+</mat-dialog-actions>

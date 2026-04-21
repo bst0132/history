@@ -1,0 +1,286 @@
+@import '../../../../mylib/var';
+@import '../../../../mylib/mixin';
+
+// ページタイトル用ツールバー
+.title-toolbar {
+  @include title-toolbar;
+}
+
+// 真ん中に配置されたベースのカードのスタイル
+.base-card {
+  @include base-card;
+
+  // 戻る・登録・更新ボタンの共通スタイル
+  .both-button {
+    @include flex-style($justify: space-between);
+    bottom: 20px;
+
+    // 戻るボタンのスタイル
+    .back-button {
+      @include back-button;
+      @include button-effect;
+    }
+
+    // 登録・更新ボタンのスタイル
+    .reg-and-update {
+      @include update-button;
+      margin-top: 20px;
+      margin-right: 8px;
+      padding: 0 16px;
+      @media (min-width: $media-tb) {
+        margin-right: 15px;
+      }
+      @media (min-width: $media-pc) {
+        margin-right: 20px;
+      }
+    }
+    .active-button {
+      @include active-button;
+    }
+  }
+}
+
+// カードのまとまり部分のスタイル
+.card {
+  @include card;
+}
+
+// カードのスタイル
+.contents-card {
+  @include contents-card;
+  overflow: auto;
+
+  // メインの白いカードのスタイル
+  &.radius {
+    border-radius: 5px;
+  }
+
+  // 不活性要素のスタイル
+  .inert-element {
+    pointer-events: none;
+  }
+}
+
+// フォームのスタイリング
+mat-form-field {
+  width: 100%;
+  margin-bottom: 10px;
+  .required {
+    color: $required-color;
+  }
+  // リーグ情報のスタイル
+  &.league-info {
+    width: 50%;
+  }
+  .game-start-date {
+    cursor: pointer;
+  }
+}
+
+.flexible-area {
+  @include flex-style($display: flex, $justify: space-between);
+  &.sp {
+    @include flex-style($display: flex, $direction: column);
+  }
+  .table-info {
+    margin-bottom: 5px;
+    // 非活性時のメッセージ・試合開始ボタンのスタイル
+    .game-start {
+      max-width: 140px;
+      text-align: right;
+      // 試合開始ボタン非活性時のメッセージ
+      .disable-start-message {
+        font-size: 80%;
+        line-height: 1.3;
+        margin-bottom: 5px;
+      }
+      // 試合開始ボタン
+      .game-start-button {
+        min-width: 120px;
+        @include button-effect;
+        padding: 0 16px;
+        &.active-button{
+          @include active-button
+        }
+        &.sp {
+          height: 5%;
+        }
+      }
+    }
+    &.pc {
+      align-self: flex-end;
+    }
+    &.sp {
+      @include flex-style($display: flex, $justify: space-between);
+      align-items: flex-end;
+    }
+  }
+}
+
+// テーブルのスタイル
+.scroll-table {
+  display: block;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  max-height: 250px;
+  @media (min-width: 380px) {
+    max-height: 350px;
+  }
+  .cell-check {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: none;
+    th {
+      padding: 10px;
+      border: solid 1px #ffffff;
+      background: #c7c7c7;
+      color: #000000;
+      table-layout: fixed;
+      &.point-details {
+        min-width: 42px;
+      }
+    }
+    td {
+      padding: 10px;
+      border: solid 1px #c7c7c7;
+      &.detail-numbers {
+        text-align: center;
+        &.rank:hover {
+          cursor: pointer;
+          border: solid;
+        }
+        mat-select {
+          @include focus-visible-outline;
+        }
+      }
+    }
+    // リーグ表内スクロール時の機能用スタイル
+    .table-row th {
+      position: sticky;
+      position: -webkit-sticky;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      &.upper-left {
+        z-index: 2;
+      }
+    }
+    .data-cell {
+      min-width: 110px;
+      word-break: break-all;
+      white-space: pre-wrap;
+      text-align: center;
+      &.game-result {
+        height: 40px;
+        @include focus-visible-outline($offset: -7px);
+        &:hover {
+          cursor: pointer;
+          border: solid;
+        }
+        &.selected-cell {
+          border: solid;
+          border-width: medium;
+          border-color: red;
+        }
+      }
+      // 表内の試合情報のないセル
+      &.slash {
+        background-image: linear-gradient(to top right, transparent 49%, grey 49%, grey 51%, transparent 51%, transparent);
+      }
+      // 読み取り専用のチームタイトル欄
+      .readonly-team {
+        text-overflow: ellipsis;
+        &:hover {
+          cursor: default;
+        }
+      }
+      // チーム選択セル
+      &.select-team-cell {
+        max-width: 130px;
+        cursor: default !important;
+        mat-select {
+          @include focus-visible-outline;
+        }
+      }
+    }
+  }
+}
+
+// チーム選択の矢印
+:host ::ng-deep .mat-select-arrow {
+  color: black;
+}
+
+// 開始予定時間・得点の横並びスタイル
+.flex {
+  @include flex-style($display: flex, $justify: space-between);
+  .mat-form-field {
+    width: 48%;
+  }
+  .semicolon {
+    margin: 20px 5px;
+  }
+  input,span {
+    cursor: pointer;
+  }
+}
+
+// 点数表示部分のカーソル
+.score-area:hover {
+  cursor: pointer;
+}
+
+// 表のセルを押下後に表示されるフォームのまとまり
+.input-form {
+  margin-top: 40px;
+  // チーム名・得点入力欄の横並びスタイル
+  .flex-team-info {
+    @media (min-width: $media-sp) {
+      @include flex-style($display: flex, $justify: space-between);
+      mat-form-field {
+        width: 48%;
+        // 得点入力フォーム、編集不可の際のスタイル
+        &.disable-input {
+          pointer-events: none;
+          :not(mat-hint) {
+            opacity: 0.5;
+          }
+        }
+      }
+    }
+    .game-team {
+      pointer-events: none;
+    }
+  }
+  .game-progress {
+    .radio-btn{
+      padding: 0 20px;
+      &.sp{
+        display: flex;
+        padding: 1% 0;
+      }
+    }
+  }
+}
+
+// タブフォーカス時の枠線のスタイリング
+::ng-deep .mat-datepicker-toggle button:focus-visible {
+  @include focus-visible-outline;
+}
+
+.control {
+  @include flex-style($justify: space-between);
+
+  // 削除ボタンのスタイル
+  .del-button {
+    @include button-effect;
+    @include active-button;
+    height: 5%;
+    padding: 0 16px;
+  }
+}
+::ng-deep .custom-tooltip {
+  transform: translateY(25px) !important;
+}

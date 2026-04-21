@@ -1,0 +1,59 @@
+<mat-card class="contents-card">
+  <ng-container *ngIf="!canEdit && !getTeamInfo.length">
+    <p>参加チーム情報はございません。</p>
+  </ng-container>
+  <ng-container *ngIf="canEdit">
+    <div class="flex-button {{device}}">
+      <span class="add-team-button select-button" (click)="onClickSelectTeam()">
+        <a>登録済みチームを追加</a>
+        <button mat-icon-button type="button"><mat-icon>add</mat-icon></button>
+      </span>
+      <span class="add-team-button input-button" (click)="onClickInputTeam()">
+        <a>チームを入力して追加</a>
+        <button mat-icon-button type="button"><mat-icon>add</mat-icon></button>
+      </span>
+    </div>
+  </ng-container>
+  <!-- 追加済みチーム一覧 -->
+  <ng-container *ngIf="getTeamInfo.length">
+    <mat-card class="team-card">
+      <form [formGroup]="formGroup">
+        <div formArrayName="teamInfo" class="team-name-container">
+          <ng-container *ngFor="let team of getTeamInfo?.controls; let i = index" [formGroupName]="i">
+            <ng-container *ngIf="!canEdit">
+              <div class="flex-form custom-form-field">
+                <input matInput formControlName="teamName" readonly [matTooltip]="team?.get('teamName')?.value" matTooltipPosition="above" tabindex="-1">
+              </div>
+            </ng-container>
+            <ng-container *ngIf="canEdit">
+              <mat-form-field appearance="outline" hideRequiredMarker>
+                <div class="flex-form" [matTooltip]="team?.get('teamName')?.value" matTooltipPosition="above">
+                  <div *ngIf="team?.get('isSelected')?.value">
+                    <mat-icon matSuff class="icon-selected">stars</mat-icon>
+                  </div>
+                  <input matInput formControlName="teamName" placeholder="チーム名" maxLength='50' readonly
+                    [ngClass]="{'select-font': team?.get('isRegTeam')?.value, 'input-font': !team?.get('isRegTeam')?.value}"
+                    [ngStyle]="{'margin-left.px': team?.get('isSelected')?.value ? 0 : 22}" required tabindex="-1">
+                  <!-- 編集・削除アイコン表示 -->
+                  <div *ngIf="!team?.get('isRegTeam')?.value" (click)="onClickEditTeam(team?.value)">
+                    <button type="button">
+                      <mat-icon matSuff>edit</mat-icon>
+                    </button>
+                  </div>
+                  <div (click)="onDelTeam(team?.value)">
+                    <button type="button" [disabled]="team?.get('isSelected')?.value">
+                      <mat-icon matSuff>delete_outline</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </mat-form-field>
+            </ng-container>
+          </ng-container>
+        </div>
+      </form>
+      <ng-container *ngIf="canEdit">
+        <p class="delete-note {{device}}"><mat-icon class="icon-selected">stars</mat-icon>：試合で選択済みのチーム（削除不可）</p>
+      </ng-container>
+    </mat-card>
+  </ng-container>
+</mat-card>

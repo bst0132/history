@@ -1,0 +1,89 @@
+@import '../mylib/var';
+@import '../mylib/mixin';
+
+mat-sidenav-container {
+  height: 100%;
+}
+
+mat-sidenav {
+  background-color: gray;
+  color: white;
+  .mat-menu-item {
+    @include size($width: 100%, $height: 48px);
+    @include focus-visible-outline($offset: -5pt);
+    max-width: 100%;
+    line-height: 48px;
+    text-indent: 1em;
+    text-align: left;
+    text-decoration: none;
+    color: inherit;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    outline: none;
+    border: none;
+    -webkit-tap-highlight-color: transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    padding: 0 16px;
+    position: relative;
+    cursor: pointer;
+  }
+  .page-name {
+    text-indent: 1em;
+    h3 {
+      margin: 16px 0 0 0;
+      font-weight: bolder;
+    }
+    :disabled {
+      color: silver;
+    }
+  }
+}
+
+mat-sidenav.sp {
+  width: 100%;
+}
+
+mat-sidenav.pc {
+  width: 30%;
+}
+
+.content {
+  &.pc {
+    // PCは70％の領域で画面表示を行う
+    width: 70%;
+    margin: auto;
+    margin-top: 60px;
+    // TB(1025pxまで)は100％の領域で画面表示を行う
+    @media (max-width: $media-pc) {
+      width: 100%;
+    }
+  }
+
+  &.sp {
+    width: 100%;
+    margin-top: 60px;
+  }
+}
+
+mat-sidenav-content {
+  @include flex-style($direction: column);
+  min-height: 100vh;
+}
+
+app-common-footer {
+  margin-top: auto;
+  width: 100%;
+}
+
+.header-blank-area-menu{
+  margin-top: 60px;
+}
+
+.mat-header-row {
+  border-style: none;
+}

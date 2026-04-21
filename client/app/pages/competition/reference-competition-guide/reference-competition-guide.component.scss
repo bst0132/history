@@ -1,0 +1,56 @@
+@import '../../../../mylib/var';
+@import '../../../../mylib/mixin';
+
+// タイトル用ツールバー
+.title-toolbar {
+  @include title-toolbar;
+  @include flex-style($justify: flex-end);
+  span {
+    margin-right: auto;
+  }
+}
+
+// 真ん中に配置されたベースのカードのスタイル
+.base-card {
+  @include base-card;
+  // カードのマージン
+  .card {
+    @include card;
+  }
+}
+
+// 以下タブ関連スタイリング
+mat-tab-group {
+  background-color: $basecard-color;
+}
+// タブ：背景色と文字色の設定
+:host ::ng-deep .mat-tab-label {
+  background-color: $contentsbar-color;
+  color: white;
+  height: 50px;
+  border-radius: 10px 10px 0 0;
+}
+// タブ：レスポンシブ対応用スタイル
+:host ::ng-deep .mat-tab-label,
+:host ::ng-deep .mat-tab-label-active {
+  min-width: 0 !important;
+  @include focus-visible-outline($offset: -7px);
+}
+// タブ：角の設定
+:host ::ng-deep .mat-tab-header {
+  @media (max-width: $media-tb) {
+    .mat-tab-label-container {
+      display: inline;
+    }
+  }
+}
+// タブ：選択中の設定
+:host ::ng-deep .mat-tab-label-active {
+  background-color: #151c24 !important;
+  opacity: 1 !important;
+  color: $parts-yellow;
+}
+// タブ：ページネーション非表示設定
+:host ::ng-deep .mat-tab-header-pagination {
+  display: none !important;
+}

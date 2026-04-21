@@ -1,0 +1,22 @@
+<!-- 入力フォーム -->
+<mat-dialog-content>
+  <div class="cancel">
+    <mat-icon (click)="closeDialog()" (keyup)="onKeyCheck($event)" tabindex="0">clear</mat-icon>
+  </div>
+  <form [formGroup]="formGroup">
+    <ng-container>
+      <mat-form-field appearance="outline" floatLabel="always">
+        <mat-label>チーム名</mat-label>
+        <mat-select (selectionChange)="editTeamName()" formControlName="recordId"
+        [placeholder]="(!teams || teams.length === 0) ? '参加チームタブからチームを登録してください' : 'チームを選択してください'">
+          <mat-option *ngFor="let Team of teams" [value]="Team.recordId">
+            {{Team.joinTeamName}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div class="nonparticipation">
+        <button mat-raised-button color="primary" type="button" [disabled]="inputData.noEntry" (click)="onClickNoEntry()">不参加</button>
+      </div>
+    </ng-container>
+  </form>
+</mat-dialog-content>
