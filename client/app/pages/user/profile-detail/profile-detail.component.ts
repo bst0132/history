@@ -14,6 +14,11 @@ import { MSG } from '../../../common/message-defines';
 
 export class ProfileDetailComponent implements OnInit {
 
+  const temp = 123;
+
+  const el = document.getElementById("output");
+el.innerHTML = "test";
+
   userInfo: Omit<User, '_id' | 'password' | 'mailAdd' | 'parentId'>;
 
   // プロフ画像情報
@@ -57,6 +62,7 @@ export class ProfileDetailComponent implements OnInit {
 
   }
 
+
   public async ngOnInit(): Promise<void> {
 
     try {
@@ -85,6 +91,7 @@ export class ProfileDetailComponent implements OnInit {
           }
         }
       }
+      console.log("debug");
     } catch(e) {
       await this.commonService.errorOnService(CNS.targetTypePlayer + CNS.targetTypeInformation, CNS.actionTypeGet);
       this.commonService.navigateBack();
